@@ -1,0 +1,128 @@
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
+import {provideHttpClient, withInterceptors, withInterceptorsFromDi} from '@angular/common/http';
+
+import {AppRoutingModule} from '@/app-routing.module';
+import {AppComponent} from './app.component';
+import {MainComponent} from '@modules/main/main.component';
+import {LoginComponent} from '@modules/login/login.component';
+import {HeaderComponent} from '@modules/main/header/header.component';
+import {FooterComponent} from '@modules/main/footer/footer.component';
+import {MenuSidebarComponent} from '@modules/main/menu-sidebar/menu-sidebar.component';
+import {BlankComponent} from '@pages/blank/blank.component';
+import {ReactiveFormsModule} from '@angular/forms';
+import {ProfileComponent} from '@pages/profile/profile.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {RegisterComponent} from '@modules/register/register.component';
+import {DashboardComponent} from '@pages/dashboard/dashboard.component';
+import {ToastrModule} from 'ngx-toastr';
+import {MessagesComponent} from '@modules/main/header/messages/messages.component';
+import {NotificationsComponent} from '@modules/main/header/notifications/notifications.component';
+
+import {CommonModule, registerLocaleData} from '@angular/common';
+import localeEn from '@angular/common/locales/en';
+import {UserComponent} from '@modules/main/header/user/user.component';
+import {ForgotPasswordComponent} from '@modules/forgot-password/forgot-password.component';
+import {RecoverPasswordComponent} from '@modules/recover-password/recover-password.component';
+import {LanguageComponent} from '@modules/main/header/language/language.component';
+import {MainMenuComponent} from './pages/main-menu/main-menu.component';
+import {SubMenuComponent} from './pages/main-menu/sub-menu/sub-menu.component';
+import {MenuItemComponent} from './components/menu-item/menu-item.component';
+import {ControlSidebarComponent} from './modules/main/control-sidebar/control-sidebar.component';
+import {StoreModule} from '@ngrx/store';
+import {authReducer} from './store/auth/reducer';
+import {uiReducer} from './store/ui/reducer';
+import {ProfabricComponentsModule} from '@profabric/angular-components';
+import {SidebarSearchComponent} from './components/sidebar-search/sidebar-search.component';
+import {NgxGoogleAnalyticsModule} from 'ngx-google-analytics';
+import {environment} from 'environments/environment';
+import {ActivityTabComponent} from './pages/profile/activity-tab/activity-tab.component';
+import {TimelineTabComponent} from './pages/profile/timeline-tab/timeline-tab.component';
+import {SettingsTabComponent} from './pages/profile/settings-tab/settings-tab.component';
+import {PostComponent} from './pages/profile/post/post.component';
+import {InfoBoxComponent} from './components/info-box/info-box.component';
+import {SmallBoxComponent} from './components/small-box/small-box.component';
+import {ContentHeaderComponent} from './components/content-header/content-header.component';
+import {LoadingComponent} from './components/loading/loading.component';
+import {OverlayLoadingComponent} from './components/overlay-loading/overlay-loading.component';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import { FrontendComponent } from './pages/frontend/frontend.component';
+import { IndexComponent } from './pages/frontend/index/index.component';
+import { API_BASE_URL } from './tokens/api-base-url.token';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { tokenInterceptor } from './interceptors/token.interceptor';
+import { HospitalDataComponent } from './pages/dashboard/masters/hospital-data/hospital-data.component';
+import { LocationsComponent } from './pages/dashboard/masters/locations/locations.component';
+import { MainTypesComponent } from './pages/dashboard/masters/main-types/main-types.component';
+import { SalutationsComponent } from './pages/dashboard/masters/salutations/salutations.component';
+import { DepartmentsComponent } from './pages/dashboard/masters/departments/departments.component';
+import { BloodGroupsComponent } from './pages/dashboard/masters/blood-groups/blood-groups.component';
+import { GenericNamesComponent } from './pages/dashboard/masters/generic-names/generic-names.component';
+import { IcdsComponent } from './pages/dashboard/masters/icds/icds.component';
+
+registerLocaleData(localeEn, 'en-EN');
+
+@NgModule({
+    declarations: [
+        AppComponent,
+        MainComponent,
+        LoginComponent,
+        HeaderComponent,
+        FooterComponent,
+        MenuSidebarComponent,
+        BlankComponent,
+        ProfileComponent,
+        RegisterComponent,
+        DashboardComponent,
+        MessagesComponent,
+        NotificationsComponent,
+        UserComponent,
+        ForgotPasswordComponent,
+        RecoverPasswordComponent,
+        LanguageComponent,
+        MainMenuComponent,
+        SubMenuComponent,
+        MenuItemComponent,
+        ControlSidebarComponent,
+        SidebarSearchComponent,
+        ActivityTabComponent,
+        TimelineTabComponent,
+        SettingsTabComponent,
+        PostComponent,
+        InfoBoxComponent,
+        SmallBoxComponent,
+        ContentHeaderComponent,
+        LoadingComponent,
+        OverlayLoadingComponent,
+        FrontendComponent,
+        IndexComponent,
+        HospitalDataComponent,
+        LocationsComponent,
+        MainTypesComponent,
+        SalutationsComponent,
+        DepartmentsComponent,
+        BloodGroupsComponent,
+        GenericNamesComponent,
+        IcdsComponent
+    ],
+    bootstrap: [AppComponent],
+    imports: [
+        ProfabricComponentsModule,
+        CommonModule,
+        BrowserModule,
+        StoreModule.forRoot({auth: authReducer, ui: uiReducer}),
+        AppRoutingModule,
+        ReactiveFormsModule,
+        BrowserAnimationsModule,
+        ToastrModule.forRoot({
+            timeOut: 3000,
+            positionClass: 'toast-top-right',
+            preventDuplicates: true
+        }),
+        NgxGoogleAnalyticsModule.forRoot(environment.GA_ID),
+        FontAwesomeModule,
+        NgbModule,
+    ],
+    providers: [provideHttpClient(withInterceptorsFromDi()),provideHttpClient(withInterceptors([tokenInterceptor])), {provide:API_BASE_URL, useValue: environment.apiBaseUrl}]
+})
+export class AppModule {}

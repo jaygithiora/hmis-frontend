@@ -1,0 +1,33 @@
+<!-- Brand Logo -->
+<a [routerLink]="['/']" class="brand-link">
+    <pf-image
+        src="assets/img/logo.png"
+        alt="AdminLTE Logo"
+        class="brand-image"
+        height="32"
+        width="32"
+        rounded="true"
+        style="opacity: 0.8"
+    ></pf-image>
+    <span class="brand-text font-weight-light"><b class="text-success">Aphia</b>One</span>
+</a>
+
+<!-- Sidebar -->
+<div class="sidebar">
+
+    <div class="form-inline">
+        <app-sidebar-search></app-sidebar-search>
+    </div>
+
+    <!-- Sidebar Menu -->
+    <nav class="mt-2" style="overflow-y: hidden">
+        <ul
+            class="nav nav-pills nav-sidebar flex-column"
+            data-widget="treeview"
+            role="menu"
+            data-accordion="false"
+        >
+            <app-menu-item *ngFor="let item of menu" [menuItem]="item" />
+        </ul>
+    </nav>
+</div>

@@ -1,0 +1,140 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <div class="container-fluid">
+        <a class="navbar-brand" routerLink="/"
+            ><img
+                src="/assets/img/1.jpg"
+                class="img-fluid m-2"
+                style="max-width: 150px"
+        /></a>
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+            (click)="isMenuCollapsed = !isMenuCollapsed"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div
+            [ngbCollapse]="isMenuCollapsed"
+            class="collapse navbar-collapse"
+            id="navbarSupportedContent"
+        >
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a
+                        class="nav-link me-3"
+                        routerLink="/"
+                        routerLinkActive="active"
+                        >Home</a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a
+                        class="nav-link me-3"
+                        routerLink="about"
+                        routerLinkActive="active"
+                        >Our Pricing</a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a
+                        class="nav-link me-3"
+                        routerLink="how_it_works"
+                        routerLinkActive="active"
+                        >About Us</a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a
+                        class="nav-link me-3"
+                        routerLink="about"
+                        routerLinkActive="active"
+                        >Contact Us</a
+                    >
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a
+                        *ngIf="!service.isLoggedIn()"
+                        class="nav-link me-3"
+                        routerLink="/login"
+                        routerLinkActive="active"
+                        >Login</a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a
+                        *ngIf="!service.isLoggedIn()"
+                        class="btn btn-primary"
+                        routerLink="/register"
+                        routerLinkActive="active"
+                        >Join Now</a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a
+                        *ngIf="service.isLoggedIn()"
+                        class="btn btn-primary"
+                        (click)="dashboard()"
+                        routerLinkActive="active"
+                        >Dashboard <em class="fas fa-long-arrow-alt-right"></em>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div style="min-height: 90vh">
+    <router-outlet></router-outlet>
+</div>
+<footer class="container-fluid bg-light border border-top">
+    <div class="container">
+        <div class="row pt-3">
+            <div class="col-sm-12 p-10 small"></div>
+
+            <div class="col-sm-12 text-muted pb-3">
+                <div class="row">
+                    <div class="col">
+                        <a class="text-dark">How it Works</a> &nbsp;&nbsp;<a
+                            class="text-dark"
+                            >Terms of User</a
+                        >&nbsp;&nbsp;
+                        <i
+                            class="fab fa-linkedin text-dark"
+                            style="font-size: 1.5em"
+                        ></i>
+                        &nbsp;
+                        <i
+                            class="fab fa-telegram text-dark"
+                            style="font-size: 1.5em"
+                        ></i>
+                        &nbsp;
+                        <i
+                            class="fab fa-instagram text-dark"
+                            style="font-size: 1.5em"
+                        ></i>
+                        &nbsp;
+                        <i
+                            class="fab fa-facebook text-dark"
+                            style="font-size: 1.5em"
+                        ></i>
+                        &nbsp;
+                        <i
+                            class="fab fa-twitter text-dark"
+                            style="font-size: 1.5em"
+                        ></i>
+                        &nbsp;
+                    </div>
+                    <div class="col text-end">
+                        For Press Enquiries Email, info&#64;medbookafrica.com
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>

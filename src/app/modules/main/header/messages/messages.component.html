@@ -1,0 +1,42 @@
+<pf-dropdown [hideArrow]="true">
+    <div slot="head">
+        <a class="nav-link">
+            <i class="far fa-comments"></i>
+            <span class="badge badge-danger navbar-badge">3</span>
+        </a>
+    </div>
+    <div slot="body">
+        <div *ngFor="let message of messages">
+            <a href="/" class="dropdown-item">
+                <div class="media">
+                    <pf-image
+                        src="assets/img/default-profile.png"
+                        fallbackSrc="assets/img/default-profile.png"
+                        alt="User Avatar"
+                        width="50"
+                        height="50"
+                        class="mr-2"
+                        rounded="true"
+                    />
+                    <div class="media-body">
+                        <h3 class="dropdown-item-title">
+                            <span>{{ message.name }}</span>
+                            <span class="float-right text-sm text-danger">
+                                <i class="fas fa-star"></i>
+                            </span>
+                        </h3>
+                        <p class="text-sm">{{ message.text }}</p>
+                        <p class="text-sm text-muted">
+                            <i class="far fa-clock mr-1"></i>
+                            <span>{{ message.time }}</span>
+                        </p>
+                    </div>
+                </div>
+                <!-- Message End -->
+            </a>
+            <div class="dropdown-divider"></div>
+        </div>
+
+        <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
+    </div>
+</pf-dropdown>
