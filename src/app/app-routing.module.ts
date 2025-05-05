@@ -21,6 +21,9 @@ import { DepartmentsComponent } from '@pages/dashboard/masters/departments/depar
 import { BloodGroupsComponent } from '@pages/dashboard/masters/blood-groups/blood-groups.component';
 import { GenericNamesComponent } from '@pages/dashboard/masters/generic-names/generic-names.component';
 import { IcdsComponent } from '@pages/dashboard/masters/icds/icds.component';
+import { SubTypesComponent } from '@pages/dashboard/masters/sub-types/sub-types.component';
+import { DoctorsComponent } from '@pages/dashboard/settings/doctors/doctors.component';
+import { UsersComponent } from '@pages/dashboard/users/users.component';
 
 const routes: Routes = [
     {
@@ -39,6 +42,7 @@ const routes: Routes = [
         canActivate: [authGuard],
         canActivateChild: [authGuard],
         children: [
+          //masters
             {
                 path: 'masters/hospital-data',
                 component: HospitalDataComponent
@@ -50,6 +54,10 @@ const routes: Routes = [
             {
                 path: 'masters/main-types',
                 component: MainTypesComponent
+            },
+            {
+                path: 'masters/sub-types',
+                component: SubTypesComponent
             },
             {
                 path: 'masters/salutations',
@@ -71,6 +79,17 @@ const routes: Routes = [
                 path: 'masters/icds',
                 component: IcdsComponent
             },
+            //settings
+            {
+              path: 'settings/doctors',
+              component: DoctorsComponent
+            },
+            //settings
+            {
+              path: 'users',
+              component: UsersComponent
+            },
+            //profile
             {
                 path: 'profile',
                 component: ProfileComponent
@@ -101,7 +120,7 @@ const routes: Routes = [
     {
         path: 'register',
         component: RegisterComponent,
-        canActivate: [NonAuthGuard]
+        //canActivate: [NonAuthGuard]
     },
     {
         path: 'forgot-password',

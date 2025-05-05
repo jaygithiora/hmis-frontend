@@ -9,8 +9,8 @@ import { Observable } from 'rxjs';
 export class MainTypesService {
   constructor(private http: HttpClient,@Inject(API_BASE_URL) private baseUrl:string) { }
 
-  getMainTypes(page:number = 1):Observable<any>{
-    return this.http.get(`${this.baseUrl}/api/dashboard/masters/main-types?page=${page}`);
+  getMainTypes(page:number = 1, search:string=""):Observable<any>{
+    return this.http.get(`${this.baseUrl}/api/dashboard/masters/main-types?page=${page}&search=${search}`);
   }
   updateMainType(inputData:any){
     return this.http.post(`${this.baseUrl}/api/dashboard/masters/main-types/add`, inputData);

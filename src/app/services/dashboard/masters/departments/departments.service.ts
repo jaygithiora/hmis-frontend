@@ -9,9 +9,9 @@ import { Observable } from 'rxjs';
 export class DepartmentsService {
 
   constructor(private http: HttpClient,@Inject(API_BASE_URL) private baseUrl:string) { }
-    
-      getDepartments(page:number = 1):Observable<any>{
-        return this.http.get(`${this.baseUrl}/api/dashboard/masters/departments?page=${page}`);
+
+      getDepartments(page:number = 1, search:string=""):Observable<any>{
+        return this.http.get(`${this.baseUrl}/api/dashboard/masters/departments?page=${page}&search=${search}`);
       }
       updateDepartment(inputData:any){
         return this.http.post(`${this.baseUrl}/api/dashboard/masters/departments/add`, inputData);

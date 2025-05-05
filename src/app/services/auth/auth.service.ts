@@ -11,7 +11,7 @@ export class AuthService {
   constructor(private http: HttpClient, @Inject(API_BASE_URL) private baseUrl:string, private router: Router) { }
 
   register(inputData: any) {
-    return this.http.post(this.baseUrl + "register", inputData);
+    return this.http.post(`${this.baseUrl}/api/register`, inputData);
   }
 
   login(inputData: any){

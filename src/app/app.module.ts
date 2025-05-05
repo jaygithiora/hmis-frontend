@@ -59,6 +59,10 @@ import { DepartmentsComponent } from './pages/dashboard/masters/departments/depa
 import { BloodGroupsComponent } from './pages/dashboard/masters/blood-groups/blood-groups.component';
 import { GenericNamesComponent } from './pages/dashboard/masters/generic-names/generic-names.component';
 import { IcdsComponent } from './pages/dashboard/masters/icds/icds.component';
+import { SubTypesComponent } from './pages/dashboard/masters/sub-types/sub-types.component';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { DoctorsComponent } from './pages/dashboard/settings/doctors/doctors.component';
+import { UsersComponent } from './pages/dashboard/users/users.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -103,7 +107,10 @@ registerLocaleData(localeEn, 'en-EN');
         DepartmentsComponent,
         BloodGroupsComponent,
         GenericNamesComponent,
-        IcdsComponent
+        IcdsComponent,
+        SubTypesComponent,
+        DoctorsComponent,
+        UsersComponent
     ],
     bootstrap: [AppComponent],
     imports: [
@@ -122,6 +129,7 @@ registerLocaleData(localeEn, 'en-EN');
         NgxGoogleAnalyticsModule.forRoot(environment.GA_ID),
         FontAwesomeModule,
         NgbModule,
+        NgSelectComponent
     ],
     providers: [provideHttpClient(withInterceptorsFromDi()),provideHttpClient(withInterceptors([tokenInterceptor])), {provide:API_BASE_URL, useValue: environment.apiBaseUrl}]
 })
