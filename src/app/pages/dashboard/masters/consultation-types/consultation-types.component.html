@@ -1,0 +1,262 @@
+<app-content-header [title]="'Consultation Types'"></app-content-header>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col">
+                                <h6>
+                                    <i class="fas fa-user-md"></i>
+                                    Consultation Types
+                                </h6>
+                            </div>
+                            <div class="col text-right">
+                                <button
+                                    class="btn btn-primary btn-sm"
+                                    (click)="openModal(content, null)"
+                                >
+                                    <i class="fas fa-plus"></i> Add Consultation
+                                    Type
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Department</th>
+                                    <th>Main Type</th>
+                                    <th>Sub Type</th>
+                                    <th>Location</th>
+                                    <th>Consultation Fees</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th class="text-right">Action</th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngIf="isLoading">
+                                        <td colspan="10" class="text-center">
+                                            <div class="alert alert-secondary">
+                                                <div
+                                                    class="spinner-border spinner-border-sm"
+                                                    role="status"
+                                                    *ngIf="isLoading"
+                                                >
+                                                    <span class="sr-only"
+                                                        >Loading...</span
+                                                    >
+                                                </div>
+                                                Loading Consultation Types...
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr
+                                        *ngIf="
+                                            !isLoading && consultation_types.length == 0
+                                        "
+                                    >
+                                        <td colspan="10" class="text-center">
+                                            <div class="alert alert-secondary">
+                                                <i class="fas fa-ban"></i> No
+                                                <b>consultation Types Found!</b>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr
+                                        *ngFor="
+                                            let consultation_type of consultation_types;
+                                            let i = index
+                                        "
+                                    >
+                                        <td>{{ i + 1 }}</td>
+                                        <td>{{ consultation_type.name }}</td>
+                                        <td>{{ consultation_type.department.name }}</td>
+                                        <td>{{ consultation_type.location.name }}</td>
+                                        <td>
+                                            {{ consultation_type.sub_type.name }}
+                                        </td>
+                                        <td>
+                                            {{ consultation_type.location.name }}
+                                        </td>
+                                        <td>{{ consultation_type.consultation_fees }}</td>
+                                        <td>
+                                            {{ formatDate(consultation_type.created_at) }}
+                                        </td>
+                                        <td>
+                                            <span
+                                                class="badge badge-primary btn-pill"
+                                                *ngIf="consultation_type.status"
+                                                >Active</span
+                                            >
+                                            <span
+                                                class="badge badge-secondary btn-pill"
+                                                *ngIf="!consultation_type.status"
+                                                >In-Active</span
+                                            >
+                                        </td>
+                                        <td class="text-right">
+                                            <button
+                                                class="btn btn-primary btn-sm"
+                                                (click)="
+                                                    openModal(content, consultation_type)
+                                                "
+                                            >
+                                                <i class="fas fa-edit"></i> Edit
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Add/Edit Consultation Type</h4>
+        <button
+            type="button"
+            class="btn-close close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="consultationTypesForm" (submit)="addLocation()">
+            <input type="hidden" formControlName="id" />
+            <div class="mb-3">
+                <label>Name</label>
+                <input
+                    class="form-control"
+                    placeholder="Name"
+                    formControlName="name"
+                    s
+                />
+            </div>
+            <div class="mb-3">
+                <label>Department</label>
+                <ng-select
+                    [items]="departments"
+                    bindLabel="name"
+                    bindValue="id"
+                    [typeahead]="searchDepartments$"
+                    [loading]="loadingDepartments"
+                    [(ngModel)]="selectedDepartmentOption"
+                    placeholder="Search for department"
+                    (change)="onItemSelect($event)"
+                    formControlName="department"
+                ></ng-select>
+            </div>
+            <div class="mb-3">
+                <label>Main Type</label>
+                <ng-select
+                    [items]="mainTypes"
+                    bindLabel="name"
+                    bindValue="id"
+                    [typeahead]="searchMainTypes$"
+                    [loading]="loadingMainType"
+                    [(ngModel)]="selectedMainTypeOption"
+                    placeholder="Search for Main Type"
+                    (change)="onItemSelect($event)"
+                    formControlName="main_type"
+                ></ng-select>
+            </div>
+            <div class="mb-3">
+                <label>Sub Type</label>
+                <ng-select
+                    [items]="subTypes"
+                    bindLabel="name"
+                    bindValue="id"
+                    [typeahead]="searchSubTypes$"
+                    [loading]="loadingSubTypes"
+                    [(ngModel)]="selectedSubTypeOption"
+                    placeholder="Search for Sub Types"
+                    (change)="onItemSelect($event)"
+                    formControlName="sub_type"
+                ></ng-select>
+            </div>
+            <div class="mb-3">
+                <label>Doctor</label>
+                <ng-select
+                    [items]="doctors"
+                    bindLabel="name"
+                    bindValue="id"
+                    [typeahead]="searchDoctors$"
+                    [loading]="loadingDoctors"
+                    [(ngModel)]="selectedDoctorOption"
+                    placeholder="Search for Doctors"
+                    (change)="onItemSelect($event)"
+                    formControlName="doctor"
+                ></ng-select>
+            </div>
+            <div class="mb-3">
+                <label>Location</label>
+                <ng-select
+                    [items]="locations"
+                    bindLabel="name"
+                    bindValue="id"
+                    [typeahead]="searchLocations$"
+                    [loading]="loadingLocations"
+                    [(ngModel)]="selectedLocationOption"
+                    placeholder="Search for Location"
+                    (change)="onItemSelect($event)"
+                    formControlName="location"
+                ></ng-select>
+            </div>
+            <div class="mb-3">
+                <label>Consultation Fees</label>
+                <input
+                    type="number"
+                    class="form-control"
+                    placeholder="Consultation Fees"
+                    formControlName="consultation_fees"
+                />
+            </div>
+            <div class="mb-3">
+                <label>Status</label>
+                <select
+                    class="form-control custom-select"
+                    formControlName="status"
+                >
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
+                </select>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="modal.close('Save click')"
+        >
+            Close
+        </button>
+        <button
+            type="button"
+            class="btn btn-primary"
+            [disabled]="isLoading"
+            (click)="addLocation()"
+        >
+            <div
+                class="spinner-border spinner-border-sm"
+                role="status"
+                *ngIf="isLoading"
+            >
+                <span class="sr-only">Loading...</span>
+            </div>
+            Save Changes
+        </button>
+    </div>
+</ng-template>

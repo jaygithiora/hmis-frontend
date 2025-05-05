@@ -72,6 +72,16 @@ export const MENU = [
         path: ['/dashboard/masters/departments']
       },
       {
+        name: 'Consultation Types',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/masters/consultation-types']
+      },
+      {
+        name: 'Main Accounts',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/masters/consultation-types']
+      },
+      {
         name: 'Blood Groups',
         iconClasses: 'fas fa-circle icon-small',
         path: ['/dashboard/masters/blood-groups']

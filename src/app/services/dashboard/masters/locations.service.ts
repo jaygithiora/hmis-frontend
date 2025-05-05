@@ -9,7 +9,7 @@ export class LocationsService {
 
   constructor(private http: HttpClient, @Inject(API_BASE_URL) private baseUrl:string) { }
 
-  getLocations(page:number = 1){
+  getLocations(page:number = 1, search:string=""){
     return this.http.get(`${this.baseUrl}/api/dashboard/masters/locations?page=${page}`);
   }
 

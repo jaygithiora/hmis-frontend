@@ -26,14 +26,12 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Phone</th>
-                <th>Role</th>
                 <th>Date</th>
-                <th>Status</th>
                 <th class="text-right">Action</th>
               </thead>
               <tbody>
                 <tr *ngIf="isLoading">
-                  <td colspan="8" class="text-center">
+                  <td colspan="6" class="text-center">
                     <div class="alert alert-secondary">
                       <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
                         <span class="sr-only">Loading...</span>
@@ -43,7 +41,7 @@
                   </td>
                 </tr>
                 <tr *ngIf="!isLoading && users.length == 0">
-                  <td colspan="8" class="text-center">
+                  <td colspan="6" class="text-center">
                     <div class="alert alert-secondary">
                       <i class="fas fa-ban"></i> No
                       <b>Users Found!</b>
@@ -58,14 +56,13 @@
                   <td>{{ user.firstname }} {{ user.lastname }}</td>
                   <td>{{ user.email }}</td>
                   <td>{{ user.phone }}</td>
-                  <td>{{ user.roles[0].name }}</td>
                   <td>
                     {{ formatDate(user.created_at) }}
                   </td>
-                  <td>
+                  <!--<td>
                     <span class="badge badge-primary btn-pill" *ngIf="user.status">Active</span>
                     <span class="badge badge-secondary btn-pill" *ngIf="!user.status">In-Active</span>
-                  </td>
+                  </td>-->
                   <td class="text-right">
                     <button class="btn btn-primary btn-sm" (click)="
                                                 openModal(content, user)
@@ -94,9 +91,22 @@
     <form [formGroup]="usersForm" (submit)="addLocation()">
       <input type="hidden" formControlName="id" />
       <div class="mb-3">
-        <label>Name</label>
-        <input class="form-control" placeholder="Name" formControlName="name" s />
+        <label>First Name</label>
+        <input class="form-control" placeholder="First Name" formControlName="firstname"/>
       </div>
+      <div class="mb-3">
+        <label>Last Name</label>
+        <input class="form-control" placeholder="Last Name" formControlName="lastname"/>
+      </div>
+      <div class="mb-3">
+        <label>Email Address</label>
+        <input type='email' class="form-control" placeholder="Email Address" formControlName="email"/>
+      </div>
+      <div class="mb-3">
+        <label>Phone Number</label>
+        <input type='text' class="form-control" placeholder="Phone Number" formControlName="phone"/>
+      </div>
+      <!--
       <div class="mb-3">
         <label>Role</label>
         <ng-select [items]="roles" bindLabel="name" bindValue="id" [typeahead]="search$" [loading]="loading"
@@ -104,16 +114,12 @@
           formControlName="role"></ng-select>
       </div>
       <div class="mb-3">
-        <label>Consultation Fees</label>
-        <input type='number' class="form-control" placeholder="Consultation Fees" formControlName="consultation_fees"/>
-      </div>
-      <div class="mb-3">
         <label>Status</label>
         <select class="form-control custom-select" formControlName="status">
           <option value="1">Active</option>
           <option value="0">Inactive</option>
         </select>
-      </div>
+      </div>-->
     </form>
   </div>
   <div class="modal-footer">

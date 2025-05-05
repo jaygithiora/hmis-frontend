@@ -24,6 +24,8 @@ import { IcdsComponent } from '@pages/dashboard/masters/icds/icds.component';
 import { SubTypesComponent } from '@pages/dashboard/masters/sub-types/sub-types.component';
 import { DoctorsComponent } from '@pages/dashboard/settings/doctors/doctors.component';
 import { UsersComponent } from '@pages/dashboard/users/users.component';
+import { ConsultationTypesComponent } from '@pages/dashboard/masters/consultation-types/consultation-types.component';
+import { MainAccountsComponent } from '@pages/dashboard/masters/main-accounts/main-accounts.component';
 
 const routes: Routes = [
     {
@@ -66,6 +68,14 @@ const routes: Routes = [
             {
                 path: 'masters/departments',
                 component: DepartmentsComponent
+            },
+            {
+                path: 'masters/consultation-types',
+                component: ConsultationTypesComponent
+            },
+            {
+                path: 'masters/main-accounts',
+                component: MainAccountsComponent
             },
             {
                 path: 'masters/blood-groups',

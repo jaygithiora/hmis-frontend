@@ -24,16 +24,17 @@
               <thead>
                 <th>ID</th>
                 <th>Name</th>
+                <th>Department</th>
+                <th>Location</th>
                 <th>User</th>
                 <th>Consultation Fees</th>
-                <th>Location</th>
                 <th>Date</th>
                 <th>Status</th>
                 <th class="text-right">Action</th>
               </thead>
               <tbody>
                 <tr *ngIf="isLoading">
-                  <td colspan="8" class="text-center">
+                  <td colspan="9" class="text-center">
                     <div class="alert alert-secondary">
                       <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
                         <span class="sr-only">Loading...</span>
@@ -43,7 +44,7 @@
                   </td>
                 </tr>
                 <tr *ngIf="!isLoading && doctors.length == 0">
-                  <td colspan="8" class="text-center">
+                  <td colspan="9" class="text-center">
                     <div class="alert alert-secondary">
                       <i class="fas fa-ban"></i> No
                       <b>Doctors Found!</b>
@@ -56,8 +57,10 @@
                                     ">
                   <td>{{ i + 1 }}</td>
                   <td>{{ doctor.name }}</td>
-                  <td>{{ doctor.main_type.name }}</td>
-                  <td>{{ doctor.description }}</td>
+                  <td>{{ doctor.department.name }}</td>
+                  <td>{{ doctor.location.name }}</td>
+                  <td>{{ doctor.user.firstname }} {{ doctor.user.lastname }}</td>
+                  <td>{{ doctor.consultation_fees }}</td>
                   <td>
                     {{ formatDate(doctor.created_at) }}
                   </td>
@@ -98,7 +101,7 @@
       </div>
       <div class="mb-3">
         <label>Department</label>
-        <ng-select [items]="departments" bindLabel="name" bindValue="id" [typeahead]="searchDepartments$" [loading]="loading"
+        <ng-select [items]="departments" bindLabel="name" bindValue="id" [typeahead]="searchDepartments$" [loading]="loadingDepartments"
           [(ngModel)]="selectedDepartmentOption" placeholder="Search for department" (change)="onItemSelect($event)"
           formControlName="department"></ng-select>
       </div>
@@ -108,17 +111,17 @@
       </div>
       <div class="mb-3">
         <label>User Link</label>
-        <ng-select [items]="departments" bindLabel="name" bindValue="id" [typeahead]="searchUsers$" [loading]="loading"
+        <ng-select [items]="users" bindLabel="name" bindValue="id" [typeahead]="searchUsers$" [loading]="loadingUsers"
           [(ngModel)]="selectedUserOption" placeholder="Search for user" (change)="onItemSelect($event)"
           formControlName="user"></ng-select>
       </div>
       <div class="mb-3">
         <label>Location</label>
-        <ng-select [items]="locations" bindLabel="name" bindValue="id" [typeahead]="searchLocations$" [loading]="loading"
+        <ng-select [items]="locations" bindLabel="name" bindValue="id" [typeahead]="searchLocations$" [loading]="loadingLocations"
           [(ngModel)]="selectedLocationOption" placeholder="Search for Location" (change)="onItemSelect($event)"
-          formControlName="main_type"></ng-select>
+          formControlName="location"></ng-select>
       </div>
-      <div class="mb-3">
+      <div class="mb-3 d-none">
         <label>Description</label>
         <textarea rows="5" class="form-control" placeholder="Description" formControlName="description"></textarea>
       </div>

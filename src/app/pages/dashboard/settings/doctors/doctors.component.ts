@@ -3,7 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '@services/auth/auth.service';
 import { DepartmentsService } from '@services/dashboard/masters/departments/departments.service';
+import { LocationsService } from '@services/dashboard/masters/locations.service';
 import { DoctorsService } from '@services/dashboard/settings/doctors/doctors.service';
+import { UsersService } from '@services/dashboard/users/users.service';
 import moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { debounceTime, distinctUntilChanged, Subject, switchMap, tap } from 'rxjs';
@@ -15,7 +17,9 @@ import { debounceTime, distinctUntilChanged, Subject, switchMap, tap } from 'rxj
 })
 export class DoctorsComponent implements OnInit {
   public isLoading: boolean = true;
-  loading: boolean = false;
+  loadingDepartments: boolean = false;
+  loadingUsers: boolean = false;
+  loadingLocations: boolean = false;
   doctorsForm!: FormGroup;
 
   departments: any[] = [];
@@ -39,13 +43,13 @@ export class DoctorsComponent implements OnInit {
 
   constructor(private doctorService: DoctorsService, private departmentService: DepartmentsService,
     private modalService: NgbModal, private fb: FormBuilder, private toastr: ToastrService,
-    private service: AuthService) {
+    private service: AuthService, private usersService: UsersService, private locationsService: LocationsService) {
     this.doctorsForm = this.fb.group({
       id: ['0', [Validators.required]],
       name: ['', [Validators.required]],
       description: [''],
       department: ['', [Validators.required]],
-      consultation_fees:['', [Validators.required, Validators.min(0)]],
+      consultation_fees: ['', [Validators.required, Validators.min(0)]],
       user: ['', [Validators.required]],
       location: [''],
       status: ['1', [Validators.required]]
@@ -59,35 +63,39 @@ export class DoctorsComponent implements OnInit {
       .pipe(
         debounceTime(300),  // Wait for the user to stop typing for 300ms
         distinctUntilChanged(),  // Only search if the query has changed
-        tap(() => this.loading = true),  // Show the loading spinner
+        tap(() => this.loadingDepartments = true),  // Show the loading spinner
         switchMap(term => this.departmentService.getDepartments(1, term))  // Switch to a new observable for each search term
       )
       .subscribe(results => {
         this.departments = results.departments.data;
-        this.loading = false;  // Hide the loading spinner when the API call finishes
+        this.loadingDepartments = false;  // Hide the loading spinner when the API call finishes
       });
-      this.searchLocations$
-        .pipe(
-          debounceTime(300),  // Wait for the user to stop typing for 300ms
-          distinctUntilChanged(),  // Only search if the query has changed
-          tap(() => this.loading = true),  // Show the loading spinner
-          switchMap(term => this.departmentService.getDepartments(1, term))  // Switch to a new observable for each search term
-        )
-        .subscribe(results => {
-          this.departments = results.departments.data;
-          this.loading = false;  // Hide the loading spinner when the API call finishes
-        });
-        this.searchUsers$
-          .pipe(
-            debounceTime(300),  // Wait for the user to stop typing for 300ms
-            distinctUntilChanged(),  // Only search if the query has changed
-            tap(() => this.loading = true),  // Show the loading spinner
-            switchMap(term => this.departmentService.getDepartments(1, term))  // Switch to a new observable for each search term
-          )
-          .subscribe(results => {
-            this.departments = results.departments.data;
-            this.loading = false;  // Hide the loading spinner when the API call finishes
-          });
+    this.searchLocations$
+      .pipe(
+        debounceTime(300),  // Wait for the user to stop typing for 300ms
+        distinctUntilChanged(),  // Only search if the query has changed
+        tap(() => this.loadingLocations = true),  // Show the loading spinner
+        switchMap(term => this.locationsService.getLocations(1, term))  // Switch to a new observable for each search term
+      )
+      .subscribe((results: any) => {
+        this.locations = results.locations.data;
+        this.loadingLocations = false;  // Hide the loading spinner when the API call finishes
+      });
+
+    this.searchUsers$
+      .pipe(
+        debounceTime(300),  // Wait for the user to stop typing for 300ms
+        distinctUntilChanged(),  // Only search if the query has changed
+        tap(() => this.loadingUsers = true),  // Show the loading spinner
+        switchMap(term => this.usersService.getUsers(1, term))  // Switch to a new observable for each search term
+      )
+      .subscribe(results => {
+        this.users = results.users.data.map(element => ({
+          id: element.id,
+          name: `${element.firstname} ${element.lastname} (${element.email})`
+        }));
+        this.loadingUsers = false;  // Hide the loading spinner when the API call finishes
+      });
   }
   // Handle item selection
   onItemSelect(event: any) {
@@ -112,20 +120,34 @@ export class DoctorsComponent implements OnInit {
     });
   }
 
-  openModal(content: TemplateRef<any>, sub_type: any) {
+  openModal(content: TemplateRef<any>, doctor: any) {
     this.modalService.open(content, { centered: true });
-    if (sub_type != null) {
-      this.doctorsForm.get("id").setValue(sub_type.id);
-      this.doctorsForm.get("name").setValue(sub_type.name);
-      this.doctorsForm.get("description").setValue(sub_type.description);
-      //this.main_types.push(sub_type.main_type);
-      //this.selectedOption = sub_type.main_type_id;
-      this.doctorsForm.get("status").setValue(sub_type.status);
+    if (doctor != null) {
+      this.doctorsForm.get("id").setValue(doctor.id);
+      this.doctorsForm.get("name").setValue(doctor.name);
+      if (doctor.department_id != null) {
+        this.departments.push(doctor.department);
+        this.selectedDepartmentOption = doctor.department_id;
+      }
+      if (doctor.user_id != null) {
+        this.users.push({
+          id: doctor.user.id,
+          name: `${doctor.user.firstname} ${doctor.user.lastname} (${doctor.user.email})`
+        });
+        this.selectedUserOption = doctor.user_id;
+      }
+      if (doctor.location_id != null) {
+        this.locations.push(doctor.location);
+        this.selectedLocationOption = doctor.location_id;
+      }
+      this.doctorsForm.get("consultation_fees").setValue(doctor.consultation_fees);
+      this.doctorsForm.get("status").setValue(doctor.status);
     } else {
       this.doctorsForm.get("id").setValue(0);
       this.doctorsForm.get("name").setValue("");
       this.doctorsForm.get("description").setValue("");
-      //this.selectedOption = null;
+      this.selectedDepartmentOption = null;
+      this.selectedUserOption = null;
       this.doctorsForm.get("status").setValue(1);
     }
   }

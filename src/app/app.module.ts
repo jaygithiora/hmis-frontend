@@ -63,6 +63,8 @@ import { SubTypesComponent } from './pages/dashboard/masters/sub-types/sub-types
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { DoctorsComponent } from './pages/dashboard/settings/doctors/doctors.component';
 import { UsersComponent } from './pages/dashboard/users/users.component';
+import { ConsultationTypesComponent } from './pages/dashboard/masters/consultation-types/consultation-types.component';
+import { MainAccountsComponent } from './pages/dashboard/masters/main-accounts/main-accounts.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -110,7 +112,9 @@ registerLocaleData(localeEn, 'en-EN');
         IcdsComponent,
         SubTypesComponent,
         DoctorsComponent,
-        UsersComponent
+        UsersComponent,
+        ConsultationTypesComponent,
+        MainAccountsComponent
     ],
     bootstrap: [AppComponent],
     imports: [

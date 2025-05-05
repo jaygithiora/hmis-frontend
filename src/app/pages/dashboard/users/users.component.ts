@@ -37,8 +37,8 @@ export class UsersComponent implements OnInit {
       firstname: ['', [Validators.required]],
       lastname: ['', [Validators.required]],
       email: ['', [Validators.required]],
-      phone:['', [Validators.required, Validators.min(10), Validators.max(10)]],
-      role: ['', [Validators.required]],
+      phone:['', [Validators.required]],
+      //role: ['', [Validators.required]],
       status: ['1', [Validators.required]]
     });
 
@@ -81,21 +81,24 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  openModal(content: TemplateRef<any>, sub_type: any) {
+  openModal(content: TemplateRef<any>, user: any) {
     this.modalService.open(content, { centered: true });
-    if (sub_type != null) {
-      this.usersForm.get("id").setValue(sub_type.id);
-      this.usersForm.get("name").setValue(sub_type.name);
-      this.usersForm.get("description").setValue(sub_type.description);
-      //this.main_types.push(sub_type.main_type);
-      //this.selectedOption = sub_type.main_type_id;
-      this.usersForm.get("status").setValue(sub_type.status);
+    if (user != null) {
+      this.usersForm.get("id").setValue(user.id);
+      this.usersForm.get("firstname").setValue(user.firstname);
+      this.usersForm.get("lastname").setValue(user.lastname);
+      this.usersForm.get("email").setValue(user.email);
+      this.usersForm.get("phone").setValue(user.phone);
+      //this.main_types.push(user.main_type);
+      //this.selectedOption = user.main_type_id;
+      //this.usersForm.get("status").setValue(user.status);
     } else {
       this.usersForm.get("id").setValue(0);
-      this.usersForm.get("name").setValue("");
-      this.usersForm.get("description").setValue("");
+      this.usersForm.get("firstname").setValue("");
+      this.usersForm.get("lastname").setValue("");
+      this.usersForm.get("email").setValue("");
+      this.usersForm.get("phone").setValue("");
       //this.selectedOption = null;
-      this.usersForm.get("status").setValue(1);
     }
   }
   addLocation() {
@@ -114,14 +117,14 @@ export class UsersComponent implements OnInit {
         if (error?.error?.errors?.firstname) {
           this.toastr.error(error?.error?.errors?.firstname);
         }
+        if (error?.error?.errors?.lastname) {
+          this.toastr.error(error?.error?.errors?.lastname);
+        }
         if (error?.error?.errors?.email) {
           this.toastr.error(error?.error?.errors?.email);
         }
         if (error?.error?.errors?.phone) {
           this.toastr.error(error?.error?.errors?.phone);
-        }
-        if (error?.error?.errors?.password) {
-          this.toastr.error(error?.error?.errors?.password);
         }
         if (error?.error?.message) {
           this.toastr.error(error?.error?.message);
