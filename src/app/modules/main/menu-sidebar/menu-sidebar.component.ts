@@ -92,6 +92,11 @@ export const MENU = [
         path: ['/dashboard/masters/accounts']
       },
       {
+        name: 'Plans',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/masters/plans']
+      },
+      {
         name: 'Blood Groups',
         iconClasses: 'fas fa-circle icon-small',
         path: ['/dashboard/masters/blood-groups']

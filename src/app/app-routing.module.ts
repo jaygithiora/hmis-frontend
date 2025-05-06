@@ -28,6 +28,7 @@ import { ConsultationTypesComponent } from '@pages/dashboard/masters/consultatio
 import { MainAccountsComponent } from '@pages/dashboard/masters/main-accounts/main-accounts.component';
 import { SubAccountsComponent } from '@pages/dashboard/masters/sub-accounts/sub-accounts.component';
 import { AccountsComponent } from '@pages/dashboard/masters/accounts/accounts.component';
+import { PlansComponent } from '@pages/dashboard/masters/plans/plans.component';
 
 const routes: Routes = [
     {
@@ -86,6 +87,10 @@ const routes: Routes = [
             {
                 path: 'masters/accounts',
                 component: AccountsComponent
+            },
+            {
+                path: 'masters/plans',
+                component: PlansComponent
             },
             {
                 path: 'masters/blood-groups',

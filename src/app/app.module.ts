@@ -67,6 +67,7 @@ import { ConsultationTypesComponent } from './pages/dashboard/masters/consultati
 import { MainAccountsComponent } from './pages/dashboard/masters/main-accounts/main-accounts.component';
 import { SubAccountsComponent } from './pages/dashboard/masters/sub-accounts/sub-accounts.component';
 import { AccountsComponent } from './pages/dashboard/masters/accounts/accounts.component';
+import { PlansComponent } from './pages/dashboard/masters/plans/plans.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -118,7 +119,8 @@ registerLocaleData(localeEn, 'en-EN');
         ConsultationTypesComponent,
         MainAccountsComponent,
         SubAccountsComponent,
-        AccountsComponent
+        AccountsComponent,
+        PlansComponent
     ],
     bootstrap: [AppComponent],
     imports: [
