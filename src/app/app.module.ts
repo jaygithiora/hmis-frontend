@@ -65,6 +65,8 @@ import { DoctorsComponent } from './pages/dashboard/settings/doctors/doctors.com
 import { UsersComponent } from './pages/dashboard/users/users.component';
 import { ConsultationTypesComponent } from './pages/dashboard/masters/consultation-types/consultation-types.component';
 import { MainAccountsComponent } from './pages/dashboard/masters/main-accounts/main-accounts.component';
+import { SubAccountsComponent } from './pages/dashboard/masters/sub-accounts/sub-accounts.component';
+import { AccountsComponent } from './pages/dashboard/masters/accounts/accounts.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -114,7 +116,9 @@ registerLocaleData(localeEn, 'en-EN');
         DoctorsComponent,
         UsersComponent,
         ConsultationTypesComponent,
-        MainAccountsComponent
+        MainAccountsComponent,
+        SubAccountsComponent,
+        AccountsComponent
     ],
     bootstrap: [AppComponent],
     imports: [

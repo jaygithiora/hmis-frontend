@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '@services/auth/auth.service';
 import { BloodGroupsService } from '@services/dashboard/masters/blood-groups/blood-groups.service';
+import { MainAccountsService } from '@services/dashboard/masters/main-accounts/main-accounts.service';
 import moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 
@@ -13,20 +14,19 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class MainAccountsComponent  implements OnInit {
   public isLoading: boolean = true;
-  bloodGroupForm!: FormGroup;
+  mainAccountForm!: FormGroup;
 
-  blood_groups: any[] = [];// Store fetched items
+  main_accounts: any[] = [];// Store fetched items
   totalItems = 0;     // Total number of items
   currentPage = 1;    // Current page number
   fromItems = 0; //from items
   toItems = 0; //to items
   perPage = 10;       // Items per page
-  constructor(private bloodGroupService: BloodGroupsService, private modalService: NgbModal,
+  constructor(private mainAccountService: MainAccountsService, private modalService: NgbModal,
     private fb: FormBuilder, private toastr: ToastrService, private service:AuthService) {
-    this.bloodGroupForm = this.fb.group({
+    this.mainAccountForm = this.fb.group({
       id: ['0', [Validators.required]],
       name: ['', [Validators.required]],
-      description: [''],
       status: ['1', [Validators.required]]
     });
 
@@ -36,14 +36,14 @@ export class MainAccountsComponent  implements OnInit {
   }
 
   loadPage(page: number) {
-    this.bloodGroupService.getBloodGroups(page).subscribe((result: any) => {
+    this.mainAccountService.getMainAccounts(page).subscribe((result: any) => {
       this.isLoading = false;
-      this.blood_groups = result.blood_groups.data;// Set the items
-      this.totalItems = result.blood_groups.total; // Total number of items
-      this.perPage = result.blood_groups.per_page; // Items per page
-      this.currentPage = result.blood_groups.current_page; // Set the current page
-      this.toItems = result.blood_groups.to; // Set to Items
-      this.fromItems = result.blood_groups.from; // Set from Items
+      this.main_accounts = result.main_accounts.data;// Set the items
+      this.totalItems = result.main_accounts.total; // Total number of items
+      this.perPage = result.main_accounts.per_page; // Items per page
+      this.currentPage = result.main_accounts.current_page; // Set the current page
+      this.toItems = result.main_accounts.to; // Set to Items
+      this.fromItems = result.main_accounts.from; // Set from Items
     }, error => {
       this.isLoading = false;
       console.log(error);
@@ -53,21 +53,19 @@ export class MainAccountsComponent  implements OnInit {
   openModal(content: TemplateRef<any>, blood_group: any) {
     this.modalService.open(content, { centered: true });
     if (blood_group != null) {
-      this.bloodGroupForm.get("id").setValue(blood_group.id);
-      this.bloodGroupForm.get("name").setValue(blood_group.name);
-      this.bloodGroupForm.get("description").setValue(blood_group.description);
-      this.bloodGroupForm.get("status").setValue(blood_group.status);
+      this.mainAccountForm.get("id").setValue(blood_group.id);
+      this.mainAccountForm.get("name").setValue(blood_group.name);
+      this.mainAccountForm.get("status").setValue(blood_group.status);
     } else {
-      this.bloodGroupForm.get("id").setValue(0);
-      this.bloodGroupForm.get("name").setValue("");
-      this.bloodGroupForm.get("description").setValue("");
-      this.bloodGroupForm.get("status").setValue(1);
+      this.mainAccountForm.get("id").setValue(0);
+      this.mainAccountForm.get("name").setValue("");
+      this.mainAccountForm.get("status").setValue(1);
     }
   }
   addLocation() {
-    if (this.bloodGroupForm.valid) {
+    if (this.mainAccountForm.valid) {
       this.isLoading = true;
-      this.bloodGroupService.updateBloodGroups(this.bloodGroupForm.getRawValue()).subscribe((result: any) => {
+      this.mainAccountService.updateMainAccount(this.mainAccountForm.getRawValue()).subscribe((result: any) => {
         this.isLoading = false;
         if (result.success) {
           this.toastr.success(result.success);
@@ -82,10 +80,6 @@ export class MainAccountsComponent  implements OnInit {
         }
         if(error?.error?.errors?.status){
           this.toastr.error(error?.error?.errors?.status);
-        }
-        if (error?.error?.message) {
-          this.toastr.error(error?.error?.message);
-          this.service.logout();
         }
         if (error?.error?.message) {
           this.toastr.error(error?.error?.message);

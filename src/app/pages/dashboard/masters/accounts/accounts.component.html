@@ -1,4 +1,4 @@
-<app-content-header [title]="'Main Accounts'"></app-content-header>
+<app-content-header [title]="'Accounts'"></app-content-header>
 <section class="content">
     <div class="container-fluid">
         <div class="row">
@@ -9,7 +9,7 @@
                             <div class="col">
                                 <h6>
                                     <i class="far fa-heart"></i>
-                                    Main Accounts
+                                    Accounts
                                 </h6>
                             </div>
                             <div class="col text-right">
@@ -17,7 +17,7 @@
                                     class="btn btn-primary btn-sm"
                                     (click)="openModal(content, null)"
                                 >
-                                    <i class="fas fa-plus"></i> Add Main Account
+                                    <i class="fas fa-plus"></i> Add Account
                                 </button>
                             </div>
                         </div>
@@ -27,13 +27,16 @@
                             <thead>
                                 <th>ID</th>
                                 <th>Name</th>
+                                <th>Main Account</th>
+                                <th>Sub Account</th>
+                                <th>Sub Type</th>
                                 <th>Date</th>
                                 <th>Status</th>
                                 <th class="text-right">Action</th>
                             </thead>
                             <tbody>
                                 <tr *ngIf="isLoading">
-                                    <td colspan="5" class="text-center">
+                                    <td colspan="8" class="text-center">
                                         <div class="alert alert-secondary">
                                             <div
                                                 class="spinner-border spinner-border-sm"
@@ -44,38 +47,41 @@
                                                     >Loading...</span
                                                 >
                                             </div>
-                                            Loading Main Accounts...
+                                            Loading Accounts...
                                         </div>
                                     </td>
                                 </tr>
-                                <tr *ngIf="!isLoading && main_accounts.length == 0">
-                                    <td colspan="7" class="text-center">
+                                <tr *ngIf="!isLoading && accounts.length == 0">
+                                    <td colspan="8" class="text-center">
                                         <div class="alert alert-secondary">
                                             <i class="fas fa-ban"></i> No
-                                            <b>Main Accounts</b> Found!
+                                            <b>Accounts</b> Found!
                                         </div>
                                     </td>
                                 </tr>
                                 <tr
                                     *ngFor="
-                                        let main_account of main_accounts;
+                                        let account of accounts;
                                         let i = index
                                     "
                                 >
                                     <td>{{ i + 1 }}</td>
-                                    <td>{{ main_account.name }}</td>
+                                    <td>{{ account.name }}</td>
+                                    <td>{{ account.sub_account.main_account.name }}</td>
+                                    <td>{{ account.sub_account.name }}</td>
+                                    <td>{{ account.sub_type?.name }}</td>
                                     <td>
-                                        {{ formatDate(main_account.created_at) }}
+                                        {{ formatDate(account.created_at) }}
                                     </td>
                                     <td>
                                         <span
                                             class="badge badge-primary btn-pill"
-                                            *ngIf="main_account.status"
+                                            *ngIf="account.status"
                                             >Active</span
                                         >
                                         <span
                                             class="badge badge-secondary btn-pill"
-                                            *ngIf="!main_account.status"
+                                            *ngIf="!account.status"
                                             >In-Active</span
                                         >
                                     </td>
@@ -83,7 +89,7 @@
                                         <button
                                             class="btn btn-primary btn-sm"
                                             (click)="
-                                                openModal(content, main_account)
+                                                openModal(content, account)
                                             "
                                         >
                                             <i class="fas fa-edit"></i> Edit
@@ -101,7 +107,7 @@
 
 <ng-template #content let-modal>
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Add/Edit Blood Group</h4>
+        <h4 class="modal-title" id="modal-basic-title">Add/Edit Account</h4>
         <button
             type="button"
             class="btn-close close"
@@ -112,7 +118,7 @@
         </button>
     </div>
     <div class="modal-body">
-        <form [formGroup]="mainAccountForm" (submit)="addLocation()">
+        <form [formGroup]="accountsForm" (submit)="addLocation()">
             <input type="hidden" formControlName="id" />
             <div class="mb-3">
                 <label>Name</label>
@@ -122,6 +128,34 @@
                     formControlName="name"
                     s
                 />
+            </div>
+            <div class="mb-3">
+                <label>Sub Account</label>
+                <ng-select
+                    [items]="sub_accounts"
+                    bindLabel="name"
+                    bindValue="id"
+                    [typeahead]="search$"
+                    [loading]="loading"
+                    [(ngModel)]="selectedOption"
+                    placeholder="Search for Sub Account"
+                    (change)="onItemSelect($event)"
+                    formControlName="sub_account"
+                ></ng-select>
+            </div>
+            <div class="mb-3">
+                <label>Sub Type</label>
+                <ng-select
+                    [items]="sub_types"
+                    bindLabel="name"
+                    bindValue="id"
+                    [typeahead]="searchSubType$"
+                    [loading]="loadingSubTypes"
+                    [(ngModel)]="selectedSubTypeOption"
+                    placeholder="Search for Sub Type"
+                    (change)="onItemSelect($event)"
+                    formControlName="sub_type"
+                ></ng-select>
             </div>
             <div class="mb-3">
                 <label>Status</label>

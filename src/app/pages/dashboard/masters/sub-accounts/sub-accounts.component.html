@@ -1,4 +1,4 @@
-<app-content-header [title]="'Main Accounts'"></app-content-header>
+<app-content-header [title]="'Sub Accounts'"></app-content-header>
 <section class="content">
     <div class="container-fluid">
         <div class="row">
@@ -9,7 +9,7 @@
                             <div class="col">
                                 <h6>
                                     <i class="far fa-heart"></i>
-                                    Main Accounts
+                                    Sub Accounts
                                 </h6>
                             </div>
                             <div class="col text-right">
@@ -17,7 +17,7 @@
                                     class="btn btn-primary btn-sm"
                                     (click)="openModal(content, null)"
                                 >
-                                    <i class="fas fa-plus"></i> Add Main Account
+                                    <i class="fas fa-plus"></i> Add Sub Account
                                 </button>
                             </div>
                         </div>
@@ -27,13 +27,14 @@
                             <thead>
                                 <th>ID</th>
                                 <th>Name</th>
+                                <th>Main Account</th>
                                 <th>Date</th>
                                 <th>Status</th>
                                 <th class="text-right">Action</th>
                             </thead>
                             <tbody>
                                 <tr *ngIf="isLoading">
-                                    <td colspan="5" class="text-center">
+                                    <td colspan="6" class="text-center">
                                         <div class="alert alert-secondary">
                                             <div
                                                 class="spinner-border spinner-border-sm"
@@ -44,38 +45,39 @@
                                                     >Loading...</span
                                                 >
                                             </div>
-                                            Loading Main Accounts...
+                                            Loading Sub Accounts...
                                         </div>
                                     </td>
                                 </tr>
-                                <tr *ngIf="!isLoading && main_accounts.length == 0">
-                                    <td colspan="7" class="text-center">
+                                <tr *ngIf="!isLoading && sub_accounts.length == 0">
+                                    <td colspan="6" class="text-center">
                                         <div class="alert alert-secondary">
                                             <i class="fas fa-ban"></i> No
-                                            <b>Main Accounts</b> Found!
+                                            <b>Sub Accounts</b> Found!
                                         </div>
                                     </td>
                                 </tr>
                                 <tr
                                     *ngFor="
-                                        let main_account of main_accounts;
+                                        let sub_account of sub_accounts;
                                         let i = index
                                     "
                                 >
                                     <td>{{ i + 1 }}</td>
-                                    <td>{{ main_account.name }}</td>
+                                    <td>{{ sub_account.name }}</td>
+                                    <td>{{ sub_account.main_account.name }}</td>
                                     <td>
-                                        {{ formatDate(main_account.created_at) }}
+                                        {{ formatDate(sub_account.created_at) }}
                                     </td>
                                     <td>
                                         <span
                                             class="badge badge-primary btn-pill"
-                                            *ngIf="main_account.status"
+                                            *ngIf="sub_account.status"
                                             >Active</span
                                         >
                                         <span
                                             class="badge badge-secondary btn-pill"
-                                            *ngIf="!main_account.status"
+                                            *ngIf="!sub_account.status"
                                             >In-Active</span
                                         >
                                     </td>
@@ -83,7 +85,7 @@
                                         <button
                                             class="btn btn-primary btn-sm"
                                             (click)="
-                                                openModal(content, main_account)
+                                                openModal(content, sub_account)
                                             "
                                         >
                                             <i class="fas fa-edit"></i> Edit
@@ -101,7 +103,7 @@
 
 <ng-template #content let-modal>
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Add/Edit Blood Group</h4>
+        <h4 class="modal-title" id="modal-basic-title">Add/Edit Sub Account</h4>
         <button
             type="button"
             class="btn-close close"
@@ -112,7 +114,7 @@
         </button>
     </div>
     <div class="modal-body">
-        <form [formGroup]="mainAccountForm" (submit)="addLocation()">
+        <form [formGroup]="subAccountForm" (submit)="addLocation()">
             <input type="hidden" formControlName="id" />
             <div class="mb-3">
                 <label>Name</label>
@@ -122,6 +124,20 @@
                     formControlName="name"
                     s
                 />
+            </div>
+            <div class="mb-3">
+                <label>Main Account</label>
+                <ng-select
+                    [items]="main_accounts"
+                    bindLabel="name"
+                    bindValue="id"
+                    [typeahead]="search$"
+                    [loading]="loading"
+                    [(ngModel)]="selectedOption"
+                    placeholder="Search for Main Account"
+                    (change)="onItemSelect($event)"
+                    formControlName="main_account"
+                ></ng-select>
             </div>
             <div class="mb-3">
                 <label>Status</label>

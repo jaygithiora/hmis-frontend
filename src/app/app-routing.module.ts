@@ -26,6 +26,8 @@ import { DoctorsComponent } from '@pages/dashboard/settings/doctors/doctors.comp
 import { UsersComponent } from '@pages/dashboard/users/users.component';
 import { ConsultationTypesComponent } from '@pages/dashboard/masters/consultation-types/consultation-types.component';
 import { MainAccountsComponent } from '@pages/dashboard/masters/main-accounts/main-accounts.component';
+import { SubAccountsComponent } from '@pages/dashboard/masters/sub-accounts/sub-accounts.component';
+import { AccountsComponent } from '@pages/dashboard/masters/accounts/accounts.component';
 
 const routes: Routes = [
     {
@@ -76,6 +78,14 @@ const routes: Routes = [
             {
                 path: 'masters/main-accounts',
                 component: MainAccountsComponent
+            },
+            {
+                path: 'masters/sub-accounts',
+                component: SubAccountsComponent
+            },
+            {
+                path: 'masters/accounts',
+                component: AccountsComponent
             },
             {
                 path: 'masters/blood-groups',
