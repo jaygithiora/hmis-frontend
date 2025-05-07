@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '@services/auth/auth.service';
 import { AccountsService } from '@services/dashboard/masters/accounts/accounts.service';
 import { MainAccountsService } from '@services/dashboard/masters/main-accounts/main-accounts.service';
@@ -16,6 +16,7 @@ import { Subject, debounceTime, distinctUntilChanged, tap, switchMap } from 'rxj
   styleUrl: './plans.component.scss'
 })
 export class PlansComponent  implements OnInit {
+  modalRef:NgbModalRef;
   public isLoading: boolean = true;
   loading: boolean = false;
 
@@ -82,6 +83,7 @@ export class PlansComponent  implements OnInit {
   }
 
   loadPage(page: number) {
+    this.isLoading = true;
     this.planService.getPlans(page).subscribe((result: any) => {
       this.isLoading = false;
       this.plans = result.plans.data;// Set the items
@@ -96,14 +98,30 @@ export class PlansComponent  implements OnInit {
     });
   }
 
-  openModal(content: TemplateRef<any>, sub_account: any) {
-    this.modalService.open(content, { centered: true , size: 'xl'});
-    if (sub_account != null) {
-      this.planForm.get("id").setValue(sub_account.id);
-      this.planForm.get("name").setValue(sub_account.name);
-      this.accounts.push(sub_account.main_account);
-      this.selectedOption = sub_account.main_account_id
-      this.planForm.get("status").setValue(sub_account.status);
+  openModal(content: TemplateRef<any>, plan: any) {
+    this.modalRef = this.modalService.open(content, { centered: true , size: 'xl'});
+    if (plan != null) {
+      this.planForm.get("id").setValue(plan.id);
+      this.planForm.get("name").setValue(plan.name);
+      this.accounts.push(plan.account);
+      this.selectedOption = plan.account_id;
+      this.planForm.get("plan_type").setValue(plan.plan_type);
+      this.planForm.get("limit_type").setValue(plan.limit_type);
+      this.planForm.get("copay_amount").setValue(plan.copay_amount);
+      this.planForm.get("copay_percentage").setValue(plan.copay_percentage);
+      this.planForm.get("copay_percentage_type").setValue(plan.copay_percentage_type);
+      this.planForm.get("overall_op_limit").setValue(plan.overall_op_limit);
+      this.planForm.get("overall_ip_limit").setValue(plan.overall_ip_limit);
+      this.planForm.get("op_visit_limit").setValue(plan.op_visit_limit);
+      this.planForm.get("ip_visit_limit").setValue(plan.ip_visit_limit);
+      this.planForm.get("pharmacy_limit").setValue(plan.pharmacy_limit);
+      this.planForm.get("lab_limit").setValue(plan.lab_limit);
+      this.planForm.get("radiology_limit").setValue(plan.radiology_limit);
+      this.planForm.get("services_limit").setValue(plan.services_limit);
+      this.planForm.get("start_date").setValue(plan.start_date);
+      this.planForm.get("end_date").setValue(plan.end_date);
+      this.planForm.get("forall").setValue(plan.for_all);
+      this.planForm.get("status").setValue(plan.status);
     } else {
       this.planForm.get("id").setValue(0);
       this.planForm.get("name").setValue("");
@@ -120,6 +138,8 @@ export class PlansComponent  implements OnInit {
       this.planForm.get("lab_limit").setValue("");
       this.planForm.get("radiology_limit").setValue("");
       this.planForm.get("services_limit").setValue("");
+      this.planForm.get("start_date").setValue("");
+      this.planForm.get("end_date").setValue("");
       this.selectedOption = null;
       this.planForm.get("status").setValue(1);
     }
@@ -132,6 +152,7 @@ export class PlansComponent  implements OnInit {
         if (result.success) {
           this.toastr.success(result.success);
           this.loadPage(1);
+          this.modalRef?.close();
         }
       }, error => {
         if (error?.error?.errors?.id) {
@@ -146,6 +167,7 @@ export class PlansComponent  implements OnInit {
         if (error?.error?.message) {
           this.toastr.error(error?.error?.message);
           this.service.logout();
+          this.modalRef?.close();
         }
         this.isLoading = false;
         console.log(error);

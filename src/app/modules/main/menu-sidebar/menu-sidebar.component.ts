@@ -3,6 +3,7 @@ import { UiState } from '@/store/ui/state';
 import { Component, HostBinding, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AuthService } from '@services/auth/auth.service';
+import { title } from 'process';
 import { Observable } from 'rxjs';
 
 const BASE_CLASSES = 'main-sidebar elevation-4';
@@ -111,6 +112,27 @@ export const MENU = [
         iconClasses: 'fas fa-circle icon-small',
         path: ['/dashboard/masters/icds']
       }
+    ]
+  },
+  {
+    name: 'Inventory',
+    iconClasses: 'fas fa-truck-loading',
+    children: [
+      {
+        name: 'Categories',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/inventory/categories']
+      },
+      {
+        name: 'Pack Sizes',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/inventory/pack-sizes']
+      },
+      {
+        name: 'Purchase Types',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/inventory/purchase-types']
+      },
     ]
   },
   {

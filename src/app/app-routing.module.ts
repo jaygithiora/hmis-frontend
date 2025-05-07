@@ -29,6 +29,9 @@ import { MainAccountsComponent } from '@pages/dashboard/masters/main-accounts/ma
 import { SubAccountsComponent } from '@pages/dashboard/masters/sub-accounts/sub-accounts.component';
 import { AccountsComponent } from '@pages/dashboard/masters/accounts/accounts.component';
 import { PlansComponent } from '@pages/dashboard/masters/plans/plans.component';
+import { InventoryCategoriesComponent } from '@pages/dashboard/inventory/inventory-categories/inventory-categories.component';
+import { PackSizesComponent } from '@pages/dashboard/inventory/pack-sizes/pack-sizes.component';
+import { PurchaseTypesComponent } from '@pages/dashboard/inventory/purchase-types/purchase-types.component';
 
 const routes: Routes = [
     {
@@ -103,6 +106,19 @@ const routes: Routes = [
             {
                 path: 'masters/icds',
                 component: IcdsComponent
+            },
+            //inventory
+            {
+                path: 'inventory/categories',
+                component: InventoryCategoriesComponent
+            },
+            {
+                path: 'inventory/pack-sizes',
+                component: PackSizesComponent
+            },
+            {
+                path: 'inventory/purchase-types',
+                component: PurchaseTypesComponent
             },
             //settings
             {

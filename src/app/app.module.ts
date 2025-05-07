@@ -68,6 +68,9 @@ import { MainAccountsComponent } from './pages/dashboard/masters/main-accounts/m
 import { SubAccountsComponent } from './pages/dashboard/masters/sub-accounts/sub-accounts.component';
 import { AccountsComponent } from './pages/dashboard/masters/accounts/accounts.component';
 import { PlansComponent } from './pages/dashboard/masters/plans/plans.component';
+import { InventoryCategoriesComponent } from './pages/dashboard/inventory/inventory-categories/inventory-categories.component';
+import { PackSizesComponent } from './pages/dashboard/inventory/pack-sizes/pack-sizes.component';
+import { PurchaseTypesComponent } from './pages/dashboard/inventory/purchase-types/purchase-types.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -120,7 +123,10 @@ registerLocaleData(localeEn, 'en-EN');
         MainAccountsComponent,
         SubAccountsComponent,
         AccountsComponent,
-        PlansComponent
+        PlansComponent,
+        InventoryCategoriesComponent,
+        PackSizesComponent,
+        PurchaseTypesComponent
     ],
     bootstrap: [AppComponent],
     imports: [

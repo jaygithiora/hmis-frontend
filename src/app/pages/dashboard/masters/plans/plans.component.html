@@ -28,13 +28,16 @@
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Main Account</th>
+                                <th>Plan Type</th>
+                                <th>Copay</th>
+                                <th>Percentage</th>
                                 <th>Date</th>
                                 <th>Status</th>
                                 <th class="text-right">Action</th>
                             </thead>
                             <tbody>
                                 <tr *ngIf="isLoading">
-                                    <td colspan="6" class="text-center">
+                                    <td colspan="9" class="text-center">
                                         <div class="alert alert-secondary">
                                             <div
                                                 class="spinner-border spinner-border-sm"
@@ -50,7 +53,7 @@
                                     </td>
                                 </tr>
                                 <tr *ngIf="!isLoading && plans.length == 0">
-                                    <td colspan="6" class="text-center">
+                                    <td colspan="9" class="text-center">
                                         <div class="alert alert-secondary">
                                             <i class="fas fa-ban"></i> No
                                             <b>Plans</b> Found!
@@ -65,7 +68,10 @@
                                 >
                                     <td>{{ i + 1 }}</td>
                                     <td>{{ plan.name }}</td>
-                                    <td>{{ plan.main_account.name }}</td>
+                                    <td>{{ plan.account.name }}</td>
+                                    <td>{{ plan.plan_type }}</td>
+                                    <td>{{ plan.copay_amount }}</td>
+                                    <td>{{ plan.copay_percentage }}</td>
                                     <td>
                                         {{ formatDate(plan.created_at) }}
                                     </td>
@@ -263,7 +269,7 @@
             <div class="col-sm-6 col-md-4 mb-3">
                 <label>Start Date</label>
                 <input
-                type="number"
+                type="date"
                     class="form-control"
                     placeholder="Start Date"
                     formControlName="start_date"
@@ -272,7 +278,7 @@
             <div class="col-sm-6 col-md-4 mb-3">
                 <label>End Date</label>
                 <input
-                type="number"
+                type="date"
                     class="form-control"
                     placeholder="End Date"
                     formControlName="end_date"
