@@ -66,7 +66,7 @@ export class AccountsComponent implements OnInit {
           debounceTime(300),  // Wait for the user to stop typing for 300ms
           distinctUntilChanged(),  // Only search if the query has changed
           tap(() => this.loadingSubTypes = true),  // Show the loading spinner
-          switchMap(term => this.subTypeService.getSubTypes(1, term,1))  // Switch to a new observable for each search term
+          switchMap(term => this.subTypeService.getSubTypes(1, term,0))  // Switch to a new observable for each search term
         )
         .subscribe(results => {
           this.sub_types = results.sub_types.data;

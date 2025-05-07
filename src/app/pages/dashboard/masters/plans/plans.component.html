@@ -45,39 +45,39 @@
                                                     >Loading...</span
                                                 >
                                             </div>
-                                            Loading Sub Accounts...
+                                            Loading Plans...
                                         </div>
                                     </td>
                                 </tr>
-                                <tr *ngIf="!isLoading && sub_accounts.length == 0">
+                                <tr *ngIf="!isLoading && plans.length == 0">
                                     <td colspan="6" class="text-center">
                                         <div class="alert alert-secondary">
                                             <i class="fas fa-ban"></i> No
-                                            <b>Sub Accounts</b> Found!
+                                            <b>Plans</b> Found!
                                         </div>
                                     </td>
                                 </tr>
                                 <tr
                                     *ngFor="
-                                        let sub_account of sub_accounts;
+                                        let plan of plans;
                                         let i = index
                                     "
                                 >
                                     <td>{{ i + 1 }}</td>
-                                    <td>{{ sub_account.name }}</td>
-                                    <td>{{ sub_account.main_account.name }}</td>
+                                    <td>{{ plan.name }}</td>
+                                    <td>{{ plan.main_account.name }}</td>
                                     <td>
-                                        {{ formatDate(sub_account.created_at) }}
+                                        {{ formatDate(plan.created_at) }}
                                     </td>
                                     <td>
                                         <span
                                             class="badge badge-primary btn-pill"
-                                            *ngIf="sub_account.status"
+                                            *ngIf="plan.status"
                                             >Active</span
                                         >
                                         <span
                                             class="badge badge-secondary btn-pill"
-                                            *ngIf="!sub_account.status"
+                                            *ngIf="!plan.status"
                                             >In-Active</span
                                         >
                                     </td>
@@ -85,7 +85,7 @@
                                         <button
                                             class="btn btn-primary btn-sm"
                                             (click)="
-                                                openModal(content, sub_account)
+                                                openModal(content, plan)
                                             "
                                         >
                                             <i class="fas fa-edit"></i> Edit
@@ -103,7 +103,7 @@
 
 <ng-template #content let-modal>
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Add/Edit Sub Account</h4>
+        <h4 class="modal-title" id="modal-basic-title">Add/Edit Plan</h4>
         <button
             type="button"
             class="btn-close close"
@@ -114,9 +114,9 @@
         </button>
     </div>
     <div class="modal-body">
-        <form [formGroup]="subAccountForm" (submit)="addLocation()">
+        <form [formGroup]="planForm" (submit)="addLocation()" class="row">
             <input type="hidden" formControlName="id" />
-            <div class="mb-3">
+            <div class="col-sm-12 mb-3">
                 <label>Name</label>
                 <input
                     class="form-control"
@@ -125,21 +125,170 @@
                     s
                 />
             </div>
-            <div class="mb-3">
-                <label>Main Account</label>
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>Account</label>
                 <ng-select
-                    [items]="main_accounts"
+                    [items]="accounts"
                     bindLabel="name"
                     bindValue="id"
                     [typeahead]="search$"
                     [loading]="loading"
                     [(ngModel)]="selectedOption"
-                    placeholder="Search for Main Account"
+                    placeholder="Search for Account"
                     (change)="onItemSelect($event)"
-                    formControlName="main_account"
+                    formControlName="account"
                 ></ng-select>
             </div>
-            <div class="mb-3">
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>Plan Type</label>
+                <select
+                    class="form-control custom-select"
+                    formControlName="plan_type"
+                >
+                    <option value="OP+IP">OP+IP</option>
+                    <option value="OP">OP</option>
+                    <option value="IP">IP</option>
+                </select>
+            </div>
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>Limit Type</label>
+                <select
+                    class="form-control custom-select"
+                    formControlName="limit_type"
+                >
+                    <option value="Overall">Overall</option>
+                    <option value="Visit">Visit</option>
+                </select>
+            </div>
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>Copay Amount</label>
+                <input
+                type="number"
+                    class="form-control"
+                    placeholder="Copay Amount"
+                    formControlName="copay_amount"
+                />
+            </div>
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>Copay Percentage</label>
+                <input
+                type="number"
+                    class="form-control"
+                    placeholder="Copay Percentage"
+                    formControlName="copay_percentage"
+                />
+            </div>
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>Copay Percentage Type</label>
+                <select
+                    class="form-control custom-select"
+                    formControlName="copay_percentage_type"
+                >
+                    <option value="All">All</option>
+                    <option value="Visit">Visit</option>
+                </select>
+            </div>
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>Overall OP Limit</label>
+                <input
+                type="number"
+                    class="form-control"
+                    placeholder="Overall OP Limit"
+                    formControlName="overall_op_limit"
+                />
+            </div>
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>Overall IP Limit</label>
+                <input
+                type="number"
+                    class="form-control"
+                    placeholder="Overall IP Limit"
+                    formControlName="overall_ip_limit"
+                />
+            </div>
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>OP Visit Limit</label>
+                <input
+                type="number"
+                    class="form-control"
+                    placeholder="OP Visit Limit"
+                    formControlName="op_visit_limit"
+                />
+            </div>
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>IP Visit Limit</label>
+                <input
+                type="number"
+                    class="form-control"
+                    placeholder="IP Visit Limit"
+                    formControlName="ip_visit_limit"
+                />
+            </div>
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>Pharmacy Limit</label>
+                <input
+                type="number"
+                    class="form-control"
+                    placeholder="Pharmacy Limit"
+                    formControlName="pharmacy_limit"
+                />
+            </div>
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>Lab Limit</label>
+                <input
+                type="number"
+                    class="form-control"
+                    placeholder="Lab Limit"
+                    formControlName="lab_limit"
+                />
+            </div>
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>Radiology Limit</label>
+                <input
+                type="number"
+                    class="form-control"
+                    placeholder="Radiology Limit"
+                    formControlName="radiology_limit"
+                />
+            </div>
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>Services Limit</label>
+                <input
+                type="number"
+                    class="form-control"
+                    placeholder="Services Limit"
+                    formControlName="services_limit"
+                />
+            </div>
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>Start Date</label>
+                <input
+                type="number"
+                    class="form-control"
+                    placeholder="Start Date"
+                    formControlName="start_date"
+                />
+            </div>
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>End Date</label>
+                <input
+                type="number"
+                    class="form-control"
+                    placeholder="End Date"
+                    formControlName="end_date"
+                />
+            </div>
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>For All</label>
+                <select
+                    class="form-control custom-select"
+                    formControlName="forall"
+                >
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+            <div class="col-sm-6 col-md-4 mb-3">
                 <label>Status</label>
                 <select
                     class="form-control custom-select"

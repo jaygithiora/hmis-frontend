@@ -37,7 +37,7 @@ export class MainAccountsComponent  implements OnInit {
   }
 
   loadPage(page: number) {
-    this.isLoading = false;
+    this.isLoading = true;
     this.mainAccountService.getMainAccounts(page).subscribe((result: any) => {
       this.isLoading = false;
       this.main_accounts = result.main_accounts.data;// Set the items
