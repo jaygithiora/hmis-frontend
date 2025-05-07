@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '@services/auth/auth.service';
 import { MainAccountsService } from '@services/dashboard/masters/main-accounts/main-accounts.service';
 import { SubAccountsService } from '@services/dashboard/masters/sub-accounts/sub-accounts.service';
@@ -14,6 +14,7 @@ import { debounceTime, distinctUntilChanged, Subject, switchMap, tap } from 'rxj
   styleUrl: './sub-accounts.component.scss'
 })
 export class SubAccountsComponent implements OnInit {
+  modalRef: NgbModalRef;
   public isLoading: boolean = true;
   loading: boolean = false;
 
@@ -64,6 +65,7 @@ export class SubAccountsComponent implements OnInit {
   }
 
   loadPage(page: number) {
+    this.isLoading = true;
     this.subAccountService.getSubAccounts(page).subscribe((result: any) => {
       this.isLoading = false;
       this.sub_accounts = result.sub_accounts.data;// Set the items
@@ -79,7 +81,7 @@ export class SubAccountsComponent implements OnInit {
   }
 
   openModal(content: TemplateRef<any>, sub_account: any) {
-    this.modalService.open(content, { centered: true });
+    this.modalRef = this.modalService.open(content, { centered: true });
     if (sub_account != null) {
       this.subAccountForm.get("id").setValue(sub_account.id);
       this.subAccountForm.get("name").setValue(sub_account.name);
@@ -101,6 +103,7 @@ export class SubAccountsComponent implements OnInit {
         if (result.success) {
           this.toastr.success(result.success);
           this.loadPage(1);
+          this.modalRef?.close();
         }
       }, error => {
         if (error?.error?.errors?.id) {
@@ -115,6 +118,7 @@ export class SubAccountsComponent implements OnInit {
         if (error?.error?.message) {
           this.toastr.error(error?.error?.message);
           this.service.logout();
+          this.modalRef?.close();
         }
         this.isLoading = false;
         console.log(error);

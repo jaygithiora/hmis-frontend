@@ -114,6 +114,17 @@ export const MENU = [
     ]
   },
   {
+    name: 'Patient Management',
+    iconClasses: 'fas fa-user-injured',
+    children: [
+      {
+        name: 'Patient Registration',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/patients/registration']
+      },
+    ]
+  },
+  {
     name: 'Settings',
     iconClasses: 'fas fa-cog',
     children: [

@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '@services/auth/auth.service';
 import { ConsultationTypesService } from '@services/dashboard/masters/consultation-types/consultation-types.service';
 import { DepartmentsService } from '@services/dashboard/masters/departments/departments.service';
@@ -18,6 +18,7 @@ import { debounceTime, distinctUntilChanged, Subject, switchMap, tap } from 'rxj
   styleUrl: './consultation-types.component.scss'
 })
 export class ConsultationTypesComponent implements OnInit {
+  private modalRef:NgbModalRef;
   public isLoading: boolean = true;
   loadingDepartments: boolean = false;
   loadingMainType: boolean = false;
@@ -142,6 +143,7 @@ export class ConsultationTypesComponent implements OnInit {
   }
 
   loadPage(page: number) {
+    this.isLoading = true;
     this.consultationTypesService.getConsultationTypes(page).subscribe((result: any) => {
       this.isLoading = false;
       this.consultation_types = result.consultation_types.data;// Set the items
@@ -157,7 +159,7 @@ export class ConsultationTypesComponent implements OnInit {
   }
 
   openModal(content: TemplateRef<any>, consultation_type: any) {
-    this.modalService.open(content, { centered: true });
+    this.modalRef =  this.modalService.open(content, { centered: true });
     if (consultation_type != null) {
       this.consultationTypesForm.get("id").setValue(consultation_type.id);
       this.consultationTypesForm.get("name").setValue(consultation_type.name);
@@ -184,7 +186,7 @@ export class ConsultationTypesComponent implements OnInit {
       this.consultationTypesForm.get("consultation_fees").setValue(consultation_type.consultation_fees);
       this.consultationTypesForm.get("status").setValue(consultation_type.status);
     } else {
-      this.consultationTypesForm.get("id").setValue(0);  
+      this.consultationTypesForm.get("id").setValue(0);
       this.consultationTypesForm.get("name").setValue("");
       this.selectedDepartmentOption = null;
       this.selectedMainTypeOption = null;
@@ -203,6 +205,7 @@ export class ConsultationTypesComponent implements OnInit {
         if (result.success) {
           this.toastr.success(result.success);
           this.loadPage(1);
+          this.modalRef?.close();
         }
       }, error => {
         if (error?.error?.errors?.id) {
@@ -220,10 +223,7 @@ export class ConsultationTypesComponent implements OnInit {
         if (error?.error?.message) {
           this.toastr.error(error?.error?.message);
           this.service.logout();
-        }
-        if (error?.error?.message) {
-          this.toastr.error(error?.error?.message);
-          this.service.logout();
+          this.modalRef?.close();
         }
         this.isLoading = false;
         console.log(error);

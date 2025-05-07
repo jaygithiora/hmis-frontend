@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '@services/auth/auth.service';
 import { IcdsService } from '@services/dashboard/masters/icds/icds.service';
 import moment from 'moment';
@@ -12,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './icds.component.scss'
 })
 export class IcdsComponent implements OnInit {
+  modalRef:NgbModalRef;
   public isLoading: boolean = true;
   icdForm!: FormGroup;
 
@@ -38,6 +39,7 @@ export class IcdsComponent implements OnInit {
   }
 
   loadPage(page: number) {
+    this.isLoading = true;
     this.icdService.getICDs(page).subscribe((result: any) => {
       this.isLoading = false;
       this.icds = result.icds.data;// Set the items
@@ -53,7 +55,7 @@ export class IcdsComponent implements OnInit {
   }
 
   openModal(content: TemplateRef<any>, icd: any) {
-    this.modalService.open(content, { centered: true });
+    this.modalRef = this.modalService.open(content, { centered: true });
     if (icd != null) {
       this.icdForm.get("id").setValue(icd.id);
       this.icdForm.get("icd_name").setValue(icd.name);
@@ -78,6 +80,7 @@ export class IcdsComponent implements OnInit {
         if (result.success) {
           this.toastr.success(result.success);
           this.loadPage(1);
+          this.modalRef?.close();
         }
       }, error => {
         if (error?.error?.errors?.id) {
@@ -98,10 +101,7 @@ export class IcdsComponent implements OnInit {
         if (error?.error?.message) {
           this.toastr.error(error?.error?.message);
           this.service.logout();
-        }
-        if (error?.error?.message) {
-          this.toastr.error(error?.error?.message);
-          this.service.logout();
+          this.modalRef?.close();
         }
         this.isLoading = false;
         console.log(error);

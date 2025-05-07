@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '@services/auth/auth.service';
 import { AccountsService } from '@services/dashboard/masters/accounts/accounts.service';
 import { SubAccountsService } from '@services/dashboard/masters/sub-accounts/sub-accounts.service';
@@ -15,6 +15,7 @@ import { debounceTime, distinctUntilChanged, Subject, switchMap, tap } from 'rxj
   styleUrl: './accounts.component.scss'
 })
 export class AccountsComponent implements OnInit {
+  private modalRef:NgbModalRef;
   public isLoading: boolean = true;
   loading: boolean = false;
   loadingSubTypes: boolean = false;
@@ -81,6 +82,7 @@ export class AccountsComponent implements OnInit {
   }
 
   loadPage(page: number) {
+    this.isLoading = true;
     this.accountService.getAccounts(page).subscribe((result: any) => {
       this.isLoading = false;
       this.accounts = result.accounts.data;// Set the items
@@ -96,8 +98,10 @@ export class AccountsComponent implements OnInit {
   }
 
   openModal(content: TemplateRef<any>, account: any) {
-    this.modalService.open(content, { centered: true });
+    this.modalRef = this.modalService.open(content, { centered: true });
     if (account != null) {
+      this.sub_types =[];
+      this.sub_accounts = [];
       this.accountsForm.get("id").setValue(account.id);
       this.accountsForm.get("name").setValue(account.name);
       this.sub_accounts.push(account.sub_account);
@@ -122,6 +126,7 @@ export class AccountsComponent implements OnInit {
         if (result.success) {
           this.toastr.success(result.success);
           this.loadPage(1);
+          this.modalRef?.close();
         }
       }, error => {
         if (error?.error?.errors?.id) {
@@ -142,6 +147,7 @@ export class AccountsComponent implements OnInit {
         if (error?.error?.message) {
           this.toastr.error(error?.error?.message);
           this.service.logout();
+          this.modalRef?.close();
         }
         this.isLoading = false;
         console.log(error);

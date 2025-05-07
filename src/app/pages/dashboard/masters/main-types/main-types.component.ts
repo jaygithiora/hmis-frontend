@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '@services/auth/auth.service';
 import { MainTypesService } from '@services/dashboard/masters/manin-types/main-types.service';
 import moment from 'moment';
@@ -12,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './main-types.component.scss'
 })
 export class MainTypesComponent implements OnInit {
+  private modalRef: NgbModalRef;
   public isLoading: boolean = true;
   mainTypeForm!: FormGroup;
 
@@ -36,6 +37,7 @@ export class MainTypesComponent implements OnInit {
   }
 
   loadPage(page: number) {
+    this.isLoading = true;
     this.masterTypeService.getMainTypes(page).subscribe((result: any) => {
       this.isLoading = false;
       this.main_types = result.main_types.data;// Set the items
@@ -51,7 +53,7 @@ export class MainTypesComponent implements OnInit {
   }
 
   openModal(content: TemplateRef<any>, main_type: any) {
-    this.modalService.open(content, { centered: true });
+    this.modalRef = this.modalService.open(content, { centered: true });
     if (main_type != null) {
       this.mainTypeForm.get("id").setValue(main_type.id);
       this.mainTypeForm.get("name").setValue(main_type.name);
@@ -72,6 +74,7 @@ export class MainTypesComponent implements OnInit {
         if (result.success) {
           this.toastr.success(result.success);
           this.loadPage(1);
+          this.modalRef?.close();
         }
       }, error => {
         if(error?.error?.errors?.id){
@@ -89,6 +92,7 @@ export class MainTypesComponent implements OnInit {
         if (error?.error?.message) {
           this.toastr.error(error?.error?.message);
           this.service.logout();
+          this.modalRef?.close();
         }
         if (error?.error?.message) {
           this.toastr.error(error?.error?.message);

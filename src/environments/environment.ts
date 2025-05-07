@@ -3,5 +3,5 @@ export const environment = {
   GA_ID: null,
   FIREBASE_CONFIG: null,
   production:false,
-  apiBaseUrl: 'http://localhost:8003'
+  apiBaseUrl: 'http://localhost:8000'
 };

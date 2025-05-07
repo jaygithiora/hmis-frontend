@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '@services/auth/auth.service';
 import { DepartmentsService } from '@services/dashboard/masters/departments/departments.service';
 import { LocationsService } from '@services/dashboard/masters/locations.service';
@@ -16,6 +16,7 @@ import { debounceTime, distinctUntilChanged, Subject, switchMap, tap } from 'rxj
   styleUrl: './doctors.component.scss'
 })
 export class DoctorsComponent implements OnInit {
+  private modalRef: NgbModalRef;
   public isLoading: boolean = true;
   loadingDepartments: boolean = false;
   loadingUsers: boolean = false;
@@ -106,6 +107,7 @@ export class DoctorsComponent implements OnInit {
   }
 
   loadPage(page: number) {
+    this.isLoading = true;
     this.doctorService.getDoctors(page).subscribe((result: any) => {
       this.isLoading = false;
       this.doctors = result.doctors.data;// Set the items
@@ -121,8 +123,11 @@ export class DoctorsComponent implements OnInit {
   }
 
   openModal(content: TemplateRef<any>, doctor: any) {
-    this.modalService.open(content, { centered: true });
+    this.modalRef = this.modalService.open(content, { centered: true });
     if (doctor != null) {
+      this.departments = [];
+      this.users = [];
+      this.locations = [];
       this.doctorsForm.get("id").setValue(doctor.id);
       this.doctorsForm.get("name").setValue(doctor.name);
       if (doctor.department_id != null) {
@@ -159,6 +164,7 @@ export class DoctorsComponent implements OnInit {
         if (result.success) {
           this.toastr.success(result.success);
           this.loadPage(1);
+          this.modalRef?.close();
         }
       }, error => {
         if (error?.error?.errors?.id) {
@@ -176,10 +182,7 @@ export class DoctorsComponent implements OnInit {
         if (error?.error?.message) {
           this.toastr.error(error?.error?.message);
           this.service.logout();
-        }
-        if (error?.error?.message) {
-          this.toastr.error(error?.error?.message);
-          this.service.logout();
+          this.modalRef?.close();
         }
         this.isLoading = false;
         console.log(error);

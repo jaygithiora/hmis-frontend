@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '@services/auth/auth.service';
 import { MainTypesService } from '@services/dashboard/masters/manin-types/main-types.service';
 import { SubTypesService } from '@services/dashboard/masters/sub-types/sub-types.service';
@@ -14,6 +14,7 @@ import { debounceTime, distinctUntilChanged, Subject, switchMap, tap } from 'rxj
   styleUrl: './sub-types.component.scss'
 })
 export class SubTypesComponent implements OnInit {
+  private modalRef: NgbModalRef;
   public isLoading: boolean = true;
   loading: boolean = false;
   subtypeForm!: FormGroup;
@@ -63,6 +64,7 @@ export class SubTypesComponent implements OnInit {
   }
 
   loadPage(page: number) {
+    this.isLoading = true;
     this.subtypeService.getSubTypes(page, "", 0).subscribe((result: any) => {
       this.isLoading = false;
       this.sub_types = result.sub_types.data;// Set the items
@@ -78,7 +80,7 @@ export class SubTypesComponent implements OnInit {
   }
 
   openModal(content: TemplateRef<any>, sub_type: any) {
-    this.modalService.open(content, { centered: true });
+    this.modalRef = this.modalService.open(content, { centered: true });
     if (sub_type != null) {
       this.subtypeForm.get("id").setValue(sub_type.id);
       this.subtypeForm.get("name").setValue(sub_type.name);
@@ -102,6 +104,7 @@ export class SubTypesComponent implements OnInit {
         if (result.success) {
           this.toastr.success(result.success);
           this.loadPage(1);
+          this.modalRef?.close();
         }
       }, error => {
         if (error?.error?.errors?.id) {
@@ -119,10 +122,7 @@ export class SubTypesComponent implements OnInit {
         if (error?.error?.message) {
           this.toastr.error(error?.error?.message);
           this.service.logout();
-        }
-        if (error?.error?.message) {
-          this.toastr.error(error?.error?.message);
-          this.service.logout();
+          this.modalRef?.close();
         }
         this.isLoading = false;
         console.log(error);

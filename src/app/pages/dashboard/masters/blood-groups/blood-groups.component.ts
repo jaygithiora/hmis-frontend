@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '@services/auth/auth.service';
 import { BloodGroupsService } from '@services/dashboard/masters/blood-groups/blood-groups.service';
 import moment from 'moment';
@@ -12,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './blood-groups.component.scss'
 })
 export class BloodGroupsComponent  implements OnInit {
+  modalRef:NgbModalRef;
   public isLoading: boolean = true;
   bloodGroupForm!: FormGroup;
 
@@ -36,6 +37,7 @@ export class BloodGroupsComponent  implements OnInit {
   }
 
   loadPage(page: number) {
+    this.isLoading = true;
     this.bloodGroupService.getBloodGroups(page).subscribe((result: any) => {
       this.isLoading = false;
       this.blood_groups = result.blood_groups.data;// Set the items
@@ -51,7 +53,7 @@ export class BloodGroupsComponent  implements OnInit {
   }
 
   openModal(content: TemplateRef<any>, blood_group: any) {
-    this.modalService.open(content, { centered: true });
+    this.modalRef = this.modalService.open(content, { centered: true });
     if (blood_group != null) {
       this.bloodGroupForm.get("id").setValue(blood_group.id);
       this.bloodGroupForm.get("name").setValue(blood_group.name);
@@ -72,6 +74,7 @@ export class BloodGroupsComponent  implements OnInit {
         if (result.success) {
           this.toastr.success(result.success);
           this.loadPage(1);
+          this.modalRef?.close();
         }
       }, error => {
         if(error?.error?.errors?.id){
@@ -86,10 +89,7 @@ export class BloodGroupsComponent  implements OnInit {
         if (error?.error?.message) {
           this.toastr.error(error?.error?.message);
           this.service.logout();
-        }
-        if (error?.error?.message) {
-          this.toastr.error(error?.error?.message);
-          this.service.logout();
+          this.modalRef?.close();
         }
         this.isLoading = false;
         console.log(error);

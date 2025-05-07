@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '@services/auth/auth.service';
 import { LocationsService } from '@services/dashboard/masters/locations.service';
 import moment from 'moment';
@@ -12,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './locations.component.scss',
 })
 export class LocationsComponent implements OnInit {
+  private modalRef: NgbModalRef;
   public isLoading: boolean = true;
   locationForm!: FormGroup;
 
@@ -36,6 +37,7 @@ export class LocationsComponent implements OnInit {
   }
 
   loadPage(page: number) {
+    this.isLoading = true;
     this.locationService.getLocations(page).subscribe((result: any) => {
       this.isLoading = false;
       this.locations = result.locations.data;// Set the items
@@ -51,7 +53,7 @@ export class LocationsComponent implements OnInit {
   }
 
   openModal(content: TemplateRef<any>, location: any) {
-    this.modalService.open(content, { centered: true });
+    this.modalRef = this.modalService.open(content, { centered: true });
     if (location != null) {
       this.locationForm.get("id").setValue(location.id);
       this.locationForm.get("name").setValue(location.name);
@@ -68,11 +70,12 @@ export class LocationsComponent implements OnInit {
     if (this.locationForm.valid) {
       this.isLoading = true;
       this.locationService.addLocation(this.locationForm.getRawValue()).subscribe((result: any) => {
-        
+
         this.isLoading = false;
         if (result.success) {
           this.toastr.success(result.success);
           this.loadPage(1);
+          this.modalRef?.close();
         }
       }, error => {
         if(error?.error?.errors?.code){
@@ -90,10 +93,7 @@ export class LocationsComponent implements OnInit {
         if (error?.error?.message) {
           this.toastr.error(error?.error?.message);
           this.service.logout();
-        }
-        if (error?.error?.message) {
-          this.toastr.error(error?.error?.message);
-          this.service.logout();
+          this.modalRef?.close();
         }
         this.isLoading = false;
         console.log(error);

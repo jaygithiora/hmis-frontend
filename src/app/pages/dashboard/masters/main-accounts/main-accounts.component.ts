@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '@services/auth/auth.service';
 import { BloodGroupsService } from '@services/dashboard/masters/blood-groups/blood-groups.service';
 import { MainAccountsService } from '@services/dashboard/masters/main-accounts/main-accounts.service';
@@ -13,6 +13,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './main-accounts.component.scss'
 })
 export class MainAccountsComponent  implements OnInit {
+  modalRef:NgbModalRef;
   public isLoading: boolean = true;
   mainAccountForm!: FormGroup;
 
@@ -36,6 +37,7 @@ export class MainAccountsComponent  implements OnInit {
   }
 
   loadPage(page: number) {
+    this.isLoading = false;
     this.mainAccountService.getMainAccounts(page).subscribe((result: any) => {
       this.isLoading = false;
       this.main_accounts = result.main_accounts.data;// Set the items
@@ -51,7 +53,7 @@ export class MainAccountsComponent  implements OnInit {
   }
 
   openModal(content: TemplateRef<any>, blood_group: any) {
-    this.modalService.open(content, { centered: true });
+    this.modalRef = this.modalService.open(content, { centered: true });
     if (blood_group != null) {
       this.mainAccountForm.get("id").setValue(blood_group.id);
       this.mainAccountForm.get("name").setValue(blood_group.name);
@@ -70,6 +72,7 @@ export class MainAccountsComponent  implements OnInit {
         if (result.success) {
           this.toastr.success(result.success);
           this.loadPage(1);
+          this.modalRef?.close();
         }
       }, error => {
         if(error?.error?.errors?.id){
@@ -84,6 +87,7 @@ export class MainAccountsComponent  implements OnInit {
         if (error?.error?.message) {
           this.toastr.error(error?.error?.message);
           this.service.logout();
+          this.modalRef?.close();
         }
         this.isLoading = false;
         console.log(error);

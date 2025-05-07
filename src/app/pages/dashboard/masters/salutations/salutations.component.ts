@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '@services/auth/auth.service';
 import { SalutationService } from '@services/dashboard/masters/salutation/salutation.service';
 import moment from 'moment';
@@ -12,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './salutations.component.scss'
 })
 export class SalutationsComponent implements OnInit {
+  private modalRef:NgbModalRef;
   public isLoading: boolean = true;
   salutationForm!: FormGroup;
 
@@ -37,6 +38,7 @@ export class SalutationsComponent implements OnInit {
   }
 
   loadPage(page: number) {
+    this.isLoading = true;
     this.salutationsService.getSalutations(page).subscribe((result: any) => {
       this.isLoading = false;
       this.salutations = result.salutations.data;// Set the items
@@ -52,7 +54,7 @@ export class SalutationsComponent implements OnInit {
   }
 
   openModal(content: TemplateRef<any>, main_type: any) {
-    this.modalService.open(content, { centered: true });
+    this.modalRef = this.modalService.open(content, { centered: true });
     if (main_type != null) {
       this.salutationForm.get("id").setValue(main_type.id);
       this.salutationForm.get("name").setValue(main_type.name);
@@ -75,6 +77,7 @@ export class SalutationsComponent implements OnInit {
         if (result.success) {
           this.toastr.success(result.success);
           this.loadPage(1);
+          this.modalRef?.close();
         }
       }, error => {
         if(error?.error?.errors?.id){
@@ -92,10 +95,7 @@ export class SalutationsComponent implements OnInit {
         if (error?.error?.message) {
           this.toastr.error(error?.error?.message);
           this.service.logout();
-        }
-        if (error?.error?.message) {
-          this.toastr.error(error?.error?.message);
-          this.service.logout();
+          this.modalRef?.close();
         }
         this.isLoading = false;
         console.log(error);

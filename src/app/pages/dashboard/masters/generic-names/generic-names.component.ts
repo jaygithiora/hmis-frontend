@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '@services/auth/auth.service';
 import { GenericNameService } from '@services/dashboard/masters/generic-names/generic-name.service';
 import moment from 'moment';
@@ -12,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './generic-names.component.scss'
 })
 export class GenericNamesComponent  implements OnInit {
+  modalRef:NgbModalRef;
   public isLoading: boolean = true;
   genericNameForm!: FormGroup;
 
@@ -36,6 +37,7 @@ export class GenericNamesComponent  implements OnInit {
   }
 
   loadPage(page: number) {
+    this.isLoading = true;
     this.genericNameService.getGenericNames(page).subscribe((result: any) => {
       this.isLoading = false;
       this.generic_names = result.generic_names.data;// Set the items
@@ -51,7 +53,7 @@ export class GenericNamesComponent  implements OnInit {
   }
 
   openModal(content: TemplateRef<any>, main_type: any) {
-    this.modalService.open(content, { centered: true });
+    this.modalRef = this.modalService.open(content, { centered: true });
     if (main_type != null) {
       this.genericNameForm.get("id").setValue(main_type.id);
       this.genericNameForm.get("name").setValue(main_type.name);
@@ -89,10 +91,7 @@ export class GenericNamesComponent  implements OnInit {
         if (error?.error?.message) {
           this.toastr.error(error?.error?.message);
           this.service.logout();
-        }
-        if (error?.error?.message) {
-          this.toastr.error(error?.error?.message);
-          this.service.logout();
+          this.modalRef?.close();
         }
         this.isLoading = false;
         console.log(error);

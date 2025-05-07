@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '@services/auth/auth.service';
 import { RolesService } from '@services/dashboard/users/roles.service';
 import { UsersService } from '@services/dashboard/users/users.service';
@@ -14,6 +14,7 @@ import { debounceTime, distinctUntilChanged, Subject, switchMap, tap } from 'rxj
   styleUrl: './users.component.scss'
 })
 export class UsersComponent implements OnInit {
+  private modalRef:NgbModalRef;
   public isLoading: boolean = true;
   loading: boolean = false;
   usersForm!: FormGroup;
@@ -67,6 +68,7 @@ export class UsersComponent implements OnInit {
   }
 
   loadPage(page: number) {
+    this.isLoading = true;
     this.userService.getUsers(page).subscribe((result: any) => {
       this.isLoading = false;
       this.users = result.users.data;// Set the items
@@ -82,7 +84,7 @@ export class UsersComponent implements OnInit {
   }
 
   openModal(content: TemplateRef<any>, user: any) {
-    this.modalService.open(content, { centered: true });
+    this.modalRef = this.modalService.open(content, { centered: true });
     if (user != null) {
       this.usersForm.get("id").setValue(user.id);
       this.usersForm.get("firstname").setValue(user.firstname);
@@ -109,6 +111,7 @@ export class UsersComponent implements OnInit {
         if (result.success) {
           this.toastr.success(result.success);
           this.loadPage(1);
+          this.modalRef?.close();
         }
       }, error => {
         if (error?.error?.errors?.id) {
@@ -129,10 +132,7 @@ export class UsersComponent implements OnInit {
         if (error?.error?.message) {
           this.toastr.error(error?.error?.message);
           this.service.logout();
-        }
-        if (error?.error?.message) {
-          this.toastr.error(error?.error?.message);
-          this.service.logout();
+          this.modalRef?.close();
         }
         this.isLoading = false;
         console.log(error);
