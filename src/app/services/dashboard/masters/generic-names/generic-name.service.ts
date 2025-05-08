@@ -9,8 +9,8 @@ import { Observable } from 'rxjs';
 export class GenericNameService {
   constructor(private http: HttpClient, @Inject(API_BASE_URL) private baseUrl: string) { }
   
-    getGenericNames(page: number = 1): Observable<any> {
-      return this.http.get(`${this.baseUrl}/api/dashboard/masters/generic-names?page=${page}`);
+    getGenericNames(page: number = 1, search:string=""): Observable<any> {
+      return this.http.get(`${this.baseUrl}/api/dashboard/masters/generic-names?page=${page}&search=${search}`);
     }
     updateGenericNames(inputData: any) {
       return this.http.post(`${this.baseUrl}/api/dashboard/masters/generic-names/add`, inputData);

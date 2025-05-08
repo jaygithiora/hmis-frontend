@@ -35,6 +35,7 @@ import { PurchaseTypesComponent } from '@pages/dashboard/inventory/purchase-type
 import { ProductTypesComponent } from '@pages/dashboard/inventory/product-types/product-types.component';
 import { DrugInstructionsComponent } from '@pages/dashboard/inventory/drug-instructions/drug-instructions.component';
 import { DoseMeasuresComponent } from '@pages/dashboard/inventory/dose-measures/dose-measures.component';
+import { ProductsComponent } from '@pages/dashboard/inventory/products/products.component';
 
 const routes: Routes = [
     {
@@ -134,6 +135,10 @@ const routes: Routes = [
             {
                 path: 'inventory/dose-measures',
                 component: DoseMeasuresComponent
+            },
+            {
+                path: 'inventory/products',
+                component: ProductsComponent
             },
             //settings
             {

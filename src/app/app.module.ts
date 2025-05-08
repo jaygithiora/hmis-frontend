@@ -74,6 +74,7 @@ import { PurchaseTypesComponent } from './pages/dashboard/inventory/purchase-typ
 import { ProductTypesComponent } from './pages/dashboard/inventory/product-types/product-types.component';
 import { DrugInstructionsComponent } from './pages/dashboard/inventory/drug-instructions/drug-instructions.component';
 import { DoseMeasuresComponent } from './pages/dashboard/inventory/dose-measures/dose-measures.component';
+import { ProductsComponent } from './pages/dashboard/inventory/products/products.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -132,7 +133,8 @@ registerLocaleData(localeEn, 'en-EN');
         PurchaseTypesComponent,
         ProductTypesComponent,
         DrugInstructionsComponent,
-        DoseMeasuresComponent
+        DoseMeasuresComponent,
+        ProductsComponent
     ],
     bootstrap: [AppComponent],
     imports: [

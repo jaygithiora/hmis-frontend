@@ -1,0 +1,314 @@
+<app-content-header [title]="'Products'"></app-content-header>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col">
+                                <h6>
+                                    <i class="fas fa-capsules"></i>
+                                    Products
+                                </h6>
+                            </div>
+                            <div class="col text-right">
+                                <button
+                                    class="btn btn-primary btn-sm"
+                                    (click)="openModal(content, null)"
+                                >
+                                    <i class="fas fa-plus"></i> Add Product
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <th>ID</th>
+                                    <th>Product Code</th>
+                                    <th>Product Name</th>
+                                    <th>Category</th>
+                                    <th>Pack Size</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th class="text-right">Action</th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngIf="isLoading">
+                                        <td colspan="10" class="text-center">
+                                            <div class="alert alert-secondary">
+                                                <div
+                                                    class="spinner-border spinner-border-sm"
+                                                    role="status"
+                                                    *ngIf="isLoading"
+                                                >
+                                                    <span class="sr-only"
+                                                        >Loading...</span
+                                                    >
+                                                </div>
+                                                Loading Consultation Types...
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr
+                                        *ngIf="
+                                            !isLoading && products.length == 0
+                                        "
+                                    >
+                                        <td colspan="10" class="text-center">
+                                            <div class="alert alert-secondary">
+                                                <i class="fas fa-ban"></i> No
+                                                <b>consultation Types Found!</b>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr
+                                        *ngFor="
+                                            let product of products;
+                                            let i = index
+                                        "
+                                    >
+                                        <td>{{ i + 1 }}</td>
+                                        <td>{{ product.code }}</td>
+                                        <td>{{ product.name }}</td>
+                                        <td>
+                                            {{ product.inventory_category?.name }}
+                                        </td>
+                                        <td>{{ product.pack_size.name }}</td>
+                                        <td>
+                                            {{ formatDate(product.created_at) }}
+                                        </td>
+                                        <td>
+                                            <span
+                                                class="badge badge-primary btn-pill"
+                                                *ngIf="product.status"
+                                                >Active</span
+                                            >
+                                            <span
+                                                class="badge badge-secondary btn-pill"
+                                                *ngIf="!product.status"
+                                                >In-Active</span
+                                            >
+                                        </td>
+                                        <td class="text-right">
+                                            <button
+                                                class="btn btn-primary btn-sm"
+                                                (click)="
+                                                    openModal(content, product)
+                                                "
+                                            >
+                                                <i class="fas fa-edit"></i> Edit
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Add/Edit Product</h4>
+        <button
+            type="button"
+            class="btn-close close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="productInventoryForm" (submit)="addLocation()" class="row">
+            <input type="hidden" formControlName="id" />
+            <div class="col-sm-12 mb-3">
+                <label>Name</label>
+                <input
+                    class="form-control"
+                    placeholder="Name"
+                    formControlName="name"
+                />
+            </div>
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>Inventory Category</label>
+                <ng-select
+                    [items]="inventory_categories"
+                    bindLabel="name"
+                    bindValue="id"
+                    [typeahead]="searchInventoryCategories$"
+                    [loading]="loadingInventoryCategory"
+                    [(ngModel)]="selectedInventoryCategoryOption"
+                    placeholder="Search for inventory category"
+                    (change)="onItemSelect($event)"
+                    formControlName="inventory_category"
+                ></ng-select>
+            </div>
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>Generic Name</label>
+                <ng-select
+                    [items]="generic_names"
+                    bindLabel="name"
+                    bindValue="id"
+                    [typeahead]="searchGenericNames$"
+                    [loading]="loadingGenericNames"
+                    [(ngModel)]="selectedGenericNameOption"
+                    placeholder="Search for Generic Name"
+                    (change)="onItemSelect($event)"
+                    formControlName="generic_name"
+                ></ng-select>
+            </div>
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>Formula</label>
+                <select
+                    class="form-control custom-select"
+                    formControlName="formula"
+                >
+                    <option value="Constant">Constant</option>
+                    <option value="Fixed">Fixed</option>
+                    <option value="Increment">Increment</option>
+                </select>
+            </div>
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>Reorder Level</label>
+                <input type="number"
+                    class="form-control"
+                    placeholder="Reorder Level"
+                    formControlName="reorder_level"
+                />
+            </div>
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>Pack Size</label>
+                <ng-select
+                    [items]="pack_sizes"
+                    bindLabel="name"
+                    bindValue="id"
+                    [typeahead]="searchPackSizes$"
+                    [loading]="loadingPackSizes"
+                    [(ngModel)]="selectedPackSizeOption"
+                    placeholder="Search for Pack Sizes"
+                    (change)="onItemSelect($event)"
+                    formControlName="pack_size"
+                ></ng-select>
+            </div>
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>Volume (for CONSTANT item)</label>
+                <input type="number"
+                    class="form-control"
+                    placeholder="Volume (for CONSTANT item)"
+                    formControlName="volume"
+                />
+            </div>
+            
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>Purchase Type</label>
+                <ng-select
+                    [items]="purchase_types"
+                    bindLabel="name"
+                    bindValue="id"
+                    [typeahead]="searchPurchaseType$"
+                    [loading]="loadingPurchaseTypes"
+                    [(ngModel)]="selectedPurchaseTypeOption"
+                    placeholder="Search for Purchase Types"
+                    (change)="onItemSelect($event)"
+                    formControlName="purchase_type"
+                ></ng-select>
+            </div>
+            
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>Product Type</label>
+                <ng-select
+                    [items]="product_types"
+                    bindLabel="name"
+                    bindValue="id"
+                    [typeahead]="searchProductType$"
+                    [loading]="loadingProductTypes"
+                    [(ngModel)]="selectedProductTypeOption"
+                    placeholder="Search for Product Types"
+                    (change)="onItemSelect($event)"
+                    formControlName="product_type"
+                ></ng-select>
+            </div>
+            
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>Drug Instructions</label>
+                <ng-select
+                    [items]="drug_instructions"
+                    bindLabel="name"
+                    bindValue="id"
+                    [typeahead]="searchDrugInstructions$"
+                    [loading]="loadingDrugInstructions"
+                    [(ngModel)]="selectedDrugInstructionOption"
+                    placeholder="Search for Drug Instruction"
+                    (change)="onItemSelect($event)"
+                    formControlName="drug_instruction"
+                ></ng-select>
+            </div>
+            
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>Dose Measure</label>
+                <ng-select
+                    [items]="dose_measures"
+                    bindLabel="name"
+                    bindValue="id"
+                    [typeahead]="searchDoseMeasure$"
+                    [loading]="loadingDoseMeasures"
+                    [(ngModel)]="selectedDoseMeasureOption"
+                    placeholder="Search for Dose Measure"
+                    (change)="onItemSelect($event)"
+                    formControlName="dose_measure"
+                ></ng-select>
+            </div>
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>Transfer Type</label>
+                <select
+                    class="form-control custom-select"
+                    formControlName="transfer_type"
+                >
+                    <option value="Transfer">Transfer</option>
+                    <option value="Consumable">Consumable</option>
+                </select>
+            </div>
+            <div class="col-sm-6 col-md-4 mb-3">
+                <label>Status</label>
+                <select
+                    class="form-control custom-select"
+                    formControlName="status"
+                >
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
+                </select>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="modal.close('Save click')"
+        >
+            Close
+        </button>
+        <button
+            type="button"
+            class="btn btn-primary"
+            [disabled]="isLoading"
+            (click)="addLocation()"
+        >
+            <div
+                class="spinner-border spinner-border-sm"
+                role="status"
+                *ngIf="isLoading"
+            >
+                <span class="sr-only">Loading...</span>
+            </div>
+            Save Changes
+        </button>
+    </div>
+</ng-template>

@@ -27,13 +27,14 @@
                             <thead>
                                 <th>ID</th>
                                 <th>Name</th>
+                                <th>Items</th>
                                 <th>Date</th>
                                 <th>Status</th>
                                 <th class="text-right">Action</th>
                             </thead>
                             <tbody>
                                 <tr *ngIf="isLoading">
-                                    <td colspan="5" class="text-center">
+                                    <td colspan="6" class="text-center">
                                         <div class="alert alert-secondary">
                                             <div
                                                 class="spinner-border spinner-border-sm"
@@ -49,7 +50,7 @@
                                     </td>
                                 </tr>
                                 <tr *ngIf="!isLoading && pack_sizes.length == 0">
-                                    <td colspan="5" class="text-center">
+                                    <td colspan="6" class="text-center">
                                         <div class="alert alert-secondary">
                                             <i class="fas fa-ban"></i> No
                                             <b>Pack Sizes</b> Found!
@@ -64,6 +65,7 @@
                                 >
                                     <td>{{ i + 1 }}</td>
                                     <td>{{ pack_size.name }}</td>
+                                    <td>{{ pack_size.items }}</td>
                                     <td>
                                         {{ formatDate(pack_size.created_at) }}
                                     </td>

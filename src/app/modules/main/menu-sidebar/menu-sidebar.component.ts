@@ -148,6 +148,11 @@ export const MENU = [
         iconClasses: 'fas fa-circle icon-small',
         path: ['/dashboard/inventory/dose-measures']
       },
+      {
+        name: 'Products',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/inventory/products']
+      },
     ]
   },
   {
