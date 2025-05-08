@@ -71,6 +71,9 @@ import { PlansComponent } from './pages/dashboard/masters/plans/plans.component'
 import { InventoryCategoriesComponent } from './pages/dashboard/inventory/inventory-categories/inventory-categories.component';
 import { PackSizesComponent } from './pages/dashboard/inventory/pack-sizes/pack-sizes.component';
 import { PurchaseTypesComponent } from './pages/dashboard/inventory/purchase-types/purchase-types.component';
+import { ProductTypesComponent } from './pages/dashboard/inventory/product-types/product-types.component';
+import { DrugInstructionsComponent } from './pages/dashboard/inventory/drug-instructions/drug-instructions.component';
+import { DoseMeasuresComponent } from './pages/dashboard/inventory/dose-measures/dose-measures.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -126,7 +129,10 @@ registerLocaleData(localeEn, 'en-EN');
         PlansComponent,
         InventoryCategoriesComponent,
         PackSizesComponent,
-        PurchaseTypesComponent
+        PurchaseTypesComponent,
+        ProductTypesComponent,
+        DrugInstructionsComponent,
+        DoseMeasuresComponent
     ],
     bootstrap: [AppComponent],
     imports: [

@@ -32,6 +32,9 @@ import { PlansComponent } from '@pages/dashboard/masters/plans/plans.component';
 import { InventoryCategoriesComponent } from '@pages/dashboard/inventory/inventory-categories/inventory-categories.component';
 import { PackSizesComponent } from '@pages/dashboard/inventory/pack-sizes/pack-sizes.component';
 import { PurchaseTypesComponent } from '@pages/dashboard/inventory/purchase-types/purchase-types.component';
+import { ProductTypesComponent } from '@pages/dashboard/inventory/product-types/product-types.component';
+import { DrugInstructionsComponent } from '@pages/dashboard/inventory/drug-instructions/drug-instructions.component';
+import { DoseMeasuresComponent } from '@pages/dashboard/inventory/dose-measures/dose-measures.component';
 
 const routes: Routes = [
     {
@@ -119,6 +122,18 @@ const routes: Routes = [
             {
                 path: 'inventory/purchase-types',
                 component: PurchaseTypesComponent
+            },
+            {
+                path: 'inventory/product-types',
+                component: ProductTypesComponent
+            },
+            {
+                path: 'inventory/drug-instructions',
+                component: DrugInstructionsComponent
+            },
+            {
+                path: 'inventory/dose-measures',
+                component: DoseMeasuresComponent
             },
             //settings
             {
