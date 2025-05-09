@@ -181,6 +181,22 @@ export const MENU = [
     ]
   },
   {
+    name: 'Radiology',
+    iconClasses: 'fas fa-x-ray',
+    children: [
+      {
+        name: 'Categories',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/radiology/categories']
+      },
+      {
+        name: 'Radiology Items',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/radiology/items']
+      },
+    ]
+  },
+  {
     name: 'Patient Management',
     iconClasses: 'fas fa-user-injured',
     children: [

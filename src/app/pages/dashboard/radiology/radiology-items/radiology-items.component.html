@@ -1,0 +1,174 @@
+<app-content-header [title]="'Radiology Items'"></app-content-header>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col">
+                                <h6>
+                                    <i class="fas fa-star-of-life"></i>
+                                    Radiology Items
+                                </h6>
+                            </div>
+                            <div class="col text-right">
+                                <button
+                                    class="btn btn-primary btn-sm"
+                                    (click)="openModal(content, null)"
+                                >
+                                    <i class="fas fa-plus"></i> Add Radiology Item
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <th>ID</th>
+                                <th>Code</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th class="text-right">Action</th>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="isLoading">
+                                    <td colspan="7" class="text-center">
+                                        <div class="alert alert-secondary">
+                                            <div
+                                                class="spinner-border spinner-border-sm"
+                                                role="status"
+                                                *ngIf="isLoading"
+                                            >
+                                                <span class="sr-only"
+                                                    >Loading...</span
+                                                >
+                                            </div>
+                                            Loading Radiology Items...
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="!isLoading && radiology_items.length == 0">
+                                    <td colspan="7" class="text-center">
+                                        <div class="alert alert-secondary">
+                                            <i class="fas fa-ban"></i> No
+                                            <b>Radiology Items</b> Found!
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr
+                                    *ngFor="
+                                        let radiology_item of radiology_items;
+                                        let i = index
+                                    "
+                                >
+                                    <td>{{ i + 1 }}</td>
+                                    <td>{{ radiology_item.code }}</td>
+                                    <td>{{ radiology_item.name }}</td>
+                                    <td>{{ radiology_item.radiology_category.name }}</td>
+                                    <td>
+                                        {{ formatDate(radiology_item.created_at) }}
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="badge badge-primary btn-pill"
+                                            *ngIf="radiology_item.status"
+                                            >Active</span
+                                        >
+                                        <span
+                                            class="badge badge-secondary btn-pill"
+                                            *ngIf="!radiology_item.status"
+                                            >In-Active</span
+                                        >
+                                    </td>
+                                    <td class="text-right">
+                                        <button
+                                            class="btn btn-primary btn-sm"
+                                            (click)="
+                                                openModal(content, radiology_item)
+                                            "
+                                        >
+                                            <i class="fas fa-edit"></i> Edit
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Add/Edit Radiology Item</h4>
+        <button
+            type="button"
+            class="btn-close close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="radiologyItemsForm" (submit)="addLocation()">
+            <input type="hidden" formControlName="id" />
+            <div class="mb-3">
+                <label>Name</label>
+                <input
+                    class="form-control"
+                    placeholder="Name"
+                    formControlName="name"
+                />
+            </div>
+            <div class="mb-3">
+                <label>Radiology Category</label>
+                <ng-select
+                    [items]="radiology_categories"
+                    bindLabel="name"
+                    bindValue="id"
+                    [typeahead]="search$"
+                    [loading]="loading"
+                    [(ngModel)]="selectedOption"
+                    placeholder="Search for Radiology Category"
+                    (change)="onItemSelect($event)"
+                    formControlName="radiology_category"
+                ></ng-select>
+            </div>
+            <div class="mb-3">
+                <label>Status</label>
+                <select
+                    class="form-control custom-select"
+                    formControlName="status"
+                >
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
+                </select>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="modal.close('Save click')"
+        >
+            Close
+        </button>
+        <button type="button" class="btn btn-primary" [disabled]="isLoading" (click)="addLocation()">
+            <div
+                class="spinner-border spinner-border-sm"
+                role="status"
+                *ngIf="isLoading"
+            >
+                <span class="sr-only">Loading...</span>
+            </div>
+            Save Changes
+        </button>
+    </div>
+</ng-template>

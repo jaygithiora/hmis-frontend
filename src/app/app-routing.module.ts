@@ -41,6 +41,8 @@ import { ServiceCategoriesComponent } from '@pages/dashboard/masters/service-cat
 import { ServicesComponent } from '@pages/dashboard/masters/services/services.component';
 import { StoresComponent } from '@pages/dashboard/masters/stores/stores.component';
 import { LaboratoryCategoriesComponent } from '@pages/dashboard/masters/laboratory-categories/laboratory-categories.component';
+import { RadiologyCategoriesComponent } from '@pages/dashboard/radiology/radiology-categories/radiology-categories.component';
+import { RadiologyItemsComponent } from '@pages/dashboard/radiology/radiology-items/radiology-items.component';
 
 const routes: Routes = [
     {
@@ -164,6 +166,15 @@ const routes: Routes = [
             {
                 path: 'inventory/products',
                 component: ProductsComponent
+            },
+            //radiology
+            {
+                path:'radiology/items',
+                component: RadiologyItemsComponent
+            },
+            {
+                path:'radiology/categories',
+                component: RadiologyCategoriesComponent
             },
             //settings
             {

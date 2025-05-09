@@ -80,6 +80,8 @@ import { ServiceCategoriesComponent } from './pages/dashboard/masters/service-ca
 import { ServicesComponent } from './pages/dashboard/masters/services/services.component';
 import { StoresComponent } from './pages/dashboard/masters/stores/stores.component';
 import { LaboratoryCategoriesComponent } from './pages/dashboard/masters/laboratory-categories/laboratory-categories.component';
+import { RadiologyCategoriesComponent } from './pages/dashboard/radiology/radiology-categories/radiology-categories.component';
+import { RadiologyItemsComponent } from './pages/dashboard/radiology/radiology-items/radiology-items.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -144,7 +146,9 @@ registerLocaleData(localeEn, 'en-EN');
         ServiceCategoriesComponent,
         ServicesComponent,
         StoresComponent,
-        LaboratoryCategoriesComponent
+        LaboratoryCategoriesComponent,
+        RadiologyCategoriesComponent,
+        RadiologyItemsComponent
     ],
     bootstrap: [AppComponent],
     imports: [
