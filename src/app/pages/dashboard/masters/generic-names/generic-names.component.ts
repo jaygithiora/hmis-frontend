@@ -74,6 +74,7 @@ export class GenericNamesComponent  implements OnInit {
         if (result.success) {
           this.toastr.success(result.success);
           this.loadPage(1);
+          this.modalRef?.close();
         }
       }, error => {
         if(error?.error?.errors?.id){

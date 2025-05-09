@@ -1,0 +1,197 @@
+<app-content-header [title]="'Consultation Rooms'"></app-content-header>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col">
+                                <h6>
+                                    <i class="fas fa-user-md"></i>
+                                    Consultation Rooms
+                                </h6>
+                            </div>
+                            <div class="col text-right">
+                                <button
+                                    class="btn btn-primary btn-sm"
+                                    (click)="openModal(content, null)"
+                                >
+                                    <i class="fas fa-plus"></i> Add Room
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Location</th>
+                                    <th>Description</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th class="text-right">Action</th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngIf="isLoading">
+                                        <td colspan="10" class="text-center">
+                                            <div class="alert alert-secondary">
+                                                <div
+                                                    class="spinner-border spinner-border-sm"
+                                                    role="status"
+                                                    *ngIf="isLoading"
+                                                >
+                                                    <span class="sr-only"
+                                                        >Loading...</span
+                                                    >
+                                                </div>
+                                                Loading Consultation Rooms...
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr
+                                        *ngIf="
+                                            !isLoading && consultation_rooms.length == 0
+                                        "
+                                    >
+                                        <td colspan="10" class="text-center">
+                                            <div class="alert alert-secondary">
+                                                <i class="fas fa-ban"></i> No
+                                                <b>consultation Rooms Found!</b>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr
+                                        *ngFor="
+                                            let consultation_room of consultation_rooms;
+                                            let i = index
+                                        "
+                                    >
+                                        <td>{{ i + 1 }}</td>
+                                        <td>{{ consultation_room.name }}</td>
+                                        <td>{{ consultation_room.location.name }}</td>
+                                        <td>
+                                            {{ consultation_room.description }}
+                                        </td>
+                                        <td>
+                                            {{ formatDate(consultation_room.created_at) }}
+                                        </td>
+                                        <td>
+                                            <span
+                                                class="badge badge-primary btn-pill"
+                                                *ngIf="consultation_room.status"
+                                                >Active</span
+                                            >
+                                            <span
+                                                class="badge badge-secondary btn-pill"
+                                                *ngIf="!consultation_room.status"
+                                                >In-Active</span
+                                            >
+                                        </td>
+                                        <td class="text-right">
+                                            <button
+                                                class="btn btn-primary btn-sm"
+                                                (click)="
+                                                    openModal(content, consultation_room)
+                                                "
+                                            >
+                                                <i class="fas fa-edit"></i> Edit
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Add/Edit Consultation Room</h4>
+        <button
+            type="button"
+            class="btn-close close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="consultationRoomsForm" (submit)="addLocation()">
+            <input type="hidden" formControlName="id" />
+            <div class="mb-3">
+                <label>Name</label>
+                <input
+                    class="form-control"
+                    placeholder="Name"
+                    formControlName="name"
+                    s
+                />
+            </div>
+            <div class="mb-3">
+                <label>Location</label>
+                <ng-select
+                    [items]="locations"
+                    bindLabel="name"
+                    bindValue="id"
+                    [typeahead]="search$"
+                    [loading]="loading"
+                    [(ngModel)]="selectedOption"
+                    placeholder="Search for Location"
+                    (change)="onItemSelect($event)"
+                    formControlName="location"
+                ></ng-select>
+            </div>
+            <div class="mb-3">
+                <label>Description</label>
+                <textarea
+                    class="form-control"
+                    placeholder="Description"
+                    formControlName="description"
+                    rows="4"
+                ></textarea>
+            </div>
+            <div class="mb-3">
+                <label>Status</label>
+                <select
+                    class="form-control custom-select"
+                    formControlName="status"
+                >
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
+                </select>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="modal.close('Save click')"
+        >
+            Close
+        </button>
+        <button
+            type="button"
+            class="btn btn-primary"
+            [disabled]="isLoading"
+            (click)="addLocation()"
+        >
+            <div
+                class="spinner-border spinner-border-sm"
+                role="status"
+                *ngIf="isLoading"
+            >
+                <span class="sr-only">Loading...</span>
+            </div>
+            Save Changes
+        </button>
+    </div>
+</ng-template>

@@ -78,6 +78,11 @@ export const MENU = [
         path: ['/dashboard/masters/consultation-types']
       },
       {
+        name: 'Consultation Rooms',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/masters/consultation-rooms']
+      },
+      {
         name: 'Main Accounts',
         iconClasses: 'fas fa-circle icon-small',
         path: ['/dashboard/masters/main-accounts']

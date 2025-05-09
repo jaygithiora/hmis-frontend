@@ -36,6 +36,7 @@ import { ProductTypesComponent } from '@pages/dashboard/inventory/product-types/
 import { DrugInstructionsComponent } from '@pages/dashboard/inventory/drug-instructions/drug-instructions.component';
 import { DoseMeasuresComponent } from '@pages/dashboard/inventory/dose-measures/dose-measures.component';
 import { ProductsComponent } from '@pages/dashboard/inventory/products/products.component';
+import { ConsultationRoomsComponent } from '@pages/dashboard/masters/consultation-rooms/consultation-rooms.component';
 
 const routes: Routes = [
     {
@@ -82,6 +83,10 @@ const routes: Routes = [
             {
                 path: 'masters/consultation-types',
                 component: ConsultationTypesComponent
+            },
+            {
+                path: 'masters/consultation-rooms',
+                component: ConsultationRoomsComponent
             },
             {
                 path: 'masters/main-accounts',

@@ -98,5 +98,3 @@ export class PurchaseTypesComponent implements OnInit {
     return moment.utc(date).local().format('D MMMM, YYYY h:mma');
   }
 }
-
-

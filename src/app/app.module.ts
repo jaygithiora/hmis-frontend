@@ -75,6 +75,7 @@ import { ProductTypesComponent } from './pages/dashboard/inventory/product-types
 import { DrugInstructionsComponent } from './pages/dashboard/inventory/drug-instructions/drug-instructions.component';
 import { DoseMeasuresComponent } from './pages/dashboard/inventory/dose-measures/dose-measures.component';
 import { ProductsComponent } from './pages/dashboard/inventory/products/products.component';
+import { ConsultationRoomsComponent } from './pages/dashboard/masters/consultation-rooms/consultation-rooms.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -134,7 +135,8 @@ registerLocaleData(localeEn, 'en-EN');
         ProductTypesComponent,
         DrugInstructionsComponent,
         DoseMeasuresComponent,
-        ProductsComponent
+        ProductsComponent,
+        ConsultationRoomsComponent
     ],
     bootstrap: [AppComponent],
     imports: [
