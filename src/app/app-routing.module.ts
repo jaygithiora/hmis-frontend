@@ -37,6 +37,10 @@ import { DrugInstructionsComponent } from '@pages/dashboard/inventory/drug-instr
 import { DoseMeasuresComponent } from '@pages/dashboard/inventory/dose-measures/dose-measures.component';
 import { ProductsComponent } from '@pages/dashboard/inventory/products/products.component';
 import { ConsultationRoomsComponent } from '@pages/dashboard/masters/consultation-rooms/consultation-rooms.component';
+import { ServiceCategoriesComponent } from '@pages/dashboard/masters/service-categories/service-categories.component';
+import { ServicesComponent } from '@pages/dashboard/masters/services/services.component';
+import { StoresComponent } from '@pages/dashboard/masters/stores/stores.component';
+import { LaboratoryCategoriesComponent } from '@pages/dashboard/masters/laboratory-categories/laboratory-categories.component';
 
 const routes: Routes = [
     {
@@ -115,6 +119,22 @@ const routes: Routes = [
             {
                 path: 'masters/icds',
                 component: IcdsComponent
+            },
+            {
+                path: 'masters/service-categories',
+                component: ServiceCategoriesComponent
+            },
+            {
+                path: 'masters/services',
+                component: ServicesComponent
+            },
+            {
+                path: 'masters/stores',
+                component: StoresComponent
+            },
+            {
+                path: 'masters/lab-categories',
+                component: LaboratoryCategoriesComponent
             },
             //inventory
             {

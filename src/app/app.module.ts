@@ -76,6 +76,10 @@ import { DrugInstructionsComponent } from './pages/dashboard/inventory/drug-inst
 import { DoseMeasuresComponent } from './pages/dashboard/inventory/dose-measures/dose-measures.component';
 import { ProductsComponent } from './pages/dashboard/inventory/products/products.component';
 import { ConsultationRoomsComponent } from './pages/dashboard/masters/consultation-rooms/consultation-rooms.component';
+import { ServiceCategoriesComponent } from './pages/dashboard/masters/service-categories/service-categories.component';
+import { ServicesComponent } from './pages/dashboard/masters/services/services.component';
+import { StoresComponent } from './pages/dashboard/masters/stores/stores.component';
+import { LaboratoryCategoriesComponent } from './pages/dashboard/masters/laboratory-categories/laboratory-categories.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -136,7 +140,11 @@ registerLocaleData(localeEn, 'en-EN');
         DrugInstructionsComponent,
         DoseMeasuresComponent,
         ProductsComponent,
-        ConsultationRoomsComponent
+        ConsultationRoomsComponent,
+        ServiceCategoriesComponent,
+        ServicesComponent,
+        StoresComponent,
+        LaboratoryCategoriesComponent
     ],
     bootstrap: [AppComponent],
     imports: [

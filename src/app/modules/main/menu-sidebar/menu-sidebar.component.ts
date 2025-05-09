@@ -116,6 +116,26 @@ export const MENU = [
         name: 'ICDs',
         iconClasses: 'fas fa-circle icon-small',
         path: ['/dashboard/masters/icds']
+      },
+      {
+        name: 'Services',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/masters/services']
+      },
+      {
+        name: 'Service Categories',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/masters/service-categories']
+      },
+      {
+        name: 'Stores',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/masters/stores']
+      },
+      {
+        name: 'Lab Categories',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/masters/lab-categories']
       }
     ]
   },
