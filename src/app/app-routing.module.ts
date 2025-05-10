@@ -1,15 +1,15 @@
-import {NgModule} from '@angular/core';
-import {Routes, RouterModule} from '@angular/router';
-import {MainComponent} from '@modules/main/main.component';
-import {BlankComponent} from '@pages/blank/blank.component';
-import {LoginComponent} from '@modules/login/login.component';
-import {ProfileComponent} from '@pages/profile/profile.component';
-import {RegisterComponent} from '@modules/register/register.component';
-import {DashboardComponent} from '@pages/dashboard/dashboard.component';
-import {NonAuthGuard} from '@guards/non-auth.guard';
-import {ForgotPasswordComponent} from '@modules/forgot-password/forgot-password.component';
-import {RecoverPasswordComponent} from '@modules/recover-password/recover-password.component';
-import {SubMenuComponent} from '@pages/main-menu/sub-menu/sub-menu.component';
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+import { MainComponent } from '@modules/main/main.component';
+import { BlankComponent } from '@pages/blank/blank.component';
+import { LoginComponent } from '@modules/login/login.component';
+import { ProfileComponent } from '@pages/profile/profile.component';
+import { RegisterComponent } from '@modules/register/register.component';
+import { DashboardComponent } from '@pages/dashboard/dashboard.component';
+import { NonAuthGuard } from '@guards/non-auth.guard';
+import { ForgotPasswordComponent } from '@modules/forgot-password/forgot-password.component';
+import { RecoverPasswordComponent } from '@modules/recover-password/recover-password.component';
+import { SubMenuComponent } from '@pages/main-menu/sub-menu/sub-menu.component';
 import { FrontendComponent } from '@pages/frontend/frontend.component';
 import { IndexComponent } from '@pages/frontend/index/index.component';
 import { authGuard } from '@guards/auth.guard';
@@ -37,203 +37,263 @@ import { DrugInstructionsComponent } from '@pages/dashboard/inventory/drug-instr
 import { DoseMeasuresComponent } from '@pages/dashboard/inventory/dose-measures/dose-measures.component';
 import { ProductsComponent } from '@pages/dashboard/inventory/products/products.component';
 import { ConsultationRoomsComponent } from '@pages/dashboard/masters/consultation-rooms/consultation-rooms.component';
-import { ServiceCategoriesComponent } from '@pages/dashboard/masters/service-categories/service-categories.component';
-import { ServicesComponent } from '@pages/dashboard/masters/services/services.component';
+import { ServiceCategoriesComponent } from '@pages/dashboard/services/service-categories/service-categories.component';
+import { ServicesComponent } from '@pages/dashboard/services/services/services.component';
 import { StoresComponent } from '@pages/dashboard/masters/stores/stores.component';
 import { LaboratoryCategoriesComponent } from '@pages/dashboard/masters/laboratory-categories/laboratory-categories.component';
 import { RadiologyCategoriesComponent } from '@pages/dashboard/radiology/radiology-categories/radiology-categories.component';
 import { RadiologyItemsComponent } from '@pages/dashboard/radiology/radiology-items/radiology-items.component';
+import { LaboratoryTestsComponent } from '@pages/dashboard/laboratory/laboratory-tests/laboratory-tests.component';
+import { ProductRatesComponent } from '@pages/dashboard/inventory/product-rates/product-rates.component';
+import { LaboratoryTestRatesComponent } from '@pages/dashboard/laboratory/laboratory-test-rates/laboratory-test-rates.component';
+import { LaboratoryTestReferencesComponent } from '@pages/dashboard/laboratory/laboratory-test-references/laboratory-test-references.component';
+import { RadiologyItemRatesComponent } from '@pages/dashboard/radiology/radiology-item-rates/radiology-item-rates.component';
+import { ServiceRatesComponent } from '@pages/dashboard/services/service-rates/service-rates.component';
+import { WardsComponent } from '@pages/dashboard/ip-masters/wards/wards.component';
+import { BedsComponent } from '@pages/dashboard/ip-masters/beds/beds.component';
+import { BedChargesComponent } from '@pages/dashboard/ip-masters/bed-charges/bed-charges.component';
+import { BedChargeSettingsComponent } from '@pages/dashboard/ip-masters/bed-charge-settings/bed-charge-settings.component';
+import { PatientRegistrationComponent } from '@pages/dashboard/patients/patient-registration/patient-registration.component';
 
 const routes: Routes = [
-    {
+  {
+    path: '',
+    component: FrontendComponent,
+    children: [
+      {
+        path: "",
+        component: IndexComponent
+      }
+    ]
+  },
+  {
+    path: 'dashboard',
+    component: MainComponent,
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
+    children: [
+      //masters
+      {
+        path: 'masters/hospital-data',
+        component: HospitalDataComponent
+      },
+      {
+        path: 'masters/locations',
+        component: LocationsComponent
+      },
+      {
+        path: 'masters/main-types',
+        component: MainTypesComponent
+      },
+      {
+        path: 'masters/sub-types',
+        component: SubTypesComponent
+      },
+      {
+        path: 'masters/salutations',
+        component: SalutationsComponent
+      },
+      {
+        path: 'masters/departments',
+        component: DepartmentsComponent
+      },
+      {
+        path: 'masters/consultation-types',
+        component: ConsultationTypesComponent
+      },
+      {
+        path: 'masters/consultation-rooms',
+        component: ConsultationRoomsComponent
+      },
+      {
+        path: 'masters/main-accounts',
+        component: MainAccountsComponent
+      },
+      {
+        path: 'masters/sub-accounts',
+        component: SubAccountsComponent
+      },
+      {
+        path: 'masters/accounts',
+        component: AccountsComponent
+      },
+      {
+        path: 'masters/plans',
+        component: PlansComponent
+      },
+      {
+        path: 'masters/blood-groups',
+        component: BloodGroupsComponent
+      },
+      {
+        path: 'masters/generic-names',
+        component: GenericNamesComponent
+      },
+      {
+        path: 'masters/icds',
+        component: IcdsComponent
+      },
+      {
+        path: 'masters/stores',
+        component: StoresComponent
+      },
+      {
+        path: 'masters/lab-categories',
+        component: LaboratoryCategoriesComponent
+      },
+      //ip masters
+      {
+        path: 'ip-masters/wards',
+        component: WardsComponent
+      },
+      {
+        path: 'ip-masters/beds',
+        component: BedsComponent
+      },
+      {
+        path: 'ip-masters/bed-charges',
+        component: BedChargesComponent
+      },
+      {
+        path: 'ip-masters/bed-charge-settings',
+        component: BedChargeSettingsComponent
+      },
+      //inventory
+      {
+        path: 'inventory/categories',
+        component: InventoryCategoriesComponent
+      },
+      {
+        path: 'inventory/pack-sizes',
+        component: PackSizesComponent
+      },
+      {
+        path: 'inventory/purchase-types',
+        component: PurchaseTypesComponent
+      },
+      {
+        path: 'inventory/product-types',
+        component: ProductTypesComponent
+      },
+      {
+        path: 'inventory/drug-instructions',
+        component: DrugInstructionsComponent
+      },
+      {
+        path: 'inventory/dose-measures',
+        component: DoseMeasuresComponent
+      },
+      {
+        path: 'inventory/products',
+        component: ProductsComponent
+      },
+      {
+        path: 'inventory/product-rates',
+        component: ProductRatesComponent
+      },
+      //radiology
+      {
+        path: 'radiology/items',
+        component: RadiologyItemsComponent
+      },
+      {
+        path: 'radiology/categories',
+        component: RadiologyCategoriesComponent
+      },
+      {
+        path: 'radiology/item-rates',
+        component: RadiologyItemRatesComponent
+      },
+      //laboratory
+      {
+        path: 'laboratory/tests',
+        component: LaboratoryTestsComponent
+      },
+      {
+        path: 'laboratory/test-rates',
+        component: LaboratoryTestRatesComponent
+      },
+      {
+        path: 'laboratory/test-references',
+        component: LaboratoryTestReferencesComponent
+      },
+      //services
+
+      {
+        path: 'services/service-categories',
+        component: ServiceCategoriesComponent
+      },
+      {
+        path: 'services/services',
+        component: ServicesComponent
+      },
+      {
+        path:'services/service-rates',
+        component: ServiceRatesComponent
+      },
+      //patients
+      {
+        path: 'patient-registration',
+        component: PatientRegistrationComponent
+      },
+      //settings
+      {
+        path: 'settings/doctors',
+        component: DoctorsComponent
+      },
+      //settings
+      {
+        path: 'users',
+        component: UsersComponent
+      },
+      //profile
+      {
+        path: 'profile',
+        component: ProfileComponent
+      },
+      {
+        path: 'blank',
+        component: BlankComponent
+      },
+      {
+        path: 'sub-menu-1',
+        component: SubMenuComponent
+      },
+      {
+        path: 'sub-menu-2',
+        component: BlankComponent
+      },
+      {
         path: '',
-        component: FrontendComponent,
-        children: [
-            {
-                path:"",
-                component:IndexComponent
-            }
-        ]
-    },
-    {
-        path: 'dashboard',
-        component: MainComponent,
-        canActivate: [authGuard],
-        canActivateChild: [authGuard],
-        children: [
-          //masters
-            {
-                path: 'masters/hospital-data',
-                component: HospitalDataComponent
-            },
-            {
-                path: 'masters/locations',
-                component: LocationsComponent
-            },
-            {
-                path: 'masters/main-types',
-                component: MainTypesComponent
-            },
-            {
-                path: 'masters/sub-types',
-                component: SubTypesComponent
-            },
-            {
-                path: 'masters/salutations',
-                component: SalutationsComponent
-            },
-            {
-                path: 'masters/departments',
-                component: DepartmentsComponent
-            },
-            {
-                path: 'masters/consultation-types',
-                component: ConsultationTypesComponent
-            },
-            {
-                path: 'masters/consultation-rooms',
-                component: ConsultationRoomsComponent
-            },
-            {
-                path: 'masters/main-accounts',
-                component: MainAccountsComponent
-            },
-            {
-                path: 'masters/sub-accounts',
-                component: SubAccountsComponent
-            },
-            {
-                path: 'masters/accounts',
-                component: AccountsComponent
-            },
-            {
-                path: 'masters/plans',
-                component: PlansComponent
-            },
-            {
-                path: 'masters/blood-groups',
-                component: BloodGroupsComponent
-            },
-            {
-                path: 'masters/generic-names',
-                component: GenericNamesComponent
-            },
-            {
-                path: 'masters/icds',
-                component: IcdsComponent
-            },
-            {
-                path: 'masters/service-categories',
-                component: ServiceCategoriesComponent
-            },
-            {
-                path: 'masters/services',
-                component: ServicesComponent
-            },
-            {
-                path: 'masters/stores',
-                component: StoresComponent
-            },
-            {
-                path: 'masters/lab-categories',
-                component: LaboratoryCategoriesComponent
-            },
-            //inventory
-            {
-                path: 'inventory/categories',
-                component: InventoryCategoriesComponent
-            },
-            {
-                path: 'inventory/pack-sizes',
-                component: PackSizesComponent
-            },
-            {
-                path: 'inventory/purchase-types',
-                component: PurchaseTypesComponent
-            },
-            {
-                path: 'inventory/product-types',
-                component: ProductTypesComponent
-            },
-            {
-                path: 'inventory/drug-instructions',
-                component: DrugInstructionsComponent
-            },
-            {
-                path: 'inventory/dose-measures',
-                component: DoseMeasuresComponent
-            },
-            {
-                path: 'inventory/products',
-                component: ProductsComponent
-            },
-            //radiology
-            {
-                path:'radiology/items',
-                component: RadiologyItemsComponent
-            },
-            {
-                path:'radiology/categories',
-                component: RadiologyCategoriesComponent
-            },
-            //settings
-            {
-              path: 'settings/doctors',
-              component: DoctorsComponent
-            },
-            //settings
-            {
-              path: 'users',
-              component: UsersComponent
-            },
-            //profile
-            {
-                path: 'profile',
-                component: ProfileComponent
-            },
-            {
-                path: 'blank',
-                component: BlankComponent
-            },
-            {
-                path: 'sub-menu-1',
-                component: SubMenuComponent
-            },
-            {
-                path: 'sub-menu-2',
-                component: BlankComponent
-            },
-            {
-                path: '',
-                component: DashboardComponent
-            }
-        ]
-    },
-    {
-        path: 'login',
-        component: LoginComponent,
-        //canActivate: [NonAuthGuard]
-    },
-    {
-        path: 'register',
-        component: RegisterComponent,
-        //canActivate: [NonAuthGuard]
-    },
-    {
-        path: 'forgot-password',
-        component: ForgotPasswordComponent,
-        canActivate: [NonAuthGuard]
-    },
-    {
-        path: 'recover-password',
-        component: RecoverPasswordComponent,
-        canActivate: [NonAuthGuard]
-    },
-    {path: '**', redirectTo: ''}
+        component: DashboardComponent
+      }
+    ]
+  },
+  {
+    path: 'login',
+    component: LoginComponent,
+    //canActivate: [NonAuthGuard]
+  },
+  {
+    path: 'register',
+    component: RegisterComponent,
+    //canActivate: [NonAuthGuard]
+  },
+  {
+    path: 'forgot-password',
+    component: ForgotPasswordComponent,
+    canActivate: [NonAuthGuard]
+  },
+  {
+    path: 'recover-password',
+    component: RecoverPasswordComponent,
+    canActivate: [NonAuthGuard]
+  },
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes, {})],
-    exports: [RouterModule]
+  imports: [RouterModule.forRoot(routes, {})],
+  exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

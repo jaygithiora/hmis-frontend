@@ -76,12 +76,23 @@ import { DrugInstructionsComponent } from './pages/dashboard/inventory/drug-inst
 import { DoseMeasuresComponent } from './pages/dashboard/inventory/dose-measures/dose-measures.component';
 import { ProductsComponent } from './pages/dashboard/inventory/products/products.component';
 import { ConsultationRoomsComponent } from './pages/dashboard/masters/consultation-rooms/consultation-rooms.component';
-import { ServiceCategoriesComponent } from './pages/dashboard/masters/service-categories/service-categories.component';
-import { ServicesComponent } from './pages/dashboard/masters/services/services.component';
+import { ServiceCategoriesComponent } from './pages/dashboard/services/service-categories/service-categories.component';
 import { StoresComponent } from './pages/dashboard/masters/stores/stores.component';
 import { LaboratoryCategoriesComponent } from './pages/dashboard/masters/laboratory-categories/laboratory-categories.component';
 import { RadiologyCategoriesComponent } from './pages/dashboard/radiology/radiology-categories/radiology-categories.component';
 import { RadiologyItemsComponent } from './pages/dashboard/radiology/radiology-items/radiology-items.component';
+import { LaboratoryTestsComponent } from './pages/dashboard/laboratory/laboratory-tests/laboratory-tests.component';
+import { ProductRatesComponent } from './pages/dashboard/inventory/product-rates/product-rates.component';
+import { LaboratoryTestRatesComponent } from './pages/dashboard/laboratory/laboratory-test-rates/laboratory-test-rates.component';
+import { LaboratoryTestReferencesComponent } from './pages/dashboard/laboratory/laboratory-test-references/laboratory-test-references.component';
+import { RadiologyItemRatesComponent } from './pages/dashboard/radiology/radiology-item-rates/radiology-item-rates.component';
+import { ServicesComponent } from './pages/dashboard/services/services/services.component';
+import { ServiceRatesComponent } from '@pages/dashboard/services/service-rates/service-rates.component';
+import { WardsComponent } from './pages/dashboard/ip-masters/wards/wards.component';
+import { BedsComponent } from './pages/dashboard/ip-masters/beds/beds.component';
+import { BedChargesComponent } from './pages/dashboard/ip-masters/bed-charges/bed-charges.component';
+import { BedChargeSettingsComponent } from './pages/dashboard/ip-masters/bed-charge-settings/bed-charge-settings.component';
+import { PatientRegistrationComponent } from './pages/dashboard/patients/patient-registration/patient-registration.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -148,7 +159,18 @@ registerLocaleData(localeEn, 'en-EN');
         StoresComponent,
         LaboratoryCategoriesComponent,
         RadiologyCategoriesComponent,
-        RadiologyItemsComponent
+        RadiologyItemsComponent,
+        LaboratoryTestsComponent,
+        ProductRatesComponent,
+        LaboratoryTestRatesComponent,
+        LaboratoryTestReferencesComponent,
+        RadiologyItemRatesComponent,
+        ServiceRatesComponent,
+        WardsComponent,
+        BedsComponent,
+        BedChargesComponent,
+        BedChargeSettingsComponent,
+        PatientRegistrationComponent
     ],
     bootstrap: [AppComponent],
     imports: [

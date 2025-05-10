@@ -21,7 +21,6 @@ export class ConsultationTypesComponent implements OnInit {
   private modalRef:NgbModalRef;
   public isLoading: boolean = true;
   loadingDepartments: boolean = false;
-  loadingMainType: boolean = false;
   loadingLocations: boolean = false;
   loadingSubTypes: boolean = false;
   loadingDoctors: boolean = false;
@@ -29,19 +28,16 @@ export class ConsultationTypesComponent implements OnInit {
   consultationTypesForm!: FormGroup;
 
   departments: any[] = [];
-  mainTypes: any[] = [];
   locations: any[] = [];
   subTypes: any[] = [];
   doctors: any[] = [];
 
   searchDepartments$ = new Subject<string>();
-  searchMainTypes$ = new Subject<string>();
   searchLocations$ = new Subject<string>();
   searchSubTypes$ = new Subject<string>();
   searchDoctors$ = new Subject<string>();
 
   selectedDepartmentOption: any;
-  selectedMainTypeOption: any;
   selectedLocationOption: any;
   selectedSubTypeOption: any;
   selectedDoctorOption: any;
@@ -55,13 +51,12 @@ export class ConsultationTypesComponent implements OnInit {
 
   constructor(private consultationTypesService: ConsultationTypesService, private departmentService: DepartmentsService,
     private modalService: NgbModal, private fb: FormBuilder, private toastr: ToastrService, private subTypesService: SubTypesService,
-    private service: AuthService, private mainTypesService: MainTypesService, private locationsService: LocationsService,
+    private service: AuthService, private locationsService: LocationsService,
     private doctorsService: DoctorsService) {
     this.consultationTypesForm = this.fb.group({
       id: ['0', [Validators.required]],
       name: ['', [Validators.required]],
       department: ['', [Validators.required]],
-      main_type: ['', [Validators.required]],
       sub_type: ['', [Validators.required]],
       doctor: ['', [Validators.required]],
       consultation_fees: ['', [Validators.required, Validators.min(0)]],
@@ -96,24 +91,12 @@ export class ConsultationTypesComponent implements OnInit {
         this.loadingLocations = false;  // Hide the loading spinner when the API call finishes
       });
 
-    this.searchMainTypes$
-      .pipe(
-        debounceTime(300),  // Wait for the user to stop typing for 300ms
-        distinctUntilChanged(),  // Only search if the query has changed
-        tap(() => this.loadingMainType = true),  // Show the loading spinner
-        switchMap(term => this.mainTypesService.getMainTypes(1, term))  // Switch to a new observable for each search term
-      )
-      .subscribe(results => {
-        this.mainTypes = results.main_types.data;
-        this.loadingMainType = false;  // Hide the loading spinner when the API call finishes
-      });
-
     this.searchSubTypes$
       .pipe(
         debounceTime(300),  // Wait for the user to stop typing for 300ms
         distinctUntilChanged(),  // Only search if the query has changed
         tap(() => this.loadingSubTypes = true),  // Show the loading spinner
-        switchMap(term => this.subTypesService.getSubTypes(1, term, this.selectedMainTypeOption))  // Switch to a new observable for each search term
+        switchMap(term => this.subTypesService.getSubTypes(1, term))  // Switch to a new observable for each search term
       )
       .subscribe(results => {
         console.log(results);
@@ -167,10 +150,6 @@ export class ConsultationTypesComponent implements OnInit {
         this.departments.push(consultation_type.department);
         this.selectedDepartmentOption = consultation_type.department_id;
       }
-      if (consultation_type.main_type_id != null) {
-        this.mainTypes.push(consultation_type.main_type);
-        this.selectedMainTypeOption = consultation_type.main_type_id;
-      }
       if (consultation_type.sub_type_id != null) {
         this.subTypes.push(consultation_type.sub_type);
         this.selectedSubTypeOption = consultation_type.sub_type_id;
@@ -189,7 +168,6 @@ export class ConsultationTypesComponent implements OnInit {
       this.consultationTypesForm.get("id").setValue(0);
       this.consultationTypesForm.get("name").setValue("");
       this.selectedDepartmentOption = null;
-      this.selectedMainTypeOption = null;
       this.selectedSubTypeOption = null;
       this.selectedLocationOption = null;
       this.selectedDoctorOption = null;

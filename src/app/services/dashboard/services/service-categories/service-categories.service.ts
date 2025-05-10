@@ -9,9 +9,9 @@ import { Observable } from 'rxjs';
 export class ServiceCategoriesService {
   constructor(private http: HttpClient, @Inject(API_BASE_URL) private baseUrl: string) { }
   getServiceCategories(page: number = 1, search: string = ""): Observable<any> {
-    return this.http.get(`${this.baseUrl}/api/dashboard/masters/services/categories?page=${page}&search=${search}`);
+    return this.http.get(`${this.baseUrl}/api/dashboard/services/categories?page=${page}&search=${search}`);
   }
   updateServiceCategory(inputData: any) {
-    return this.http.post(`${this.baseUrl}/api/dashboard/masters/services/categories/add`, inputData);
+    return this.http.post(`${this.baseUrl}/api/dashboard/services/categories/add`, inputData);
   }
 }

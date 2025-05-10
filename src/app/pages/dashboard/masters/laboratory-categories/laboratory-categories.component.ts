@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '@services/auth/auth.service';
 import { LaboratoryCategoriesService } from '@services/dashboard/masters/laboratory-categories/laboratory-categories.service';
-import { ServiceCategoriesService } from '@services/dashboard/masters/service-categories/service-categories.service';
+import { ServiceCategoriesService } from '@services/dashboard/services/service-categories/service-categories.service';
 import moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 

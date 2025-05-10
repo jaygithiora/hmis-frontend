@@ -1,0 +1,176 @@
+<app-content-header [title]="'Register New Patient'"></app-content-header>
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-body">
+            <form [formGroup]="patientRegistrationForm" (ngSubmit)="updateHospitalData()">
+
+              <h6 class="alert alert-primary">
+                1. Payment Details
+              </h6>
+              <input type="hidden" formControlName="id" value="0" />
+              <div class="row">
+                <div class="col-sm-4 p-3">
+                  <img src="assets/img/default-profile.png" class="img-fluid w-100 img-thumbnail" />
+                  <p class="m-3">
+                    <span class="btn btn-primary btn-sm w-100"><i class='fas fa-image'></i> Take Photo</span>
+                  </p>
+                </div>
+                <div class="col-sm-8">
+                  <div class="row">
+                    <div class="col-sm-6 col-lg-4 mb-3">
+                      <label>Location<span class='text-danger'>*</span></label>
+                      <ng-select [items]="locations" bindLabel="name" bindValue="id" [typeahead]="search$"
+                        [loading]="loading" [(ngModel)]="selectedOption" placeholder="Search for Location"
+                        (change)="onItemSelect($event)" formControlName="location"></ng-select>
+                    </div>
+                    <div class="col-sm-6 col-lg-4 mb-3">
+                      <label>Type<span class='text-danger'>*</span></label>
+                      <ng-select [items]="main_types" bindLabel="name" bindValue="id" [typeahead]="searchMainTypes$"
+                        [loading]="loadingMainType" [(ngModel)]="selectedMainTypeOption"
+                        placeholder="Search for Main Type" (change)="onItemSelect($event)"
+                        formControlName="main_type"></ng-select>
+                    </div>
+                    <div class="col-sm-6 col-lg-4 mb-3">
+                      <label>Insurance/Sub Type<span class='text-danger'>*</span></label>
+                      <ng-select [items]="sub_types" bindLabel="name" bindValue="id" [typeahead]="searchSubTypes$"
+                        [loading]="loadingSubType" [(ngModel)]="selectedSubTypeOption" placeholder="Search for Sub Type"
+                        (change)="onItemSelect($event)" formControlName="sub_type"></ng-select>
+                    </div>
+                    <div class="col-sm-6 col-lg-4 mb-3">
+                      <label>Account/Company<span class='text-danger'>*</span></label>
+                      <ng-select [items]="accounts" bindLabel="name" bindValue="id" [typeahead]="searchAccounts$"
+                        [loading]="loadingAccount" [(ngModel)]="selectedAccountOption" placeholder="Search for Account"
+                        (change)="onItemSelect($event)" formControlName="sub_type"></ng-select>
+                    </div>
+                    <!--                    <div class="col-sm-6 col-lg-4 mb-3">
+                      <label>Validity</label>
+                      <input type="text" class="form-control bg-white" placeholder="Validity" formControlName="validity"
+                        readonly />
+                    </div>
+                    <div class="col-sm-6 col-lg-4 mb-3">
+                      <label>Copay</label>
+                      <input type="number" class="form-control bg-white" placeholder="Copay" formControlName="copay"
+                        readonly />
+                    </div>
+                    <div class="col-sm-6 col-lg-4 mb-3">
+                      <label>Bill Type</label>
+                      <input type="text" class="form-control bg-white" placeholder="Bill Type"
+                        formControlName="bill_type" readonly />
+                    </div>
+                    <div class="col-sm-6 col-lg-4 mb-3">
+                      <label>Limit</label>
+                      <input type="number" class="form-control bg-white" placeholder="Limit" formControlName="limit"
+                        readonly />
+                    </div>
+                    -->
+
+                    <div class="col-sm-6 col-lg-4 mb-3">
+                      <label>Salutation<span class='text-danger'>*</span></label>
+                      <ng-select [items]="salutations" bindLabel="name" bindValue="id" [typeahead]="searchSalutation$"
+                        [loading]="loadingSalutation" [(ngModel)]="selectedSalutationOption"
+                        placeholder="Search for Salutation" (change)="onItemSelect($event)"
+                        formControlName="salutation"></ng-select>
+                    </div>
+                    <div class="col-sm-6 col-lg-4 mb-3">
+                      <label>Gender<span class='text-danger'>*</span></label>
+                      <select class="form-control custom-select" formControlName="gender">
+                        <option disabled>Select Gender</option>
+                        <option value="MALE">MALE</option>
+                        <option value="FEMALE">FEMALE</option>
+                      </select>
+                    </div>
+                    <div class="col-sm-6 col-lg-4 mb-3">
+                      <label>Date of Birth<span class='text-danger'>*</span></label>
+                      <input type="date" class="form-control" name="dob" placeholder="Date of Birth"/>
+                    </div>
+                    <div class="col-sm-6 col-lg-4 mb-3">
+                      <label>First Name<span class='text-danger'>*</span></label>
+                      <input type="text" class="form-control" placeholder="First Name" formControlName="first_name">
+                    </div>
+                    <div class="col-sm-6 col-lg-4 mb-3">
+                      <label>Other Name<span class='text-danger'>*</span></label>
+                      <input type="text" class="form-control" placeholder="Other Names" formControlName="other_names">
+                    </div>
+                    <div class="col-sm-6 col-lg-4 mb-3">
+                      <label>ID No.<span class='text-danger'>*</span></label>
+                      <input type="text" class="form-control" placeholder="ID Number" formControlName="id_number">
+                    </div>
+                    <div class="col-sm-6 col-lg-4 mb-3">
+                      <label>Member/Staff No.<span class='text-danger'>*</span></label>
+                      <input type="text" class="form-control" placeholder="Member Number"
+                        formControlName="member_number">
+                    </div>
+                    <div class="col-sm-6 col-lg-4 mb-3">
+                      <label>Member Type<span class='text-danger'>*</span></label>
+                      <select class="form-control custom-select" formControlName="gender">
+                        <option disabled>Select Member Type</option>
+                        <option value="PRIMARY">PRIMARY</option>
+                        <option value="DEPEDENT">DEPENDANT</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-12">
+                  <h6 class="alert alert-primary">
+                    2. Personal Details
+                  </h6>
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                  <label>Guardian Name<span class='text-danger'>*</span></label>
+                  <input type="text" class="form-control" formControlName="guardian_name" placeholder="Guardian Name" />
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                  <label>Blood Group</label>
+                  <input type="text" class="form-control" formControlName="guardian_name" placeholder="Guardian Name" />
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                  <label>Location<span class='text-danger'>*</span></label>
+                  <input type="text" class="form-control" formControlName="guardian_name" placeholder="Guardian Name" />
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                  <label>Citizenship<span class='text-danger'>*</span></label>
+                  <input type="text" class="form-control" formControlName="guardian_name" placeholder="Guardian Name" />
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                  <label>Mobile Number<span class='text-danger'>*</span></label>
+                  <input type="text" class="form-control" formControlName="guardian_name" placeholder="Guardian Name" />
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                  <label>Email Address</label>
+                  <input type="text" class="form-control" formControlName="guardian_name" placeholder="Guardian Name" />
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                  <label>Next of Kin Name<span class='text-danger'>*</span></label>
+                  <input type="text" class="form-control" formControlName="guardian_name" placeholder="Guardian Name" />
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                  <label>Next of Kin Phone Number<span class='text-danger'>*</span></label>
+                  <input type="text" class="form-control" formControlName="guardian_name" placeholder="Guardian Name" />
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                  <label>Next of Kin Relation<span class='text-danger'>*</span></label>
+                  <input type="text" class="form-control" formControlName="guardian_name" placeholder="Guardian Name" />
+                </div>
+              </div>
+
+              <div class="col-sm-12 text-right">
+                <button class="btn btn-primary" [disabled]="isLoading" (click)="updateHospitalData()">
+                  <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                  <span *ngIf="!isLoading">
+                    <i class="fas fa-paper-plane"></i>
+                    Update Data
+                  </span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

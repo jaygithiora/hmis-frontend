@@ -1,0 +1,207 @@
+<app-content-header [title]="'Laboratory Test Rates'"></app-content-header>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col">
+                                <h6>
+                                    <i class="fas fa-capsules"></i>
+                                    Laboratory Test Rates
+                                </h6>
+                            </div>
+                            <div class="col text-right">
+                                <button
+                                    class="btn btn-primary btn-sm"
+                                    (click)="openModal(content, null)"
+                                >
+                                    <i class="fas fa-plus"></i> Add Laboratory Test Rate
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <th>ID</th>
+                                    <th>Lab Code</th>
+                                    <th>Lab Test Name</th>
+                                    <th>Category</th>
+                                    <th>Sub-Type</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th class="text-right">Action</th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngIf="isLoading">
+                                        <td colspan="9" class="text-center">
+                                            <div class="alert alert-secondary">
+                                                <div
+                                                    class="spinner-border spinner-border-sm"
+                                                    role="status"
+                                                    *ngIf="isLoading"
+                                                >
+                                                    <span class="sr-only"
+                                                        >Loading...</span
+                                                    >
+                                                </div>
+                                                Loading Laboratory Test Rates...
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr
+                                        *ngIf="
+                                            !isLoading && laboratory_test_rates.length == 0
+                                        "
+                                    >
+                                        <td colspan="9" class="text-center">
+                                            <div class="alert alert-secondary">
+                                                <i class="fas fa-ban"></i> No
+                                                <b>Laboratory Test Rates</b> Found!
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr
+                                        *ngFor="
+                                            let laboratory_test_rate of laboratory_test_rates;
+                                            let i = index
+                                        "
+                                    >
+                                        <td>{{ i + 1 }}</td>
+                                        <td>{{ laboratory_test_rate.laboratory_test.code }}</td>
+                                        <td>{{ laboratory_test_rate.laboratory_test.name }}</td>
+                                        <td>
+                                            {{ laboratory_test_rate.laboratory_test.laboratory_category?.name }}
+                                        </td>
+                                        <td>
+                                            {{ laboratory_test_rate.sub_type?.name }}
+                                        </td>
+                                        <td>{{ laboratory_test_rate.amount }}</td>
+                                        <td>
+                                            {{ formatDate(laboratory_test_rate.created_at) }}
+                                        </td>
+                                        <td>
+                                            <span
+                                                class="badge badge-primary btn-pill"
+                                                *ngIf="laboratory_test_rate.status"
+                                                >Active</span
+                                            >
+                                            <span
+                                                class="badge badge-secondary btn-pill"
+                                                *ngIf="!laboratory_test_rate.status"
+                                                >In-Active</span
+                                            >
+                                        </td>
+                                        <td class="text-right">
+                                            <button
+                                                class="btn btn-primary btn-sm"
+                                                (click)="
+                                                    openModal(content, laboratory_test_rate)
+                                                "
+                                            >
+                                                <i class="fas fa-edit"></i> Edit
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Add/Edit Product Rate</h4>
+        <button
+            type="button"
+            class="btn-close close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="laboratoryTestRateForm" (submit)="addLocation()">
+            <input type="hidden" formControlName="id" />
+            <div class="mb-3">
+                <label>Laboratory Test</label>
+                <ng-select
+                    [items]="laboratory_tests"
+                    bindLabel="name"
+                    bindValue="id"
+                    [typeahead]="searchLaboratoryTests$"
+                    [loading]="loadingLaboratoryTests"
+                    [(ngModel)]="selectedLaboratoryTestOption"
+                    placeholder="Search for Laboratory Test"
+                    (change)="onItemSelect($event)"
+                    formControlName="laboratory_test"
+                ></ng-select>
+            </div>
+            <div class="mb-3">
+                <label>Sub-Type</label>
+                <ng-select
+                    [items]="sub_types"
+                    bindLabel="name"
+                    bindValue="id"
+                    [typeahead]="searchSubTypes$"
+                    [loading]="loadingSubTypes"
+                    [(ngModel)]="selectedSubTypeOption"
+                    placeholder="Search for Sub-Type"
+                    (change)="onItemSelect($event)"
+                    formControlName="sub_type"
+                ></ng-select>
+            </div>
+            <div class="mb-3">
+                <label>Amount</label>
+                <input type="number"
+                    class="form-control"
+                    placeholder="Amount"
+                    formControlName="amount"
+                />
+            </div>
+            <div class="mb-3">
+                <label>Status</label>
+                <select
+                    class="form-control custom-select"
+                    formControlName="status"
+                >
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
+                </select>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="modal.close('Save click')"
+        >
+            Close
+        </button>
+        <button
+            type="button"
+            class="btn btn-primary"
+            [disabled]="isLoading"
+            (click)="addLocation()"
+        >
+            <div
+                class="spinner-border spinner-border-sm"
+                role="status"
+                *ngIf="isLoading"
+            >
+                <span class="sr-only">Loading...</span>
+            </div>
+            Save Changes
+        </button>
+    </div>
+</ng-template>

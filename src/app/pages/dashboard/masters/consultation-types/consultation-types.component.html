@@ -76,7 +76,7 @@
                                         <td>{{ i + 1 }}</td>
                                         <td>{{ consultation_type.name }}</td>
                                         <td>{{ consultation_type.department.name }}</td>
-                                        <td>{{ consultation_type.location.name }}</td>
+                                        <td>{{ consultation_type.main_type?.name }}</td>
                                         <td>
                                             {{ consultation_type.sub_type.name }}
                                         </td>
@@ -156,20 +156,6 @@
                     placeholder="Search for department"
                     (change)="onItemSelect($event)"
                     formControlName="department"
-                ></ng-select>
-            </div>
-            <div class="mb-3">
-                <label>Main Type</label>
-                <ng-select
-                    [items]="mainTypes"
-                    bindLabel="name"
-                    bindValue="id"
-                    [typeahead]="searchMainTypes$"
-                    [loading]="loadingMainType"
-                    [(ngModel)]="selectedMainTypeOption"
-                    placeholder="Search for Main Type"
-                    (change)="onItemSelect($event)"
-                    formControlName="main_type"
                 ></ng-select>
             </div>
             <div class="mb-3">

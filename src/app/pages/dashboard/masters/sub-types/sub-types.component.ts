@@ -65,7 +65,7 @@ export class SubTypesComponent implements OnInit {
 
   loadPage(page: number) {
     this.isLoading = true;
-    this.subtypeService.getSubTypes(page, "", 0).subscribe((result: any) => {
+    this.subtypeService.getSubTypes(page, "").subscribe((result: any) => {
       this.isLoading = false;
       this.sub_types = result.sub_types.data;// Set the items
       this.totalItems = result.sub_types.total; // Total number of items

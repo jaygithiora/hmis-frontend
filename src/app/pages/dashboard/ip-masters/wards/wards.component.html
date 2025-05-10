@@ -1,0 +1,213 @@
+<app-content-header [title]="'Wards'"></app-content-header>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col">
+                                <h6>
+                                    <i class="fas fa-star-of-life"></i>
+                                    Wards
+                                </h6>
+                            </div>
+                            <div class="col text-right">
+                                <button
+                                    class="btn btn-primary btn-sm"
+                                    (click)="openModal(content, null)"
+                                >
+                                    <i class="fas fa-plus"></i> Add Ward
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Location</th>
+                                <th>Deposit</th>
+                                <th>Age</th>
+                                <th>Gender</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th class="text-right">Action</th>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="isLoading">
+                                    <td colspan="9" class="text-center">
+                                        <div class="alert alert-secondary">
+                                            <div
+                                                class="spinner-border spinner-border-sm"
+                                                role="status"
+                                                *ngIf="isLoading"
+                                            >
+                                                <span class="sr-only"
+                                                    >Loading...</span
+                                                >
+                                            </div>
+                                            Loading Wards...
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="!isLoading && wards.length == 0">
+                                    <td colspan="9" class="text-center">
+                                        <div class="alert alert-secondary">
+                                            <i class="fas fa-ban"></i> No
+                                            <b>Wards</b> Found!
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr
+                                    *ngFor="
+                                        let ward of wards;
+                                        let i = index
+                                    "
+                                >
+                                    <td>{{ i + 1 }}</td>
+                                    <td>{{ ward.name }}</td>
+                                    <td>{{ ward.location.name }}</td>
+                                    <td>{{ ward.deposit_amount }}</td>
+                                    <td>{{ ward.year_from }} - {{ ward.year_to }} YRS</td>
+                                    <td>{{ ward.gender }}</td>
+                                    <td>
+                                        {{ formatDate(ward.created_at) }}
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="badge badge-primary btn-pill"
+                                            *ngIf="ward.status"
+                                            >Active</span
+                                        >
+                                        <span
+                                            class="badge badge-secondary btn-pill"
+                                            *ngIf="!ward.status"
+                                            >In-Active</span
+                                        >
+                                    </td>
+                                    <td class="text-right">
+                                        <button
+                                            class="btn btn-primary btn-sm"
+                                            (click)="
+                                                openModal(content, ward)
+                                            "
+                                        >
+                                            <i class="fas fa-edit"></i> Edit
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Add/Edit Ward</h4>
+        <button
+            type="button"
+            class="btn-close close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="wardsForm" (submit)="addLocation()">
+            <input type="hidden" formControlName="id" />
+            <div class="mb-3">
+                <label>Name</label>
+                <input
+                    class="form-control"
+                    placeholder="Name"
+                    formControlName="name"
+                />
+            </div>
+            <div class="mb-3">
+                <label>Location</label>
+                <ng-select
+                    [items]="locations"
+                    bindLabel="name"
+                    bindValue="id"
+                    [typeahead]="search$"
+                    [loading]="loading"
+                    [(ngModel)]="selectedOption"
+                    placeholder="Search for Location"
+                    (change)="onItemSelect($event)"
+                    formControlName="location"
+                ></ng-select>
+            </div>
+            <div class="mb-3">
+                <label>Age From(Years)</label>
+                <input
+                    class="form-control"
+                    placeholder="Age From (Years)"
+                    formControlName="age_from"
+                />
+            </div>
+            <div class="mb-3">
+                <label>Age To(Years)</label>
+                <input
+                    class="form-control"
+                    placeholder="Age To (Years)"
+                    formControlName="age_to"
+                />
+            </div>
+            <div class="mb-3">
+                <label>Deposit Amount</label>
+                <input
+                    class="form-control"
+                    placeholder="Deposit Amount"
+                    formControlName="deposit_amount"
+                />
+            </div>
+            <div class="mb-3">
+                <label>Gender</label>
+                <select
+                    class="form-control custom-select"
+                    formControlName="gender"
+                >
+                    <option value="ALL">ALL</option>
+                    <option value="MALE">MALE</option>
+                    <option value="FEMALE">FEMALE</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label>Status</label>
+                <select
+                    class="form-control custom-select"
+                    formControlName="status"
+                >
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
+                </select>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="modal.close('Save click')"
+        >
+            Close
+        </button>
+        <button type="button" class="btn btn-primary" [disabled]="isLoading" (click)="addLocation()">
+            <div
+                class="spinner-border spinner-border-sm"
+                role="status"
+                *ngIf="isLoading"
+            >
+                <span class="sr-only">Loading...</span>
+            </div>
+            Save Changes
+        </button>
+    </div>
+</ng-template>

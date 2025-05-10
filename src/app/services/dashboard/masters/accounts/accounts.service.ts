@@ -9,11 +9,11 @@ import { Observable } from 'rxjs';
 export class AccountsService {
 
   constructor(private http: HttpClient, @Inject(API_BASE_URL) private baseUrl: string) { }
-  
-    getAccounts(page: number = 1, search: string = ""): Observable<any> {
-      return this.http.get(`${this.baseUrl}/api/dashboard/masters/accounts?page=${page}&search=${search}`);
+
+    getAccounts(page: number = 1, search: string = "", sub_type:number=0): Observable<any> {
+      return this.http.get(`${this.baseUrl}/api/dashboard/masters/accounts?page=${page}&search=${search}&sub_type=${sub_type}`);
     }
-  
+
     updateAccount(inputData: any) {
       return this.http.post(`${this.baseUrl}/api/dashboard/masters/accounts/add`, inputData);
     }

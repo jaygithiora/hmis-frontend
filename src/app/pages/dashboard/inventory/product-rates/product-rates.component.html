@@ -1,0 +1,207 @@
+<app-content-header [title]="'Product Rates'"></app-content-header>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col">
+                                <h6>
+                                    <i class="fas fa-capsules"></i>
+                                    Product Rates
+                                </h6>
+                            </div>
+                            <div class="col text-right">
+                                <button
+                                    class="btn btn-primary btn-sm"
+                                    (click)="openModal(content, null)"
+                                >
+                                    <i class="fas fa-plus"></i> Add Product Rate
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <th>ID</th>
+                                    <th>Product Code</th>
+                                    <th>Product Name</th>
+                                    <th>Category</th>
+                                    <th>Sub-Type</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th class="text-right">Action</th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngIf="isLoading">
+                                        <td colspan="9" class="text-center">
+                                            <div class="alert alert-secondary">
+                                                <div
+                                                    class="spinner-border spinner-border-sm"
+                                                    role="status"
+                                                    *ngIf="isLoading"
+                                                >
+                                                    <span class="sr-only"
+                                                        >Loading...</span
+                                                    >
+                                                </div>
+                                                Loading Product Rates...
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr
+                                        *ngIf="
+                                            !isLoading && product_rates.length == 0
+                                        "
+                                    >
+                                        <td colspan="9" class="text-center">
+                                            <div class="alert alert-secondary">
+                                                <i class="fas fa-ban"></i> No
+                                                <b>Product Rates</b> Found!
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr
+                                        *ngFor="
+                                            let product_rate of product_rates;
+                                            let i = index
+                                        "
+                                    >
+                                        <td>{{ i + 1 }}</td>
+                                        <td>{{ product_rate.product.code }}</td>
+                                        <td>{{ product_rate.product.name }}</td>
+                                        <td>
+                                            {{ product_rate.product.inventory_category?.name }}
+                                        </td>
+                                        <td>
+                                            {{ product_rate.sub_type?.name }}
+                                        </td>
+                                        <td>{{ product_rate.amount }}</td>
+                                        <td>
+                                            {{ formatDate(product_rate.created_at) }}
+                                        </td>
+                                        <td>
+                                            <span
+                                                class="badge badge-primary btn-pill"
+                                                *ngIf="product_rate.status"
+                                                >Active</span
+                                            >
+                                            <span
+                                                class="badge badge-secondary btn-pill"
+                                                *ngIf="!product_rate.status"
+                                                >In-Active</span
+                                            >
+                                        </td>
+                                        <td class="text-right">
+                                            <button
+                                                class="btn btn-primary btn-sm"
+                                                (click)="
+                                                    openModal(content, product_rate)
+                                                "
+                                            >
+                                                <i class="fas fa-edit"></i> Edit
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Add/Edit Product Rate</h4>
+        <button
+            type="button"
+            class="btn-close close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="productRateForm" (submit)="addLocation()">
+            <input type="hidden" formControlName="id" />
+            <div class="mb-3">
+                <label>Product</label>
+                <ng-select
+                    [items]="products"
+                    bindLabel="name"
+                    bindValue="id"
+                    [typeahead]="searchProducts$"
+                    [loading]="loadingProducts"
+                    [(ngModel)]="selectedProductOption"
+                    placeholder="Search for Product"
+                    (change)="onItemSelect($event)"
+                    formControlName="product"
+                ></ng-select>
+            </div>
+            <div class="mb-3">
+                <label>Sub-Type</label>
+                <ng-select
+                    [items]="sub_types"
+                    bindLabel="name"
+                    bindValue="id"
+                    [typeahead]="searchSubTypes$"
+                    [loading]="loadingSubTypes"
+                    [(ngModel)]="selectedSubTypeOption"
+                    placeholder="Search for Sub-Type"
+                    (change)="onItemSelect($event)"
+                    formControlName="sub_type"
+                ></ng-select>
+            </div>
+            <div class="mb-3">
+                <label>Amount</label>
+                <input type="number"
+                    class="form-control"
+                    placeholder="Amount"
+                    formControlName="amount"
+                />
+            </div>
+            <div class="mb-3">
+                <label>Status</label>
+                <select
+                    class="form-control custom-select"
+                    formControlName="status"
+                >
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
+                </select>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="modal.close('Save click')"
+        >
+            Close
+        </button>
+        <button
+            type="button"
+            class="btn btn-primary"
+            [disabled]="isLoading"
+            (click)="addLocation()"
+        >
+            <div
+                class="spinner-border spinner-border-sm"
+                role="status"
+                *ngIf="isLoading"
+            >
+                <span class="sr-only">Loading...</span>
+            </div>
+            Save Changes
+        </button>
+    </div>
+</ng-template>

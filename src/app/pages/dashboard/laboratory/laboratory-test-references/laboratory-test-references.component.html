@@ -1,0 +1,212 @@
+<app-content-header [title]="'Laboratory Test References'"></app-content-header>
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-header">
+            <div class="row">
+              <div class="col">
+                <h6>
+                  <i class="fas fa-capsules"></i>
+                  Laboratory Test References
+                </h6>
+              </div>
+              <div class="col text-right">
+                <button class="btn btn-primary btn-sm" (click)="openModal(content, null)">
+                  <i class="fas fa-plus"></i> Add Laboratory Test Reference
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <th>ID</th>
+                  <th>Lab Code</th>
+                  <th>Lab Test Name</th>
+                  <th>Name</th>
+                  <th>Gender</th>
+                  <th>Reference Type</th>
+                  <th>Age</th>
+                  <th>Ref. Range Label</th>
+                  <th>Status</th>
+                  <th class="text-right">Action</th>
+                </thead>
+                <tbody>
+                  <tr *ngIf="isLoading">
+                    <td colspan="11" class="text-center">
+                      <div class="alert alert-secondary">
+                        <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+                          <span class="sr-only">Loading...</span>
+                        </div>
+                        Loading Laboratory Test References...
+                      </div>
+                    </td>
+                  </tr>
+                  <tr *ngIf="
+                                            !isLoading && laboratory_test_references.length == 0
+                                        ">
+                    <td colspan="9" class="text-center">
+                      <div class="alert alert-secondary">
+                        <i class="fas fa-ban"></i> No
+                        <b>Laboratory Test References</b> Found!
+                      </div>
+                    </td>
+                  </tr>
+                  <tr *ngFor="
+                                            let laboratory_test_rate of laboratory_test_references;
+                                            let i = index
+                                        ">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ laboratory_test_rate.laboratory_test.code }}</td>
+                    <td>{{ laboratory_test_rate.laboratory_test.name }}</td>
+                    <td>
+                      {{ laboratory_test_rate.name }}
+                    </td>
+                    <td>{{ laboratory_test_rate.gender }}</td>
+                    <td>{{ laboratory_test_rate.reference_type }}</td>
+                    <td>{{ laboratory_test_rate.age_from }}-{{laboratory_test_rate.age_to }}</td>
+                    <td>{{ laboratory_test_rate.ref_range_label }}</td>
+                    <!--<td>
+                      {{ formatDate(laboratory_test_rate.created_at) }}
+                    </td>-->
+                    <td>
+                      <span class="badge badge-primary btn-pill" *ngIf="laboratory_test_rate.status">Active</span>
+                      <span class="badge badge-secondary btn-pill" *ngIf="!laboratory_test_rate.status">In-Active</span>
+                    </td>
+                    <td class="text-right">
+                      <button class="btn btn-primary btn-sm" (click)="
+                                                    openModal(content, laboratory_test_rate)
+                                                ">
+                        <i class="fas fa-edit"></i> Edit
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Add/Edit Laboratory Rate Reference</h4>
+    <button type="button" class="btn-close close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="laboratoryTestReferenceForm" (submit)="addLocation()">
+      <input type="hidden" formControlName="id" />
+      <div class="mb-3">
+        <label>Name</label>
+        <input type="text" class="form-control" placeholder="Name" formControlName="name" />
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <div class="mb-3">
+            <label>Laboratory Test</label>
+            <ng-select [items]="laboratory_tests" bindLabel="name" bindValue="id" [typeahead]="search$"
+              [loading]="loading" [(ngModel)]="selectedOption" placeholder="Search for Laboratory Test"
+              (change)="onItemSelect($event)" formControlName="laboratory_test"></ng-select>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label>SubHeader</label>
+          <input type="text" class="form-control" placeholder="SubHeader" formControlName="subheader" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="mb-3">
+            <label>Age From</label>
+            <input type="number" class="form-control" placeholder="Age From" formControlName="agefrom" />
+          </div>
+        </div>
+        <div class="col">
+          <div class="mb-3">
+            <label>Age To</label>
+            <input type="number" class="form-control" placeholder="Age To" formControlName="ageto" />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <div class="mb-3">
+            <label>Reference Range Label</label>
+            <input type="text" class="form-control" placeholder="Reference Range Label"
+              formControlName="ref_range_label" />
+          </div>
+        </div>
+        <div class="col">
+          <div class="mb-3">
+            <label>Reference Order</label>
+            <input type="number" class="form-control" placeholder="Reference Order" formControlName="ref_order" />
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col">
+          <div class="mb-3">
+            <label>Reference Code</label>
+            <input type="string" class="form-control" placeholder="Reference Code" formControlName="ref_code" />
+          </div>
+        </div>
+        <div class="col">
+          <div class="mb-3">
+            <label>Reference Type</label>
+            <select formControlName="reference_type" class="form-control custom-select">
+              <option value="Qualitative">Qualitative</option>
+              <option value="Quantitative">Quantitive</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col">
+          <div class="mb-3">
+            <label>Gender</label>
+            <select name="gender" class="form-control custom-select">
+              <option value="ALL">All</option>
+              <option value="MALE">Male</option>
+              <option value="FEMALE">Female</option>
+            </select>
+          </div>
+        </div>
+        <div class="col">
+          <div class="mb-3">
+            <label>Status</label>
+            <select class="form-control custom-select" formControlName="status">
+              <option value="1">Active</option>
+              <option value="0">Inactive</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.close('Save click')">
+      Close
+    </button>
+    <button type="button" class="btn btn-primary" [disabled]="isLoading" (click)="addLocation()">
+      <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+        <span class="sr-only">Loading...</span>
+      </div>
+      Save Changes
+    </button>
+  </div>
+</ng-template>

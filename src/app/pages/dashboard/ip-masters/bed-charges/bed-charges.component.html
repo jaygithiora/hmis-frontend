@@ -1,0 +1,133 @@
+<app-content-header [title]="'Beds'"></app-content-header>
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-header">
+            <div class="row">
+              <div class="col">
+                <h6>
+                  <i class="fas fa-bed"></i>
+                  Bed Charges
+                </h6>
+              </div>
+              <div class="col text-right">
+                <button class="btn btn-primary btn-sm" (click)="openModal(content, null)">
+                  <i class="fas fa-plus"></i> Add Bed Charge
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <table class="table">
+              <thead>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Bed</th>
+                <th>Ward</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th class="text-right">Action</th>
+              </thead>
+              <tbody>
+                <tr *ngIf="isLoading">
+                  <td colspan="8" class="text-center">
+                    <div class="alert alert-secondary">
+                      <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+                        <span class="sr-only">Loading...</span>
+                      </div>
+                      Loading Bed Charges...
+                    </div>
+                  </td>
+                </tr>
+                <tr *ngIf="!isLoading && bed_charges.length == 0">
+                  <td colspan="8" class="text-center">
+                    <div class="alert alert-secondary">
+                      <i class="fas fa-ban"></i> No
+                      <b>Bed Charges</b> Found!
+                    </div>
+                  </td>
+                </tr>
+                <tr *ngFor="
+                                        let bed_charge of bed_charges;
+                                        let i = index
+                                    ">
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ bed_charge.bed_charge_setting.name }}</td>
+                  <td>{{ bed_charge.bed.name }}</td>
+                  <td>{{ bed_charge.bed.ward.name }}</td>
+                  <td>{{ bed_charge.amount }}</td>
+                  <td>
+                    {{ formatDate(bed_charge.created_at) }}
+                  </td>
+                  <td>
+                    <span class="badge badge-primary btn-pill" *ngIf="bed_charge.status">Active</span>
+                    <span class="badge badge-secondary btn-pill" *ngIf="!bed_charge.status">In-Active</span>
+                  </td>
+                  <td class="text-right">
+                    <button class="btn btn-primary btn-sm" (click)="
+                                                openModal(content, bed_charge)
+                                            ">
+                      <i class="fas fa-edit"></i> Edit
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Add/Edit Bed Charge</h4>
+    <button type="button" class="btn-close close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="bedChargesForm" (submit)="addLocation()">
+      <input type="hidden" formControlName="id" />
+
+      <div class="mb-3">
+        <label>Bed</label>
+        <ng-select [items]="beds" bindLabel="name" bindValue="id" [typeahead]="search$" [loading]="loading"
+          [(ngModel)]="selectedOption" placeholder="Search for Bed" (change)="onItemSelect($event)"
+          formControlName="bed"></ng-select>
+      </div>
+      <div class="mb-3">
+        <label>Bed Charge Setting</label>
+        <ng-select [items]="bed_charge_settings" bindLabel="name" bindValue="id" [typeahead]="searchBCS$"
+          [loading]="loadingBCS" [(ngModel)]="selectedBCSOption" placeholder="Search for Bed Charge Setting"
+          (change)="onItemSelect($event)" formControlName="bed_charge_setting"></ng-select>
+      </div>
+      <div class="mb-3">
+        <label>Amount</label>
+        <input text="number" class="form-control" placeholder="Amount" formControlName="amount" />
+      </div>
+      <div class="mb-3">
+        <label>Status</label>
+        <select class="form-control custom-select" formControlName="status">
+          <option value="1">Active</option>
+          <option value="0">Inactive</option>
+        </select>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.close('Save click')">
+      Close
+    </button>
+    <button type="button" class="btn btn-primary" [disabled]="isLoading" (click)="addLocation()">
+      <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+        <span class="sr-only">Loading...</span>
+      </div>
+      Save Changes
+    </button>
+  </div>
+</ng-template>

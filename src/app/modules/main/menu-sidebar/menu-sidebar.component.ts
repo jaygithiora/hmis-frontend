@@ -118,16 +118,6 @@ export const MENU = [
         path: ['/dashboard/masters/icds']
       },
       {
-        name: 'Services',
-        iconClasses: 'fas fa-circle icon-small',
-        path: ['/dashboard/masters/services']
-      },
-      {
-        name: 'Service Categories',
-        iconClasses: 'fas fa-circle icon-small',
-        path: ['/dashboard/masters/service-categories']
-      },
-      {
         name: 'Stores',
         iconClasses: 'fas fa-circle icon-small',
         path: ['/dashboard/masters/stores']
@@ -137,6 +127,32 @@ export const MENU = [
         iconClasses: 'fas fa-circle icon-small',
         path: ['/dashboard/masters/lab-categories']
       }
+    ]
+  },
+  {
+    name: 'IP Masters',
+    iconClasses: 'fas fa-bed',
+    children: [
+      {
+        name: 'Wards',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/ip-masters/wards']
+      },
+      {
+        name: 'Beds',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/ip-masters/beds']
+      },
+      {
+        name: 'Bed Charges',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/ip-masters/bed-charges']
+      },
+      {
+        name: 'Bed Charge Settings',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/ip-masters/bed-charge-settings']
+      },
     ]
   },
   {
@@ -178,6 +194,11 @@ export const MENU = [
         iconClasses: 'fas fa-circle icon-small',
         path: ['/dashboard/inventory/products']
       },
+      {
+        name: 'Product Rates',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/inventory/product-rates']
+      },
     ]
   },
   {
@@ -194,16 +215,68 @@ export const MENU = [
         iconClasses: 'fas fa-circle icon-small',
         path: ['/dashboard/radiology/items']
       },
+      {
+        name: 'Radiology Item Rates',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/radiology/item-rates']
+      },
     ]
   },
   {
-    name: 'Patient Management',
+    name: 'Laboratory',
+    iconClasses: 'fas fa-vials',
+    children: [
+      {
+        name: 'Lab Tests',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/laboratory/tests']
+      },
+      {
+        name: 'Lab Test Rates',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/laboratory/test-rates']
+      },
+      {
+        name: 'Lab Test References',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/laboratory/test-references']
+      },
+    ]
+  },
+  {
+    name: 'Services',
+    iconClasses: 'fas fa-concierge-bell',
+    children: [
+      {
+        name: 'Categories',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/services/service-categories']
+      },
+      {
+        name: 'Services',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/services/services']
+      },
+      {
+        name: 'Service Rate',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/services/service-rates']
+      },
+    ]
+  },
+  {
+    name: 'Patients',
     iconClasses: 'fas fa-user-injured',
     children: [
       {
         name: 'Patient Registration',
         iconClasses: 'fas fa-circle icon-small',
-        path: ['/dashboard/patients/registration']
+        path: ['/dashboard/patient-registration']
+      },
+      {
+        name: 'Patients',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/patients']
       },
     ]
   },

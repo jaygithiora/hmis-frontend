@@ -10,8 +10,8 @@ export class SubTypesService {
 
    constructor(private http: HttpClient,@Inject(API_BASE_URL) private baseUrl:string) { }
 
-      getSubTypes(page:number = 1, search:string="",mainType:number):Observable<any>{
-        return this.http.get(`${this.baseUrl}/api/dashboard/masters/sub-types?page=${page}&main_type=${mainType}`);
+      getSubTypes(page:number = 1, search:string="", main_type:number=0):Observable<any>{
+        return this.http.get(`${this.baseUrl}/api/dashboard/masters/sub-types?page=${page}&search=${search}&main_type=${main_type}`);
       }
 
       updateSubTypes(inputData:any){
