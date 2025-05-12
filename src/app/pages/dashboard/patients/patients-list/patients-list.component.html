@@ -38,7 +38,7 @@
                             </thead>
                             <tbody>
                                 <tr *ngIf="isLoading">
-                                    <td colspan="7" class="text-center">
+                                    <td colspan="11" class="text-center">
                                         <div class="alert alert-secondary">
                                             <div
                                                 class="spinner-border spinner-border-sm"
@@ -54,7 +54,7 @@
                                     </td>
                                 </tr>
                                 <tr *ngIf="!isLoading && patients.length == 0">
-                                    <td colspan="7" class="text-center">
+                                    <td colspan="11" class="text-center">
                                         <div class="alert alert-secondary">
                                             <i class="fas fa-ban"></i> No
                                             <b>Patients</b> Found!
@@ -71,6 +71,12 @@
                                     <td>{{ patient.code }}</td>
                                     <td>{{ patient.first_name }} {{ patient.other_names }}</td>
                                     <td>{{ patient.main_type?.name }}</td>
+                                    <td>{{ patient.sub_type?.name }}</td>
+                                    <td>{{ patient.account?.name }}</td>
+                                    <td>{{ patient.plan?.name }}</td>
+                                    <td>
+                                        {{ patient.dob|date }}
+                                    </td>
                                     <td>
                                         {{ formatDate(patient.created_at) }}
                                     </td>

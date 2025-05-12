@@ -68,7 +68,7 @@ export class PatientRegistrationComponent implements OnInit, AfterViewInit{
   constructor(private patientRegistrationService: PatientRegistrationService, private toastr:ToastrService, private service:AuthService,
     private fb:FormBuilder, private locationService:LocationsService, private mainTypeService:MainTypesService,
     private accountService:AccountsService, private subTypeService: SubTypesService, private planService:PlansService,
-  private salutationService:SalutationService, private bloodGroupService:BloodGroupsService, private nextOfKinRelationService:NextOfKinRelationsService, 
+  private salutationService:SalutationService, private bloodGroupService:BloodGroupsService, private nextOfKinRelationService:NextOfKinRelationsService,
 private router: Router){
     this.patientRegistrationForm = this.fb.group({
       id:['0', [Validators.required]],
@@ -232,7 +232,7 @@ private router: Router){
     this.patientRegistrationService.updatePatientRegistration(this.patientImage != null?formData:this.patientRegistrationForm.getRawValue()).subscribe((result:any)=>{
       if(result.success){
         this.toastr.success(result.success);
-        this.router.navigate(["/dashboard/patients"]);
+        this.router.navigate(["/dashboard/patients/list"]);
       }
       this.isLoading = false;
     }, error=>{
@@ -333,7 +333,7 @@ private router: Router){
   createFormData(blob: Blob): FormData {
     const formData = new FormData();
     formData.append('photo', blob, 'photo.jpg');
-    
+
     // Append other form data fields here
     Object.keys(this.patientRegistrationForm.value).forEach(key => {
       formData.append(key, this.patientRegistrationForm.get(key)?.value);
