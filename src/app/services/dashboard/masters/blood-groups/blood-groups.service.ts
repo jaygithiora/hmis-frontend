@@ -10,8 +10,8 @@ export class BloodGroupsService {
 
   constructor(private http: HttpClient, @Inject(API_BASE_URL) private baseUrl: string) { }
 
-  getBloodGroups(page: number = 1): Observable<any> {
-    return this.http.get(`${this.baseUrl}/api/dashboard/masters/blood-groups?page=${page}`);
+  getBloodGroups(page: number = 1, search:string=""): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/dashboard/masters/blood-groups?page=${page}&search=${search}`);
   }
   updateBloodGroups(inputData: any) {
     return this.http.post(`${this.baseUrl}/api/dashboard/masters/blood-groups/add`, inputData);

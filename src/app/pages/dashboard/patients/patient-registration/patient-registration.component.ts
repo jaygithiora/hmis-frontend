@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '@services/auth/auth.service';
 import { AccountsService } from '@services/dashboard/masters/accounts/accounts.service';
+import { BloodGroupsService } from '@services/dashboard/masters/blood-groups/blood-groups.service';
 import { HospitalDataService } from '@services/dashboard/masters/hospital-data.service';
 import { LocationsService } from '@services/dashboard/masters/locations.service';
 import { MainTypesService } from '@services/dashboard/masters/manin-types/main-types.service';
@@ -9,6 +10,7 @@ import { PlansService } from '@services/dashboard/masters/plans/plans.service';
 import { SalutationService } from '@services/dashboard/masters/salutation/salutation.service';
 import { SubTypesService } from '@services/dashboard/masters/sub-types/sub-types.service';
 import { ToastrService } from 'ngx-toastr';
+import { WebcamImage } from 'ngx-webcam';
 import { debounceTime, distinctUntilChanged, Subject, switchMap, tap } from 'rxjs';
 
 @Component({
@@ -16,7 +18,9 @@ import { debounceTime, distinctUntilChanged, Subject, switchMap, tap } from 'rxj
   templateUrl: './patient-registration.component.html',
   styleUrl: './patient-registration.component.scss'
 })
-export class PatientRegistrationComponent implements OnInit{
+export class PatientRegistrationComponent implements OnInit, AfterViewInit{
+  @ViewChild('locationInput') locationInput!: ElementRef;
+
   public isLoading:boolean = false;
     loading: boolean = false;
     loadingMainType:boolean = false;
@@ -24,6 +28,7 @@ export class PatientRegistrationComponent implements OnInit{
     loadingAccount:boolean = false;
     loadingPlan:boolean = false;
     loadingSalutation:boolean = false;
+    loadingBloodGroup:boolean = false;
 
     locations: any[] = [];
     main_types: any[] = [];
@@ -31,6 +36,7 @@ export class PatientRegistrationComponent implements OnInit{
     accounts: any[] = [];
     plans: any[] = [];
     salutations: any[] = [];
+    blood_groups: any[] = [];
 
     search$ = new Subject<string>();
     searchMainTypes$ = new Subject<string>();
@@ -38,6 +44,7 @@ export class PatientRegistrationComponent implements OnInit{
     searchAccounts$ = new Subject<string>();
     searchPlan$ = new Subject<string>();
     searchSalutation$ = new Subject<string>();
+    searchBloodGroup$ = new Subject<string>();
 
     selectedOption: any;
     selectedMainTypeOption: any;
@@ -45,6 +52,7 @@ export class PatientRegistrationComponent implements OnInit{
     selectedAccountOption: any;
     selectedPlanOption: any;
     selectedSalutationOption: any;
+    selectedBloodGroupOption: any;
 
   patient : any;
   patientRegistrationForm!:FormGroup;
@@ -52,7 +60,7 @@ export class PatientRegistrationComponent implements OnInit{
   constructor(private hospitalDataService: HospitalDataService, private toastr:ToastrService, private service:AuthService,
     private fb:FormBuilder, private locationService:LocationsService, private mainTypeService:MainTypesService,
     private accountService:AccountsService, private subTypeService: SubTypesService, private planService:PlansService,
-  private salutationService:SalutationService){
+  private salutationService:SalutationService, private bloodGroupService:BloodGroupsService){
     this.patientRegistrationForm = this.fb.group({
       id:['0', [Validators.required]],
       location:['', [Validators.required]],
@@ -71,6 +79,9 @@ export class PatientRegistrationComponent implements OnInit{
       id_number: [''],
       member_number: [''],
       member_type: ['', [Validators.required]],
+      blood_group: [''],
+      guardian_name: [''],
+      patient_location: ['', [Validators.required]],
       phone:['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
       email:['', [Validators.required, Validators.email]],
       address: ['', [Validators.required]]
@@ -148,6 +159,17 @@ export class PatientRegistrationComponent implements OnInit{
           this.salutations = results.salutations.data;
           this.loadingSalutation = false;  // Hide the loading spinner when the API call finishes
         });
+        this.searchBloodGroup$
+        .pipe(
+          debounceTime(300),  // Wait for the user to stop typing for 300ms
+          distinctUntilChanged(),  // Only search if the query has changed
+          tap(() => this.loadingBloodGroup = true),  // Show the loading spinner
+          switchMap(term => this.bloodGroupService.getBloodGroups(1, term))  // Switch to a new observable for each search term
+        )
+        .subscribe((results: any) => {
+          this.blood_groups = results.blood_groups.data;
+          this.loadingBloodGroup = false;  // Hide the loading spinner when the API call finishes
+        });
     }
     // Handle item selection
     onItemSelect(event: any) {
@@ -174,6 +196,17 @@ export class PatientRegistrationComponent implements OnInit{
       }
       this.isLoading = false;
       console.log(error);
+    });
+  }
+  ngAfterViewInit() {
+    const autocomplete = new google.maps.places.Autocomplete(this.locationInput.nativeElement, {
+      types: ['geocode'], // or use ['(cities)'] or ['establishment']
+    });
+
+    autocomplete.addListener('place_changed', () => {
+      const place = autocomplete.getPlace();
+      console.log('Selected Place:', place);
+      // You can extract place.geometry.location, place.formatted_address, etc.
     });
   }
 

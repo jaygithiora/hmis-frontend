@@ -15,7 +15,7 @@
                 <div class="col-sm-4 p-3">
                   <img src="assets/img/default-profile.png" class="img-fluid w-100 img-thumbnail" />
                   <p class="m-3">
-                    <span class="btn btn-primary btn-sm w-100"><i class='fas fa-image'></i> Take Photo</span>
+                    <app-take-photo></app-take-photo>
                   </p>
                 </div>
                 <div class="col-sm-8">
@@ -124,31 +124,37 @@
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
                   <label>Blood Group</label>
-                  <input type="text" class="form-control" formControlName="guardian_name" placeholder="Guardian Name" />
+                      <ng-select [items]="blood_groups" bindLabel="name" bindValue="id" [typeahead]="searchBloodGroup$"
+                        [loading]="loadingBloodGroup" [(ngModel)]="selectedBloodGroupOption"
+                        placeholder="Search for Blood Group" (change)="onItemSelect($event)"
+                        formControlName="blood_group"></ng-select>
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
                   <label>Location<span class='text-danger'>*</span></label>
-                  <input type="text" class="form-control" formControlName="guardian_name" placeholder="Guardian Name" />
+                  <input type="text" class="form-control" #locationInput formControlName="patient_location" placeholder="Location" />
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
                   <label>Citizenship<span class='text-danger'>*</span></label>
-                  <input type="text" class="form-control" formControlName="guardian_name" placeholder="Guardian Name" />
+                  <select formControlName="citizenship" class="form-control custom-select">
+                    <option value="National">National</option>
+                    <option value="International">International</option>
+                  </select>
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
                   <label>Mobile Number<span class='text-danger'>*</span></label>
-                  <input type="text" class="form-control" formControlName="guardian_name" placeholder="Guardian Name" />
+                  <input type="text" class="form-control" formControlName="phone" placeholder="Phone Number" />
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
                   <label>Email Address</label>
-                  <input type="text" class="form-control" formControlName="guardian_name" placeholder="Guardian Name" />
+                  <input type="email" class="form-control" formControlName="email" placeholder="Email Address" />
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
                   <label>Next of Kin Name<span class='text-danger'>*</span></label>
-                  <input type="text" class="form-control" formControlName="guardian_name" placeholder="Guardian Name" />
+                  <input type="text" class="form-control" formControlName="next_of_kin_name" placeholder="Next Of Kin Name" />
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
                   <label>Next of Kin Phone Number<span class='text-danger'>*</span></label>
-                  <input type="text" class="form-control" formControlName="guardian_name" placeholder="Guardian Name" />
+                  <input type="text" class="form-control" formControlName="next_of_kin_phone" placeholder="Next Of Kin Phone" />
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
                   <label>Next of Kin Relation<span class='text-danger'>*</span></label>

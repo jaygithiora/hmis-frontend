@@ -1,0 +1,28 @@
+<span class="btn btn-primary btn-sm w-100" (click)="openModal(content)">
+  <i class="fas fa-camera"></i> Take Photo
+</span>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Take Photo</h4>
+    <button type="button" class="btn-close close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="webcam-container">
+      <div class="aspect-ratio-box">
+        <webcam class="webcam-feed" [trigger]="triggerObservable" (imageCapture)="handleImage($event)">
+        </webcam>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.close('Save click')">
+      Close
+    </button>
+    <button type="button" class="btn btn-primary" (click)="triggerSnapshot()">
+      Capture Image
+    </button>
+  </div>
+</ng-template>

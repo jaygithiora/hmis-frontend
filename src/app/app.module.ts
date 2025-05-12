@@ -93,6 +93,9 @@ import { BedsComponent } from './pages/dashboard/ip-masters/beds/beds.component'
 import { BedChargesComponent } from './pages/dashboard/ip-masters/bed-charges/bed-charges.component';
 import { BedChargeSettingsComponent } from './pages/dashboard/ip-masters/bed-charge-settings/bed-charge-settings.component';
 import { PatientRegistrationComponent } from './pages/dashboard/patients/patient-registration/patient-registration.component';
+import { NextOfKinRelationsComponent } from './pages/dashboard/settings/next-of-kin-relations/next-of-kin-relations.component';
+import { WebcamModule } from 'ngx-webcam';
+import { TakePhotoComponent } from './components/take-photo/take-photo.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -170,7 +173,9 @@ registerLocaleData(localeEn, 'en-EN');
         BedsComponent,
         BedChargesComponent,
         BedChargeSettingsComponent,
-        PatientRegistrationComponent
+        PatientRegistrationComponent,
+        NextOfKinRelationsComponent,
+        TakePhotoComponent
     ],
     bootstrap: [AppComponent],
     imports: [
@@ -189,7 +194,8 @@ registerLocaleData(localeEn, 'en-EN');
         NgxGoogleAnalyticsModule.forRoot(environment.GA_ID),
         FontAwesomeModule,
         NgbModule,
-        NgSelectComponent
+        NgSelectComponent,
+        WebcamModule
     ],
     providers: [provideHttpClient(withInterceptorsFromDi()),provideHttpClient(withInterceptors([tokenInterceptor])), {provide:API_BASE_URL, useValue: environment.apiBaseUrl}]
 })

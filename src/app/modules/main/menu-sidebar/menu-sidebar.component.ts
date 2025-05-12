@@ -289,6 +289,11 @@ export const MENU = [
         iconClasses: 'fas fa-circle icon-small',
         path: ['/dashboard/settings/doctors']
       },
+      {
+        name: 'Next Of Kin',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/settings/next-of-kin-relations']
+      },
     ]
   },
   {

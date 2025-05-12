@@ -54,6 +54,7 @@ import { BedsComponent } from '@pages/dashboard/ip-masters/beds/beds.component';
 import { BedChargesComponent } from '@pages/dashboard/ip-masters/bed-charges/bed-charges.component';
 import { BedChargeSettingsComponent } from '@pages/dashboard/ip-masters/bed-charge-settings/bed-charge-settings.component';
 import { PatientRegistrationComponent } from '@pages/dashboard/patients/patient-registration/patient-registration.component';
+import { NextOfKinRelationsComponent } from '@pages/dashboard/settings/next-of-kin-relations/next-of-kin-relations.component';
 
 const routes: Routes = [
   {
@@ -240,6 +241,10 @@ const routes: Routes = [
       {
         path: 'settings/doctors',
         component: DoctorsComponent
+      },
+      {
+        path: 'settings/next-of-kin-relations',
+        component: NextOfKinRelationsComponent
       },
       //settings
       {
