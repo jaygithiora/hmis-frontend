@@ -96,6 +96,7 @@ import { PatientRegistrationComponent } from './pages/dashboard/patients/patient
 import { NextOfKinRelationsComponent } from './pages/dashboard/settings/next-of-kin-relations/next-of-kin-relations.component';
 import { WebcamModule } from 'ngx-webcam';
 import { TakePhotoComponent } from './components/take-photo/take-photo.component';
+import { PatientsListComponent } from './pages/dashboard/patients/patients-list/patients-list.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -175,7 +176,8 @@ registerLocaleData(localeEn, 'en-EN');
         BedChargeSettingsComponent,
         PatientRegistrationComponent,
         NextOfKinRelationsComponent,
-        TakePhotoComponent
+        TakePhotoComponent,
+        PatientsListComponent
     ],
     bootstrap: [AppComponent],
     imports: [

@@ -1,0 +1,104 @@
+<app-content-header [title]="'Patients'"></app-content-header>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col">
+                                <h6>
+                                    <i class="fas fa-user-injured"></i>
+                                    Patients
+                                </h6>
+                            </div>
+                            <div class="col text-right">
+                                <a [routerLink]="'/dashboard/patients/registration'"
+                                    class="btn btn-primary btn-sm"
+                                >
+                                    <i class="fas fa-plus"></i> Add Patient
+                            </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <th>ID</th>
+                                <th>Patient Code</th>
+                                <th>Patient Name</th>
+                                <th>Main Type</th>
+                                <th>Sub Type</th>
+                                <th>Account</th>
+                                <th>Plan</th>
+                                <th>DOB</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th class="text-right">Action</th>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="isLoading">
+                                    <td colspan="7" class="text-center">
+                                        <div class="alert alert-secondary">
+                                            <div
+                                                class="spinner-border spinner-border-sm"
+                                                role="status"
+                                                *ngIf="isLoading"
+                                            >
+                                                <span class="sr-only"
+                                                    >Loading...</span
+                                                >
+                                            </div>
+                                            Loading Patients...
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="!isLoading && patients.length == 0">
+                                    <td colspan="7" class="text-center">
+                                        <div class="alert alert-secondary">
+                                            <i class="fas fa-ban"></i> No
+                                            <b>Patients</b> Found!
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr
+                                    *ngFor="
+                                        let patient of patients;
+                                        let i = index
+                                    "
+                                >
+                                    <td>{{ i + 1 }}</td>
+                                    <td>{{ patient.code }}</td>
+                                    <td>{{ patient.first_name }} {{ patient.other_names }}</td>
+                                    <td>{{ patient.main_type?.name }}</td>
+                                    <td>
+                                        {{ formatDate(patient.created_at) }}
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="badge badge-primary btn-pill"
+                                            *ngIf="patient.status"
+                                            >Active</span
+                                        >
+                                        <span
+                                            class="badge badge-secondary btn-pill"
+                                            *ngIf="!patient.status"
+                                            >In-Active</span
+                                        >
+                                    </td>
+                                    <td class="text-right">
+                                        <a [routerLink]="'/dashboard/patients/registration/edit/'+patient.id"
+                                            class="btn btn-primary btn-sm"
+                                        >
+                                            <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,4 +1,4 @@
-import { Component, TemplateRef } from '@angular/core';
+import { Component, EventEmitter, Input, input, Output, TemplateRef } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { WebcamImage } from 'ngx-webcam';
 import { Subject } from 'rxjs';
@@ -10,17 +10,27 @@ import { Subject } from 'rxjs';
 })
 export class TakePhotoComponent {
   modalRef: NgbModalRef;
+  width = 500;
+
   trigger: Subject<void> = new Subject<void>();
   triggerObservable = this.trigger.asObservable();
 
   webcamImage!: WebcamImage;
+  @Output() imageCaptured = new EventEmitter<WebcamImage>();
 
   constructor(private modalService: NgbModal) {
   }
 
   openModal(content: TemplateRef<any>) {
-    this.modalRef = this.modalService.open(content, { centered: true });
+    this.modalRef = this.modalService.open(content, { centered: true }); setTimeout(() => {
+    const modalElement = document.querySelector('.modal-dialog') as HTMLElement;
+    if (modalElement) {
+      this.width = modalElement.offsetWidth;
+      //alert('Modal width:'+width + 'px');
+    }
+  }, 0);
   }
+
 
   //web cam functions
   triggerSnapshot(): void {
@@ -29,9 +39,11 @@ export class TakePhotoComponent {
 
   handleImage(webcamImage: WebcamImage): void {
     this.webcamImage = webcamImage;
-    this.uploadImage(webcamImage.imageAsDataUrl);
+    this.imageCaptured.emit(webcamImage);
+    this.modalRef?.close();
+    //this.uploadImage(webcamImage.imageAsDataUrl);
   }
-
+/*
   uploadImage(dataUrl: string): void {
     const blob = this.dataURLtoBlob(dataUrl);
     const formData = new FormData();
@@ -58,5 +70,5 @@ export class TakePhotoComponent {
     }
 
     return new Blob([ab], { type: mimeString });
-  }
+  }*/
 }

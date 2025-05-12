@@ -5,17 +5,19 @@
       <div class="col-sm-12">
         <div class="card">
           <div class="card-body">
-            <form [formGroup]="patientRegistrationForm" (ngSubmit)="updateHospitalData()">
+            <form [formGroup]="patientRegistrationForm" (ngSubmit)="updatePatient()">
 
               <h6 class="alert alert-primary">
-                1. Payment Details
+                1. Payment Details 
+
               </h6>
               <input type="hidden" formControlName="id" value="0" />
               <div class="row">
                 <div class="col-sm-4 p-3">
-                  <img src="assets/img/default-profile.png" class="img-fluid w-100 img-thumbnail" />
+                  <img [src]="'assets/img/default-profile.png'" class="img-fluid w-100 img-thumbnail" *ngIf="patientImage==null" />
+                  <img [src]="patientImage.imageAsDataUrl" class="img-fluid w-100 img-thumbnail" *ngIf="patientImage!=null" />
                   <p class="m-3">
-                    <app-take-photo></app-take-photo>
+                    <app-take-photo (imageCaptured)="imageCaptured($event)"></app-take-photo>
                   </p>
                 </div>
                 <div class="col-sm-8">
@@ -43,7 +45,13 @@
                       <label>Account/Company<span class='text-danger'>*</span></label>
                       <ng-select [items]="accounts" bindLabel="name" bindValue="id" [typeahead]="searchAccounts$"
                         [loading]="loadingAccount" [(ngModel)]="selectedAccountOption" placeholder="Search for Account"
-                        (change)="onItemSelect($event)" formControlName="sub_type"></ng-select>
+                        (change)="onItemSelect($event)" formControlName="account"></ng-select>
+                    </div>
+                    <div class="col-sm-6 col-lg-4 mb-3">
+                      <label>Plan<span class='text-danger'>*</span></label>
+                      <ng-select [items]="plans" bindLabel="name" bindValue="id" [typeahead]="searchPlan$"
+                        [loading]="loadingPlan" [(ngModel)]="selectedPlanOption" placeholder="Search for Plan"
+                        (change)="onItemSelect($event)" formControlName="plan"></ng-select>
                     </div>
                     <!--                    <div class="col-sm-6 col-lg-4 mb-3">
                       <label>Validity</label>
@@ -84,7 +92,7 @@
                     </div>
                     <div class="col-sm-6 col-lg-4 mb-3">
                       <label>Date of Birth<span class='text-danger'>*</span></label>
-                      <input type="date" class="form-control" name="dob" placeholder="Date of Birth"/>
+                      <input type="date" class="form-control" formControlName="dob" placeholder="Date of Birth"/>
                     </div>
                     <div class="col-sm-6 col-lg-4 mb-3">
                       <label>First Name<span class='text-danger'>*</span></label>
@@ -105,7 +113,7 @@
                     </div>
                     <div class="col-sm-6 col-lg-4 mb-3">
                       <label>Member Type<span class='text-danger'>*</span></label>
-                      <select class="form-control custom-select" formControlName="gender">
+                      <select class="form-control custom-select" formControlName="member_type">
                         <option disabled>Select Member Type</option>
                         <option value="PRIMARY">PRIMARY</option>
                         <option value="DEPEDENT">DEPENDANT</option>
@@ -158,18 +166,29 @@
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
                   <label>Next of Kin Relation<span class='text-danger'>*</span></label>
-                  <input type="text" class="form-control" formControlName="guardian_name" placeholder="Guardian Name" />
+                      <ng-select [items]="next_of_kin_relations" bindLabel="name" bindValue="id" [typeahead]="searchNextOfKinRelation$"
+                        [loading]="loadingNextOfKinRelation" [(ngModel)]="selectedNextOfKinRelationOption" placeholder="Search for Next Of Kin Relation"
+                        (change)="onItemSelect($event)" formControlName="next_of_kin_relation"></ng-select>
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+                  <label>Status<span class='text-danger'>*</span></label><select class="form-control custom-select" formControlName="status">
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
+                  </select>
                 </div>
               </div>
 
-              <div class="col-sm-12 text-right">
-                <button class="btn btn-primary" [disabled]="isLoading" (click)="updateHospitalData()">
-                  <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+              <div class="col-sm-12 text-right"><span *ngIf="isLoading">Show</span>
+                <button class="btn btn-primary" [disabled]="isLoading" (click)="updatePatient()">
+                  <span *ngIf="isLoading">
+                  <div class="spinner-border spinner-border-sm" role="status" >
                     <span class="sr-only">Loading...</span>
                   </div>
+                  Saving...
+                  </span>
                   <span *ngIf="!isLoading">
                     <i class="fas fa-paper-plane"></i>
-                    Update Data
+                  Save Registration
                   </span>
                 </button>
               </div>

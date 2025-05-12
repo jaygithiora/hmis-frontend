@@ -271,12 +271,12 @@ export const MENU = [
       {
         name: 'Patient Registration',
         iconClasses: 'fas fa-circle icon-small',
-        path: ['/dashboard/patient-registration']
+        path: ['/dashboard/patients/registration']
       },
       {
         name: 'Patients',
         iconClasses: 'fas fa-circle icon-small',
-        path: ['/dashboard/patients']
+        path: ['/dashboard/patients/list']
       },
     ]
   },

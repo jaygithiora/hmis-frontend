@@ -9,8 +9,8 @@ import { Observable } from 'rxjs';
 export class PlansService {
   constructor(private http: HttpClient,@Inject(API_BASE_URL) private baseUrl:string) { }
 
-    getPlans(page:number = 1, search:string="", sub_type:number=0):Observable<any>{
-      return this.http.get(`${this.baseUrl}/api/dashboard/masters/plans?page=${page}&search=${search}&sub_type=${sub_type}`);
+    getPlans(page:number = 1, search:string="", sub_type:number=0, account:number=0):Observable<any>{
+      return this.http.get(`${this.baseUrl}/api/dashboard/masters/plans?page=${page}&search=${search}&sub_type=${sub_type}&account=${account}`);
     }
     updatePlan(inputData:any){
       return this.http.post(`${this.baseUrl}/api/dashboard/masters/plans/add`, inputData);

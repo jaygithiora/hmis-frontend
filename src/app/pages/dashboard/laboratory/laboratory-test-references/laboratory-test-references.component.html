@@ -36,7 +36,7 @@
                 </thead>
                 <tbody>
                   <tr *ngIf="isLoading">
-                    <td colspan="11" class="text-center">
+                    <td colspan="10" class="text-center">
                       <div class="alert alert-secondary">
                         <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
                           <span class="sr-only">Loading...</span>
@@ -48,7 +48,7 @@
                   <tr *ngIf="
                                             !isLoading && laboratory_test_references.length == 0
                                         ">
-                    <td colspan="9" class="text-center">
+                    <td colspan="10" class="text-center">
                       <div class="alert alert-secondary">
                         <i class="fas fa-ban"></i> No
                         <b>Laboratory Test References</b> Found!

@@ -8,7 +8,6 @@ import { Observable } from 'rxjs';
 })
 export class RadiologyItemsService {
 constructor(private http: HttpClient,@Inject(API_BASE_URL) private baseUrl:string) { }
-
   getRadiologyItems(page:number = 1, search:string=""):Observable<any>{
     return this.http.get(`${this.baseUrl}/api/dashboard/radiology/items?page=${page}&search=${search}`);
   }
