@@ -4,24 +4,26 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@services/auth/auth.service';
 import { AccountsService } from '@services/dashboard/masters/accounts/accounts.service';
 import { BloodGroupsService } from '@services/dashboard/masters/blood-groups/blood-groups.service';
-import { HospitalDataService } from '@services/dashboard/masters/hospital-data.service';
+import { ConsultationTypesService } from '@services/dashboard/masters/consultation-types/consultation-types.service';
+import { DepartmentsService } from '@services/dashboard/masters/departments/departments.service';
 import { LocationsService } from '@services/dashboard/masters/locations.service';
 import { MainTypesService } from '@services/dashboard/masters/manin-types/main-types.service';
 import { PlansService } from '@services/dashboard/masters/plans/plans.service';
 import { SalutationService } from '@services/dashboard/masters/salutation/salutation.service';
 import { SubTypesService } from '@services/dashboard/masters/sub-types/sub-types.service';
 import { PatientRegistrationService } from '@services/dashboard/patients/patient-registration/patient-registration.service';
+import { DoctorsService } from '@services/dashboard/settings/doctors/doctors.service';
 import { NextOfKinRelationsService } from '@services/dashboard/settings/next-of-kin-relations/next-of-kin-relations.service';
 import { ToastrService } from 'ngx-toastr';
 import { WebcamImage } from 'ngx-webcam';
-import { debounceTime, distinctUntilChanged, Subject, switchMap, tap } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, tap, switchMap } from 'rxjs';
 
 @Component({
-  selector: 'app-patient-registration',
-  templateUrl: './patient-registration.component.html',
-  styleUrl: './patient-registration.component.scss',
+  selector: 'app-create-op-visit',
+  templateUrl: './create-op-visit.component.html',
+  styleUrl: './create-op-visit.component.scss'
 })
-export class PatientRegistrationComponent implements OnInit, AfterViewInit {
+export class CreateOpVisitComponent implements OnInit, AfterViewInit {
   @ViewChild('locationInput') locationInput!: ElementRef;
   patientImage: WebcamImage;
 
@@ -34,6 +36,10 @@ export class PatientRegistrationComponent implements OnInit, AfterViewInit {
   loadingSalutation: boolean = false;
   loadingBloodGroup: boolean = false;
   loadingNextOfKinRelation: boolean = false;
+  loadingPatients: boolean = false;
+  loadingDepartments: boolean = false;
+  loadingDoctors: boolean = false;
+  loadingConsultationTypes: boolean = false;
 
   locations: any[] = [];
   main_types: any[] = [];
@@ -43,6 +49,10 @@ export class PatientRegistrationComponent implements OnInit, AfterViewInit {
   salutations: any[] = [];
   blood_groups: any[] = [];
   next_of_kin_relations: any[] = [];
+  patients: any[] = [];
+  departments: any[] = [];
+  doctors: any[] = [];
+  consultation_types: any[] = [];
 
   search$ = new Subject<string>();
   searchMainTypes$ = new Subject<string>();
@@ -52,6 +62,10 @@ export class PatientRegistrationComponent implements OnInit, AfterViewInit {
   searchSalutation$ = new Subject<string>();
   searchBloodGroup$ = new Subject<string>();
   searchNextOfKinRelation$ = new Subject<string>();
+  searchPatient$ = new Subject<string>();
+  searchDepartment$ = new Subject<string>();
+  searchDoctor$ = new Subject<string>();
+  searchConsultationTypes$ = new Subject<string>();
 
   selectedOption: any;
   selectedMainTypeOption: any;
@@ -61,24 +75,36 @@ export class PatientRegistrationComponent implements OnInit, AfterViewInit {
   selectedSalutationOption: any;
   selectedBloodGroupOption: any;
   selectedNextOfKinRelationOption: any;
+  selectedPatientOption: any;
+  selectedDepartmentOption: any;
+  selectedDoctorOption: any;
+  selectedConsultationTypeOption: any;
 
   patient: any;
-  patientRegistrationForm!: FormGroup;
+  visitForm!: FormGroup;
+
   imageUrl = 'assets/img/default-profile.png';
-  title:string = "Register New Patient"
+  patientId: number = 0;
 
   constructor(private patientRegistrationService: PatientRegistrationService, private toastr: ToastrService, private service: AuthService,
-    private fb: FormBuilder, private locationService: LocationsService, private mainTypeService: MainTypesService,
+    private fb: FormBuilder, private locationService: LocationsService, private mainTypeService: MainTypesService, private activatedRoute: ActivatedRoute,
     private accountService: AccountsService, private subTypeService: SubTypesService, private planService: PlansService,
     private salutationService: SalutationService, private bloodGroupService: BloodGroupsService, private nextOfKinRelationService: NextOfKinRelationsService,
-    private router: Router, private route: ActivatedRoute) {
-    this.patientRegistrationForm = this.fb.group({
+    private departmentService: DepartmentsService,private doctorsService:DoctorsService,private consultationTypesService:ConsultationTypesService,
+    private router: Router) {
+    this.visitForm = this.fb.group({
       id: ['0', [Validators.required]],
+      patient: ['0'],
+      patient_code: [],
       location: ['', [Validators.required]],
       main_type: ['', [Validators.required]],
       sub_type: ['', [Validators.required]],
       account: ['', [Validators.required]],
       plan: ['', [Validators.required]],
+      department: ['', [Validators.required]],
+      doctor: ['', [Validators.required]],
+      consultation_type:['', [Validators.required]],
+      consultation_fees: ['0', [Validators.required]],
       //validity: [''],
       //bill_type: [''],
       //copay: [''],
@@ -91,18 +117,8 @@ export class PatientRegistrationComponent implements OnInit, AfterViewInit {
       id_number: [''],
       member_number: [''],
       member_type: ['', [Validators.required]],
-      blood_group: [''],
-      guardian_name: [''],
-      patient_location: ['', [Validators.required]],
-      citizenship: ['', [Validators.required]],
-      next_of_kin_name: ['', [Validators.required]],
-      next_of_kin_phone: ['', [Validators.required]],
-      phone: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
-      email: ['', [Validators.required, Validators.email]],
-      next_of_kin_relation: ['', Validators.required],
-      status: ['1', Validators.required]
+      status: ['active', Validators.required]
     });
-    this.title = "Register New Patient";
 
     this.setupSearch();
   }
@@ -199,11 +215,59 @@ export class PatientRegistrationComponent implements OnInit, AfterViewInit {
         this.next_of_kin_relations = results.next_of_kin_relations.data;
         this.loadingNextOfKinRelation = false;  // Hide the loading spinner when the API call finishes
       });
+    this.searchPatient$
+      .pipe(
+        debounceTime(300),  // Wait for the user to stop typing for 300ms
+        distinctUntilChanged(),  // Only search if the query has changed
+        tap(() => this.loadingPatients = true),  // Show the loading spinner
+        switchMap(term => this.patientRegistrationService.getPatientRegistrations(1, term))  // Switch to a new observable for each search term
+      )
+      .subscribe((results: any) => {
+        this.patients = results.patients.data.map((patient: any) => ({ ...patient, name: `CODE: ${patient.code} | NAME: ${patient.first_name} ${patient.other_names} | ID: ${patient.id_number} | PHONE: ${patient.phone}` }));
+        this.loadingPatients = false;  // Hide the loading spinner when the API call finishes
+      });
+    this.searchDepartment$
+      .pipe(
+        debounceTime(300),  // Wait for the user to stop typing for 300ms
+        distinctUntilChanged(),  // Only search if the query has changed
+        tap(() => this.loadingDepartments = true),  // Show the loading spinner
+        switchMap(term => this.departmentService.getDepartments(1, term))  // Switch to a new observable for each search term
+      )
+      .subscribe((results: any) => {
+        this.selectedDoctorOption = null;
+        this.departments = results.departments.data
+        this.loadingDepartments = false;  // Hide the loading spinner when the API call finishes
+      });
+    this.searchDoctor$
+      .pipe(
+        debounceTime(300),  // Wait for the user to stop typing for 300ms
+        distinctUntilChanged(),  // Only search if the query has changed
+        tap(() => this.loadingDoctors = true),  // Show the loading spinner
+        switchMap(term => this.doctorsService.getDoctors(1, term, this.selectedDepartmentOption))  // Switch to a new observable for each search term
+      )
+      .subscribe((results: any) => {
+        this.doctors = results.doctors.data
+        this.loadingDoctors = false;  // Hide the loading spinner when the API call finishes
+      });
+    this.searchConsultationTypes$
+      .pipe(
+        debounceTime(300),  // Wait for the user to stop typing for 300ms
+        distinctUntilChanged(),  // Only search if the query has changed
+        tap(() => this.loadingConsultationTypes = true),  // Show the loading spinner
+        switchMap(term => this.consultationTypesService.getConsultationTypes(1, term, this.selectedDoctorOption))  // Switch to a new observable for each search term
+      )
+      .subscribe((results: any) => {
+        this.consultation_types = results.consultation_types.data
+        this.loadingConsultationTypes = false;  // Hide the loading spinner when the API call finishes
+      });
   }
+  // Handle item selection
   onPatientSelect(event: any) {
-    this.title = "Edit Patient Details"
     this.patient = event;
-    this.patientRegistrationForm.get("id")?.setValue(this.patient.id);
+    this.patients = [];
+    this.visitForm.get("patient_code")?.setValue(this.patient.code);
+    this.patients.push({ ...this.patient, name: `CODE: ${this.patient.code} | NAME: ${this.patient.first_name} ${this.patient.other_names} | ID: ${this.patient.id_number} | PHONE: ${this.patient.phone}` });
+    this.selectedPatientOption = this.patient.id;
     if (this.patient.image != null) {
       this.imageUrl = this.patient.image;
     }
@@ -242,27 +306,27 @@ export class PatientRegistrationComponent implements OnInit, AfterViewInit {
       this.salutations.push(this.patient.salutation);
       this.selectedSalutationOption = this.patient.salutation_id;
     }
-    this.patientRegistrationForm.get("gender")?.setValue(this.patient.gender);
-    this.patientRegistrationForm.get("dob")?.setValue(this.patient.dob);
-    this.patientRegistrationForm.get("first_name")?.setValue(this.patient.first_name);
-    this.patientRegistrationForm.get("other_names")?.setValue(this.patient.other_names);
-    this.patientRegistrationForm.get("id_number")?.setValue(this.patient.id_number);
-    this.patientRegistrationForm.get("member_number")?.setValue(this.patient.member_number);
-    this.patientRegistrationForm.get("id_number")?.setValue(this.patient.id_number);
-    this.patientRegistrationForm.get("member_type")?.setValue(this.patient.member_type);
-    this.patientRegistrationForm.get("guardian_name")?.setValue(this.patient.guardian_name);
+    this.visitForm.get("gender")?.setValue(this.patient.gender);
+    this.visitForm.get("dob")?.setValue(this.patient.dob);
+    this.visitForm.get("first_name")?.setValue(this.patient.first_name);
+    this.visitForm.get("other_names")?.setValue(this.patient.other_names);
+    this.visitForm.get("id_number")?.setValue(this.patient.id_number);
+    this.visitForm.get("member_number")?.setValue(this.patient.member_number);
+    this.visitForm.get("id_number")?.setValue(this.patient.id_number);
+    this.visitForm.get("member_type")?.setValue(this.patient.member_type);
+    this.visitForm.get("guardian_name")?.setValue(this.patient.guardian_name);
 
     if (this.patient.blood_group) {
       this.blood_groups = [];
       this.blood_groups.push(this.patient.blood_group);
       this.selectedBloodGroupOption = this.patient.blood_group_id;
     }
-    this.patientRegistrationForm.get("patient_location")?.setValue(this.patient.patient_location);
-    this.patientRegistrationForm.get("citizenship")?.setValue(this.patient.citizenship);
-    this.patientRegistrationForm.get("phone")?.setValue(this.patient.phone);
-    this.patientRegistrationForm.get("email")?.setValue(this.patient.email);
-    this.patientRegistrationForm.get("next_of_kin_name")?.setValue(this.patient.next_of_kin_name);
-    this.patientRegistrationForm.get("next_of_kin_phone")?.setValue(this.patient.next_of_kin_phone);
+    this.visitForm.get("patient_location")?.setValue(this.patient.patient_location);
+    this.visitForm.get("citizenship")?.setValue(this.patient.citizenship);
+    this.visitForm.get("phone")?.setValue(this.patient.phone);
+    this.visitForm.get("email")?.setValue(this.patient.email);
+    this.visitForm.get("next_of_kin_name")?.setValue(this.patient.next_of_kin_name);
+    this.visitForm.get("next_of_kin_phone")?.setValue(this.patient.next_of_kin_phone);
 
     if (this.patient.next_of_kin_relation) {
       this.next_of_kin_relations = [];
@@ -270,14 +334,18 @@ export class PatientRegistrationComponent implements OnInit, AfterViewInit {
       this.selectedNextOfKinRelationOption = this.patient.next_of_kin_relation_id;
     }
   }
-  // Handle item selection
   onItemSelect(event: any) {
     console.log('Selected item:', event);
   }
+  onConsultationTypeSelect(event: any) {
+    this.visitForm.get("consultation_fees")?.setValue(event.consultation_fees);
+    console.log('Consultation Type item:', event);
+  }
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get("id");
-    if(id != null){
+    const id = this.activatedRoute.snapshot.paramMap.get("patient_id");
+    if (id != null) {
+      this.patientId = parseInt(id);
       this.isLoading = true;
       this.patientRegistrationService.getPatientRegistration(parseInt(id)).subscribe((result: any) => {
         this.patient = result.patient;
@@ -310,7 +378,7 @@ export class PatientRegistrationComponent implements OnInit, AfterViewInit {
   }
 
   updatePatient() {
-    if (this.patientRegistrationForm.valid) {
+    if (this.visitForm.valid) {
       let formData = new FormData();
       if (this.patientImage != null) {
         // Convert the image data to a Blob
@@ -318,7 +386,7 @@ export class PatientRegistrationComponent implements OnInit, AfterViewInit {
         formData = this.createFormData(blob);
       }
       this.isLoading = true;
-      this.patientRegistrationService.updatePatientRegistration(this.patientImage != null ? formData : this.patientRegistrationForm.getRawValue()).subscribe((result: any) => {
+      this.patientRegistrationService.updatePatientRegistration(this.patientImage != null ? formData : this.visitForm.getRawValue()).subscribe((result: any) => {
         if (result.success) {
           this.toastr.success(result.success);
           this.router.navigate(["/dashboard/patients/list"]);
@@ -424,11 +492,12 @@ export class PatientRegistrationComponent implements OnInit, AfterViewInit {
     formData.append('photo', blob, 'photo.jpg');
 
     // Append other form data fields here
-    Object.keys(this.patientRegistrationForm.value).forEach(key => {
-      formData.append(key, this.patientRegistrationForm.get(key)?.value);
+    Object.keys(this.visitForm.value).forEach(key => {
+      formData.append(key, this.visitForm.get(key)?.value);
     });
 
     return formData;
   }
 }
+
 

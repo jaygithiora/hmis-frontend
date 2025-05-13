@@ -281,6 +281,32 @@ export const MENU = [
     ]
   },
   {
+    name: 'Visit Management',
+    iconClasses: 'fas fa-hospital-user',
+    children: [
+      {
+        name: 'Create OP Visit',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/visits/op/create']
+      },
+      {
+        name: 'Create IP Visit',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/visits/ip/create']
+      },
+      {
+        name: 'OP Visit List',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/visits/op/list']
+      },
+      {
+        name: 'IP Visit List',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/visits/ip/list']
+      },
+    ]
+  },
+  {
     name: 'Settings',
     iconClasses: 'fas fa-cog',
     children: [

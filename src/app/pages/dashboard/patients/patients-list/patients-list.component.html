@@ -13,11 +13,14 @@
                                 </h6>
                             </div>
                             <div class="col text-right">
-                                <a [routerLink]="'/dashboard/patients/registration'"
+                                <a
+                                    [routerLink]="
+                                        '/dashboard/patients/registration'
+                                    "
                                     class="btn btn-primary btn-sm"
                                 >
                                     <i class="fas fa-plus"></i> Add Patient
-                            </a>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -69,13 +72,16 @@
                                 >
                                     <td>{{ i + 1 }}</td>
                                     <td>{{ patient.code }}</td>
-                                    <td>{{ patient.first_name }} {{ patient.other_names }}</td>
+                                    <td>
+                                        {{ patient.first_name }}
+                                        {{ patient.other_names }}
+                                    </td>
                                     <td>{{ patient.main_type?.name }}</td>
                                     <td>{{ patient.sub_type?.name }}</td>
                                     <td>{{ patient.account?.name }}</td>
                                     <td>{{ patient.plan?.name }}</td>
                                     <td>
-                                        {{ patient.dob|date }}
+                                        {{ patient.dob | date }}
                                     </td>
                                     <td>
                                         {{ formatDate(patient.created_at) }}
@@ -93,11 +99,54 @@
                                         >
                                     </td>
                                     <td class="text-right">
-                                        <a [routerLink]="'/dashboard/patients/registration/edit/'+patient.id"
-                                            class="btn btn-primary btn-sm"
-                                        >
-                                            <i class="fas fa-edit"></i> Edit
-                                    </a>
+                                        <div ngbDropdown container="body">
+                                            <button
+                                                type="button"
+                                                class="btn btn-outline-primary btn-sm pr-3 pl-3 border-0"
+                                                ngbDropdownToggle
+                                            >
+                                                <i
+                                                    class="fas fa-ellipsis-v"
+                                                ></i>
+                                            </button>
+                                            <div ngbDropdownMenu>
+                                                <a
+                                                    ngbDropdownItem
+                                                    [routerLink]="
+                                                        '/dashboard/visits/op/create/' +
+                                                        patient.id
+                                                    "
+                                                    ><i
+                                                        class="fas fa-user-injured"
+                                                    ></i>
+                                                    Create OP Visit</a
+                                                >
+                                                <div
+                                                    class="dropdown-divider"
+                                                ></div>
+                                                <a
+                                                    ngbDropdownItem
+                                                    [routerLink]="
+                                                        '/dashboard/visits/op/create/' +
+                                                        patient.id
+                                                    "
+                                                    ><i class="fas fa-bed"></i>
+                                                    Create IP Visit</a
+                                                >
+                                                <div
+                                                    class="dropdown-divider"
+                                                ></div>
+                                                <a
+                                                    ngbDropdownItem
+                                                    [routerLink]="
+                                                        '/dashboard/patients/registration/edit/' +
+                                                        patient.id
+                                                    "
+                                                    ><i class="fas fa-edit"></i>
+                                                    Edit</a
+                                                >
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>

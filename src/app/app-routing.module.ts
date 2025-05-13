@@ -56,6 +56,10 @@ import { BedChargeSettingsComponent } from '@pages/dashboard/ip-masters/bed-char
 import { PatientRegistrationComponent } from '@pages/dashboard/patients/patient-registration/patient-registration.component';
 import { NextOfKinRelationsComponent } from '@pages/dashboard/settings/next-of-kin-relations/next-of-kin-relations.component';
 import { PatientsListComponent } from '@pages/dashboard/patients/patients-list/patients-list.component';
+import { CreateOpVisitComponent } from '@pages/dashboard/visit-management/create-op-visit/create-op-visit.component';
+import { CreateIpVisitComponent } from '@pages/dashboard/visit-management/create-ip-visit/create-ip-visit.component';
+import { VisitOpListComponent } from '@pages/dashboard/visit-management/visit-op-list/visit-op-list.component';
+import { VisitIpListComponent } from '@pages/dashboard/visit-management/visit-ip-list/visit-ip-list.component';
 
 const routes: Routes = [
   {
@@ -239,8 +243,37 @@ const routes: Routes = [
         component: PatientRegistrationComponent
       },
       {
+        path: 'patients/registration/edit/:id',
+        component: PatientRegistrationComponent
+      },
+      {
         path: 'patients/list',
         component: PatientsListComponent
+      },
+      //visits
+      {
+        path:'visits/op/create',
+        component:CreateOpVisitComponent
+      },
+      {
+        path:'visits/op/create/:patient_id',
+        component:CreateOpVisitComponent
+      },
+      {
+        path:'visits/ip/create',
+        component:CreateIpVisitComponent
+      },
+      {
+        path:'visits/ip/create/:patient_id',
+        component:CreateIpVisitComponent
+      },
+      {
+        path:'visits/op/list',
+        component:VisitOpListComponent
+      },
+      {
+        path:'visits/ip/list',
+        component:VisitIpListComponent
       },
       //settings
       {

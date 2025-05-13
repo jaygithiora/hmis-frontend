@@ -45,3 +45,9 @@ body {
 .firebase-emulator-warning{
     display: none;
 }
+.table .dropdown-toggle::after {
+  display: none !important;
+}
+.border-2{
+    border-width: 3px !important;
+}

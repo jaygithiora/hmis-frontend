@@ -97,6 +97,10 @@ import { NextOfKinRelationsComponent } from './pages/dashboard/settings/next-of-
 import { WebcamModule } from 'ngx-webcam';
 import { TakePhotoComponent } from './components/take-photo/take-photo.component';
 import { PatientsListComponent } from './pages/dashboard/patients/patients-list/patients-list.component';
+import { CreateOpVisitComponent } from './pages/dashboard/visit-management/create-op-visit/create-op-visit.component';
+import { CreateIpVisitComponent } from './pages/dashboard/visit-management/create-ip-visit/create-ip-visit.component';
+import { VisitOpListComponent } from './pages/dashboard/visit-management/visit-op-list/visit-op-list.component';
+import { VisitIpListComponent } from './pages/dashboard/visit-management/visit-ip-list/visit-ip-list.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -177,7 +181,11 @@ registerLocaleData(localeEn, 'en-EN');
         PatientRegistrationComponent,
         NextOfKinRelationsComponent,
         TakePhotoComponent,
-        PatientsListComponent
+        PatientsListComponent,
+        CreateOpVisitComponent,
+        CreateIpVisitComponent,
+        VisitOpListComponent,
+        VisitIpListComponent
     ],
     bootstrap: [AppComponent],
     imports: [

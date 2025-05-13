@@ -15,4 +15,7 @@ constructor(private http: HttpClient,@Inject(API_BASE_URL) private baseUrl:strin
   updatePatientRegistration(inputData:any){
     return this.http.post(`${this.baseUrl}/api/dashboard/patients/registrations/add`, inputData);
   }
+  getPatientRegistration(id:number){
+    return this.http.get(`${this.baseUrl}/api/dashboard/patients/registrations/view/${id}`);
+  }
 }

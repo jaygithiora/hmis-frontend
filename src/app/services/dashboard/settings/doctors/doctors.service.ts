@@ -9,8 +9,8 @@ import { Observable } from 'rxjs';
 export class DoctorsService {
   constructor(private http: HttpClient, @Inject(API_BASE_URL) private baseUrl: string) { }
 
-  getDoctors(page: number = 1, search: string = ""): Observable<any> {
-    return this.http.get(`${this.baseUrl}/api/dashboard/settings/doctors?page=${page}&search=${search}`);
+  getDoctors(page: number = 1, search: string = "", department:number=0): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/dashboard/settings/doctors?page=${page}&search=${search}&department=${department}`);
   }
   updateDoctor(inputData: any) {
     return this.http.post(`${this.baseUrl}/api/dashboard/settings/doctors/add`, inputData);
