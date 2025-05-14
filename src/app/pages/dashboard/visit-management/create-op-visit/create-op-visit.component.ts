@@ -1,9 +1,8 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@services/auth/auth.service';
 import { AccountsService } from '@services/dashboard/masters/accounts/accounts.service';
-import { BloodGroupsService } from '@services/dashboard/masters/blood-groups/blood-groups.service';
 import { ConsultationTypesService } from '@services/dashboard/masters/consultation-types/consultation-types.service';
 import { DepartmentsService } from '@services/dashboard/masters/departments/departments.service';
 import { LocationsService } from '@services/dashboard/masters/locations.service';
@@ -11,9 +10,9 @@ import { MainTypesService } from '@services/dashboard/masters/manin-types/main-t
 import { PlansService } from '@services/dashboard/masters/plans/plans.service';
 import { SalutationService } from '@services/dashboard/masters/salutation/salutation.service';
 import { SubTypesService } from '@services/dashboard/masters/sub-types/sub-types.service';
+import { OutpatientVisitsService } from '@services/dashboard/outpatient-visits/outpatient-visits.service';
 import { PatientRegistrationService } from '@services/dashboard/patients/patient-registration/patient-registration.service';
 import { DoctorsService } from '@services/dashboard/settings/doctors/doctors.service';
-import { NextOfKinRelationsService } from '@services/dashboard/settings/next-of-kin-relations/next-of-kin-relations.service';
 import { ToastrService } from 'ngx-toastr';
 import { WebcamImage } from 'ngx-webcam';
 import { Subject, debounceTime, distinctUntilChanged, tap, switchMap } from 'rxjs';
@@ -23,7 +22,7 @@ import { Subject, debounceTime, distinctUntilChanged, tap, switchMap } from 'rxj
   templateUrl: './create-op-visit.component.html',
   styleUrl: './create-op-visit.component.scss'
 })
-export class CreateOpVisitComponent implements OnInit, AfterViewInit {
+export class CreateOpVisitComponent implements OnInit {
   @ViewChild('locationInput') locationInput!: ElementRef;
   patientImage: WebcamImage;
 
@@ -34,8 +33,6 @@ export class CreateOpVisitComponent implements OnInit, AfterViewInit {
   loadingAccount: boolean = false;
   loadingPlan: boolean = false;
   loadingSalutation: boolean = false;
-  loadingBloodGroup: boolean = false;
-  loadingNextOfKinRelation: boolean = false;
   loadingPatients: boolean = false;
   loadingDepartments: boolean = false;
   loadingDoctors: boolean = false;
@@ -47,8 +44,6 @@ export class CreateOpVisitComponent implements OnInit, AfterViewInit {
   accounts: any[] = [];
   plans: any[] = [];
   salutations: any[] = [];
-  blood_groups: any[] = [];
-  next_of_kin_relations: any[] = [];
   patients: any[] = [];
   departments: any[] = [];
   doctors: any[] = [];
@@ -60,8 +55,6 @@ export class CreateOpVisitComponent implements OnInit, AfterViewInit {
   searchAccounts$ = new Subject<string>();
   searchPlan$ = new Subject<string>();
   searchSalutation$ = new Subject<string>();
-  searchBloodGroup$ = new Subject<string>();
-  searchNextOfKinRelation$ = new Subject<string>();
   searchPatient$ = new Subject<string>();
   searchDepartment$ = new Subject<string>();
   searchDoctor$ = new Subject<string>();
@@ -73,8 +66,6 @@ export class CreateOpVisitComponent implements OnInit, AfterViewInit {
   selectedAccountOption: any;
   selectedPlanOption: any;
   selectedSalutationOption: any;
-  selectedBloodGroupOption: any;
-  selectedNextOfKinRelationOption: any;
   selectedPatientOption: any;
   selectedDepartmentOption: any;
   selectedDoctorOption: any;
@@ -86,11 +77,11 @@ export class CreateOpVisitComponent implements OnInit, AfterViewInit {
   imageUrl = 'assets/img/default-profile.png';
   patientId: number = 0;
 
-  constructor(private patientRegistrationService: PatientRegistrationService, private toastr: ToastrService, private service: AuthService,
+  constructor(private patientRegistrationService:PatientRegistrationService,private outpatientVisitsService: OutpatientVisitsService, private toastr: ToastrService, private service: AuthService,
     private fb: FormBuilder, private locationService: LocationsService, private mainTypeService: MainTypesService, private activatedRoute: ActivatedRoute,
     private accountService: AccountsService, private subTypeService: SubTypesService, private planService: PlansService,
-    private salutationService: SalutationService, private bloodGroupService: BloodGroupsService, private nextOfKinRelationService: NextOfKinRelationsService,
-    private departmentService: DepartmentsService,private doctorsService:DoctorsService,private consultationTypesService:ConsultationTypesService,
+    private salutationService: SalutationService,private departmentService: DepartmentsService,private doctorsService:DoctorsService,
+    private consultationTypesService:ConsultationTypesService,
     private router: Router) {
     this.visitForm = this.fb.group({
       id: ['0', [Validators.required]],
@@ -193,28 +184,6 @@ export class CreateOpVisitComponent implements OnInit, AfterViewInit {
         this.salutations = results.salutations.data;
         this.loadingSalutation = false;  // Hide the loading spinner when the API call finishes
       });
-    this.searchBloodGroup$
-      .pipe(
-        debounceTime(300),  // Wait for the user to stop typing for 300ms
-        distinctUntilChanged(),  // Only search if the query has changed
-        tap(() => this.loadingBloodGroup = true),  // Show the loading spinner
-        switchMap(term => this.bloodGroupService.getBloodGroups(1, term))  // Switch to a new observable for each search term
-      )
-      .subscribe((results: any) => {
-        this.blood_groups = results.blood_groups.data;
-        this.loadingBloodGroup = false;  // Hide the loading spinner when the API call finishes
-      });
-    this.searchNextOfKinRelation$
-      .pipe(
-        debounceTime(300),  // Wait for the user to stop typing for 300ms
-        distinctUntilChanged(),  // Only search if the query has changed
-        tap(() => this.loadingNextOfKinRelation = true),  // Show the loading spinner
-        switchMap(term => this.nextOfKinRelationService.getNextOfKinRelations(1, term))  // Switch to a new observable for each search term
-      )
-      .subscribe((results: any) => {
-        this.next_of_kin_relations = results.next_of_kin_relations.data;
-        this.loadingNextOfKinRelation = false;  // Hide the loading spinner when the API call finishes
-      });
     this.searchPatient$
       .pipe(
         debounceTime(300),  // Wait for the user to stop typing for 300ms
@@ -316,23 +285,6 @@ export class CreateOpVisitComponent implements OnInit, AfterViewInit {
     this.visitForm.get("member_type")?.setValue(this.patient.member_type);
     this.visitForm.get("guardian_name")?.setValue(this.patient.guardian_name);
 
-    if (this.patient.blood_group) {
-      this.blood_groups = [];
-      this.blood_groups.push(this.patient.blood_group);
-      this.selectedBloodGroupOption = this.patient.blood_group_id;
-    }
-    this.visitForm.get("patient_location")?.setValue(this.patient.patient_location);
-    this.visitForm.get("citizenship")?.setValue(this.patient.citizenship);
-    this.visitForm.get("phone")?.setValue(this.patient.phone);
-    this.visitForm.get("email")?.setValue(this.patient.email);
-    this.visitForm.get("next_of_kin_name")?.setValue(this.patient.next_of_kin_name);
-    this.visitForm.get("next_of_kin_phone")?.setValue(this.patient.next_of_kin_phone);
-
-    if (this.patient.next_of_kin_relation) {
-      this.next_of_kin_relations = [];
-      this.next_of_kin_relations.push(this.patient.next_of_kin_relation);
-      this.selectedNextOfKinRelationOption = this.patient.next_of_kin_relation_id;
-    }
   }
   onItemSelect(event: any) {
     console.log('Selected item:', event);
@@ -361,17 +313,6 @@ export class CreateOpVisitComponent implements OnInit, AfterViewInit {
       });
     }
   }
-  ngAfterViewInit() {
-    const autocomplete = new google.maps.places.Autocomplete(this.locationInput.nativeElement, {
-      types: ['geocode'], // or use ['(cities)'] or ['establishment']
-    });
-
-    autocomplete.addListener('place_changed', () => {
-      const place = autocomplete.getPlace();
-      console.log('Selected Place:', place);
-      // You can extract place.geometry.location, place.formatted_address, etc.
-    });
-  }
   imageCaptured(image: WebcamImage) {
     this.toastr.success("Patient Image Captured!");
     this.patientImage = image;
@@ -379,17 +320,17 @@ export class CreateOpVisitComponent implements OnInit, AfterViewInit {
 
   updatePatient() {
     if (this.visitForm.valid) {
-      let formData = new FormData();
+      /*let formData = new FormData();
       if (this.patientImage != null) {
         // Convert the image data to a Blob
         const blob = this.dataURLtoBlob(this.patientImage.imageAsDataUrl);
         formData = this.createFormData(blob);
-      }
+      }*/
       this.isLoading = true;
-      this.patientRegistrationService.updatePatientRegistration(this.patientImage != null ? formData : this.visitForm.getRawValue()).subscribe((result: any) => {
+      this.outpatientVisitsService.updateOutpatientVisit(this.visitForm.getRawValue()).subscribe((result: any) => {
         if (result.success) {
           this.toastr.success(result.success);
-          this.router.navigate(["/dashboard/patients/list"]);
+          this.router.navigate(["/dashboard/visits/op/list"]);
         }
         this.isLoading = false;
       }, error => {
