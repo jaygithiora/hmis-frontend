@@ -28,6 +28,7 @@ export class MainTypesComponent implements OnInit {
       id: ['0', [Validators.required]],
       name: ['', [Validators.required]],
       description: [''],
+      payment_type: ['cash', [Validators.required]],
       status: ['1', [Validators.required]]
     });
 
@@ -58,11 +59,13 @@ export class MainTypesComponent implements OnInit {
       this.mainTypeForm.get("id").setValue(main_type.id);
       this.mainTypeForm.get("name").setValue(main_type.name);
       this.mainTypeForm.get("description").setValue(main_type.description);
+      this.mainTypeForm.get("payment_type").setValue(main_type.payment_type);
       this.mainTypeForm.get("status").setValue(main_type.status);
     } else {
       this.mainTypeForm.get("id").setValue(0);
       this.mainTypeForm.get("name").setValue("");
       this.mainTypeForm.get("description").setValue("");
+      this.mainTypeForm.get("payment_type").setValue("cash");
       this.mainTypeForm.get("status").setValue(1);
     }
   }
@@ -86,8 +89,8 @@ export class MainTypesComponent implements OnInit {
         if(error?.error?.errors?.description){
           this.toastr.error(error?.error?.errors?.description);
         }
-        if(error?.error?.errors?.code){
-          this.toastr.error(error?.error?.errors?.code);
+        if(error?.error?.errors?.payment_type){
+          this.toastr.error(error?.error?.errors?.payment_type);
         }
         if (error?.error?.message) {
           this.toastr.error(error?.error?.message);

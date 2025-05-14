@@ -1,1 +1,186 @@
-<p>visit-op-list works!</p>
+<app-content-header [title]="'Patient Visits'"></app-content-header>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col">
+                                <h6>
+                                    <i class="fas fa-user-injured"></i>
+                                    Patient Visits
+                                </h6>
+                            </div>
+                            <div class="col text-right">
+                                <a
+                                    [routerLink]="
+                                        '/dashboard/visits/op/create'
+                                    "
+                                    class="btn btn-primary btn-sm"
+                                >
+                                    <i class="fas fa-plus"></i> Add OP Visit
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <th>ID</th>
+                                <th>Patient Code</th>
+                                <th>Visit Code</th>
+                                <th>Patient Name</th>
+                                <th>Main Type</th>
+                                <th>Department</th>
+                                <th>Doctor</th>
+                                <th>Consultation Type</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th class="text-right">Action</th>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="isLoading">
+                                    <td colspan="11" class="text-center">
+                                        <div class="alert alert-secondary">
+                                            <div
+                                                class="spinner-border spinner-border-sm"
+                                                role="status"
+                                                *ngIf="isLoading"
+                                            >
+                                                <span class="sr-only"
+                                                    >Loading...</span
+                                                >
+                                            </div>
+                                            Loading Outpatient Visits...
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="!isLoading && outpatient_visits.length == 0">
+                                    <td colspan="11" class="text-center">
+                                        <div class="alert alert-secondary">
+                                            <i class="fas fa-ban"></i> No
+                                            <b>Outpatient Visits</b> Found!
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr
+                                    *ngFor="
+                                        let visit of outpatient_visits;
+                                        let i = index
+                                    "
+                                >
+                                    <td>{{ i + 1 }}</td>
+                                    <td>{{ visit.patient.code }}</td>
+                                    <td>{{ visit.code }}</td>
+                                    <td>
+                                        {{ visit.patient.first_name }}
+                                        {{ visit.patient.other_names }}
+                                    </td>
+                                    <td>{{ visit.main_type?.name }}</td>
+                                    <td>
+                                        {{ visit.department.name}}
+                                    </td>
+                                    <td>
+                                        {{ visit.doctor.name}}
+                                    </td>
+                                    <td>
+                                        {{ visit.consultation_type.name}}
+                                    </td>
+                                    <td>
+                                        {{ formatDate(visit.created_at) }}
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="badge badge-secondary btn-pill"
+                                            *ngIf="visit.status == 'pending'"
+                                            >Pending</span>
+                                        <span
+                                            class="badge badge-primary btn-pill"
+                                            *ngIf="visit.status == 'active'"
+                                            >Active</span>
+                                        
+                                        <span
+                                            class="badge badge-danger btn-pill"
+                                            *ngIf="visit.status == 'cancelled'"
+                                            >Cancelled</span>
+                                        <span
+                                            class="badge badge-info btn-pill"
+                                            *ngIf="visit.status == 'review'"
+                                            >Review</span>
+                                        <span
+                                            class="badge badge-success btn-pill"
+                                            *ngIf="visit.status == 'completed'"
+                                            >Completed</span>
+                                    </td>
+                                    <td class="text-right">
+                                        <div ngbDropdown container="body">
+                                            <button
+                                                type="button"
+                                                class="btn btn-outline-primary btn-sm pr-3 pl-3 border-0"
+                                                ngbDropdownToggle
+                                            >
+                                                <i
+                                                    class="fas fa-ellipsis-v"
+                                                ></i>
+                                            </button>
+                                            <div ngbDropdownMenu>
+                                                <a
+                                                    ngbDropdownItem
+                                                    [routerLink]="
+                                                        '/dashboard/visits/op/create/' +
+                                                        visit.id
+                                                    "
+                                                    ><i
+                                                        class="fas fa-angle-right"
+                                                    ></i>
+                                                    Triage</a
+                                                >
+                                                <div
+                                                    class="dropdown-divider"
+                                                ></div>
+                                                <a
+                                                    ngbDropdownItem
+                                                    [routerLink]="
+                                                        '/dashboard/visits/op/create/' +
+                                                        visit.id
+                                                    "
+                                                    ><i class="fas fa-angle-right"></i>
+                                                    Consult</a
+                                                >
+                                                <div
+                                                    class="dropdown-divider"
+                                                ></div>
+                                                <a
+                                                    ngbDropdownItem
+                                                    [routerLink]="
+                                                        '/dashboard/visits/op/create/' +
+                                                        visit.id
+                                                    "
+                                                    ><i class="fas fa-angle-right"></i>
+                                                    Review</a
+                                                >
+                                                <div
+                                                    class="dropdown-divider"
+                                                ></div>
+                                                <a
+                                                    ngbDropdownItem
+                                                    [routerLink]="
+                                                        '/dashboard/visits/op/edit/' +
+                                                        visit.id
+                                                    "
+                                                    ><i class="fas fa-edit"></i>
+                                                    Edit Visit</a
+                                                >
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

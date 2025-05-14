@@ -30,12 +30,13 @@
                                 <th>Name</th>
                                 <th>Description</th>
                                 <th>Date</th>
+                                <th>Payment Type</th>
                                 <th>Status</th>
                                 <th class="text-right">Action</th>
                             </thead>
                             <tbody>
                                 <tr *ngIf="isLoading">
-                                    <td colspan="6" class="text-center">
+                                    <td colspan="7" class="text-center">
                                         <div class="alert alert-secondary">
                                             <div
                                                 class="spinner-border spinner-border-sm"
@@ -69,6 +70,18 @@
                                     <td>{{ main_type.description }}</td>
                                     <td>
                                         {{ formatDate(main_type.created_at) }}
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="text-primary"
+                                            *ngIf="main_type.payment_type == 'cash'"
+                                            >Cash</span
+                                        >
+                                        <span
+                                            class="text-info"
+                                            *ngIf="main_type.payment_type != 'cash'"
+                                            >Credit</span
+                                        >
                                     </td>
                                     <td>
                                         <span
@@ -135,6 +148,16 @@
                     placeholder="Description"
                     formControlName="description"
                 ></textarea>
+            </div>
+            <div class="mb-3">
+                <label>Payment Type</label>
+                <select
+                    class="form-control custom-select"
+                    formControlName="payment_type"
+                >
+                    <option value="cash">Cash</option>
+                    <option value="credit">Credit</option>
+                </select>
             </div>
             <div class="mb-3">
                 <label>Status</label>

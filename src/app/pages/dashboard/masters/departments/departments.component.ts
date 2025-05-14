@@ -28,6 +28,7 @@ export class DepartmentsComponent  implements OnInit {
       id: ['0', [Validators.required]],
       name: ['', [Validators.required]],
       description: [''],
+      triage: [true],
       status: ['1', [Validators.required]]
     });
 
@@ -52,17 +53,19 @@ export class DepartmentsComponent  implements OnInit {
     });
   }
 
-  openModal(content: TemplateRef<any>, main_type: any) {
+  openModal(content: TemplateRef<any>, department: any) {
     this.modalRef = this.modalService.open(content, { centered: true });
-    if (main_type != null) {
-      this.departmentForm.get("id").setValue(main_type.id);
-      this.departmentForm.get("name").setValue(main_type.name);
-      this.departmentForm.get("description").setValue(main_type.description);
-      this.departmentForm.get("status").setValue(main_type.status);
+    if (department != null) {
+      this.departmentForm.get("id").setValue(department.id);
+      this.departmentForm.get("name").setValue(department.name);
+      this.departmentForm.get("description").setValue(department.description);
+      this.departmentForm.get("triage").setValue(department.triage);
+      this.departmentForm.get("status").setValue(department.status);
     } else {
       this.departmentForm.get("id").setValue(0);
       this.departmentForm.get("name").setValue("");
       this.departmentForm.get("description").setValue("");
+      this.departmentForm.get("triage").setValue(true);
       this.departmentForm.get("status").setValue(1);
     }
   }
@@ -86,8 +89,8 @@ export class DepartmentsComponent  implements OnInit {
         if(error?.error?.errors?.description){
           this.toastr.error(error?.error?.errors?.description);
         }
-        if(error?.error?.errors?.gender){
-          this.toastr.error(error?.error?.errors?.gender);
+        if(error?.error?.errors?.triage){
+          this.toastr.error(error?.error?.errors?.triage);
         }
         if (error?.error?.message) {
           this.toastr.error(error?.error?.message);

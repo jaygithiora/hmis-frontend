@@ -17,6 +17,6 @@ export class OutpatientVisitsService {
       return this.http.post(`${this.baseUrl}/api/dashboard/outpatients/visits/add`, inputData);
     }
     getOutpatientVisit(id:number){
-      return this.http.get(`${this.baseUrl}/api/dashboard/patients/registrations/view/${id}`);
+      return this.http.get(`${this.baseUrl}/api/dashboard/outpatients/visits/view/${id}`);
     }
 }

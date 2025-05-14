@@ -101,6 +101,8 @@ import { CreateOpVisitComponent } from './pages/dashboard/visit-management/creat
 import { CreateIpVisitComponent } from './pages/dashboard/visit-management/create-ip-visit/create-ip-visit.component';
 import { VisitOpListComponent } from './pages/dashboard/visit-management/visit-op-list/visit-op-list.component';
 import { VisitIpListComponent } from './pages/dashboard/visit-management/visit-ip-list/visit-ip-list.component';
+import { PaymentModesComponent } from './pages/dashboard/settings/payment-modes/payment-modes.component';
+import { TriageCategoriesComponent } from './pages/dashboard/triage/triage-categories/triage-categories.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -185,7 +187,9 @@ registerLocaleData(localeEn, 'en-EN');
         CreateOpVisitComponent,
         CreateIpVisitComponent,
         VisitOpListComponent,
-        VisitIpListComponent
+        VisitIpListComponent,
+        PaymentModesComponent,
+        TriageCategoriesComponent
     ],
     bootstrap: [AppComponent],
     imports: [

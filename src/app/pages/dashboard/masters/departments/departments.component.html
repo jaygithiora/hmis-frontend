@@ -29,12 +29,13 @@
                                 <th>Name</th>
                                 <th>Description</th>
                                 <th>Date</th>
+                                <th>Triage</th>
                                 <th>Status</th>
                                 <th class="text-right">Action</th>
                             </thead>
                             <tbody>
                                 <tr *ngIf="isLoading">
-                                    <td colspan="6" class="text-center">
+                                    <td colspan="7" class="text-center">
                                         <div class="alert alert-secondary">
                                             <div
                                                 class="spinner-border spinner-border-sm"
@@ -68,6 +69,17 @@
                                     <td>{{ department.description }}</td>
                                     <td>
                                         {{ formatDate(department.created_at) }}
+                                    </td>
+                                    <td><span
+                                            class="text-primary"
+                                            *ngIf="department.triage"
+                                            >Yes</span
+                                        >
+                                        <span
+                                            class="text-muted"
+                                            *ngIf="!department.triage"
+                                            >No</span
+                                        >
                                     </td>
                                     <td>
                                         <span
@@ -143,6 +155,19 @@
                     <option value="1">Active</option>
                     <option value="0">Inactive</option>
                 </select>
+            </div>
+            <div class="mb-3">
+                <div class="form-group form-check">
+                    <input
+                        type="checkbox"
+                        class="form-check-input"
+                        id="exampleCheck1"
+                        formControlName="triage"
+                    />
+                    <label class="form-check-label" for="exampleCheck1"
+                        >Allow Triage</label
+                    >
+                </div>
             </div>
         </form>
     </div>

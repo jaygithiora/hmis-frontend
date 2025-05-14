@@ -72,10 +72,12 @@ export class CreateOpVisitComponent implements OnInit {
   selectedConsultationTypeOption: any;
 
   patient: any;
+  outpatient_visit:any;
   visitForm!: FormGroup;
 
   imageUrl = 'assets/img/default-profile.png';
   patientId: number = 0;
+  visitId: number = 0;
 
   constructor(private patientRegistrationService:PatientRegistrationService,private outpatientVisitsService: OutpatientVisitsService, private toastr: ToastrService, private service: AuthService,
     private fb: FormBuilder, private locationService: LocationsService, private mainTypeService: MainTypesService, private activatedRoute: ActivatedRoute,
@@ -215,6 +217,7 @@ export class CreateOpVisitComponent implements OnInit {
         switchMap(term => this.doctorsService.getDoctors(1, term, this.selectedDepartmentOption))  // Switch to a new observable for each search term
       )
       .subscribe((results: any) => {
+        this.selectedConsultationTypeOption = null;
         this.doctors = results.doctors.data
         this.loadingDoctors = false;  // Hide the loading spinner when the API call finishes
       });
@@ -286,6 +289,72 @@ export class CreateOpVisitComponent implements OnInit {
     this.visitForm.get("guardian_name")?.setValue(this.patient.guardian_name);
 
   }
+  setVisit(event: any) {
+    this.patients = [];
+    this.visitForm.get("id")?.setValue(this.outpatient_visit.id);
+    this.visitForm.get("patient_code")?.setValue(this.outpatient_visit.patient.code);
+    this.patients.push({ ...this.outpatient_visit.patient, name: `CODE: ${this.outpatient_visit.patient.code} | NAME: ${this.outpatient_visit.patient.first_name} ${this.outpatient_visit.patient.other_names} | ID: ${this.outpatient_visit.patient.id_number} | PHONE: ${this.outpatient_visit.patient.phone}` });
+    this.selectedPatientOption = this.outpatient_visit.patient.id;
+    if (this.outpatient_visit.patient.image != null) {
+      this.imageUrl = this.outpatient_visit.patient.image;
+    }
+    if (this.outpatient_visit.location) {
+      this.locations = [];
+      this.locations.push(this.outpatient_visit.location);
+      this.selectedOption = this.outpatient_visit.location_id;
+    }
+    if (this.outpatient_visit.main_type) {
+      this.main_types = [];
+      this.main_types.push(this.outpatient_visit.main_type);
+      this.selectedMainTypeOption = this.outpatient_visit.main_type_id;
+    }
+    if (this.outpatient_visit.sub_type) {
+      this.sub_types = [];
+      this.sub_types.push(this.outpatient_visit.sub_type);
+      this.selectedSubTypeOption = this.outpatient_visit.sub_type_id;
+    }
+    if (this.outpatient_visit.account) {
+      this.accounts = [];
+      this.accounts.push(this.outpatient_visit.account);
+      this.selectedAccountOption = this.outpatient_visit.account_id;
+    }
+    if (this.outpatient_visit.plan) {
+      this.plans = [];
+      this.plans.push(this.outpatient_visit.plan);
+      this.selectedPlanOption = this.outpatient_visit.plan_id;
+    }
+    if (this.outpatient_visit.patient.salutation) {
+      this.salutations = [];
+      this.salutations.push(this.outpatient_visit.patient.salutation);
+      this.selectedSalutationOption = this.outpatient_visit.patient.salutation_id;
+    }
+    if (this.outpatient_visit.department) {
+      this.departments = [];
+      this.departments.push(this.outpatient_visit.department);
+      this.selectedDepartmentOption = this.outpatient_visit.department_id;
+    }
+    if (this.outpatient_visit.doctor) {
+      this.doctors = [];
+      this.doctors.push(this.outpatient_visit.doctor);
+      this.selectedDoctorOption = this.outpatient_visit.doctor_id;
+    }
+    if (this.outpatient_visit.consultation_type) {
+      this.consultation_types = [];
+      this.consultation_types.push(this.outpatient_visit.consultation_type);
+      this.selectedConsultationTypeOption = this.outpatient_visit.consultation_type_id;
+    }
+    this.visitForm.get("gender")?.setValue(this.outpatient_visit.patient.gender);
+    this.visitForm.get("dob")?.setValue(this.outpatient_visit.patient.dob);
+    this.visitForm.get("first_name")?.setValue(this.outpatient_visit.patient.first_name);
+    this.visitForm.get("other_names")?.setValue(this.outpatient_visit.patient.other_names);
+    this.visitForm.get("id_number")?.setValue(this.outpatient_visit.patient.id_number);
+    this.visitForm.get("member_number")?.setValue(this.outpatient_visit.patient.member_number);
+    this.visitForm.get("id_number")?.setValue(this.outpatient_visit.patient.id_number);
+    this.visitForm.get("member_type")?.setValue(this.outpatient_visit.patient.member_type);
+    this.visitForm.get("consultation_fees")?.setValue(this.outpatient_visit.consultation_type?.consultation_fees);
+    this.visitForm.get("guardian_name")?.setValue(this.outpatient_visit.patient.guardian_name);
+
+  }
   onItemSelect(event: any) {
     console.log('Selected item:', event);
   }
@@ -311,8 +380,28 @@ export class CreateOpVisitComponent implements OnInit {
         this.isLoading = false;
         console.log(error);
       });
+    }else{
+    const id = this.activatedRoute.snapshot.paramMap.get("id");
+    if(id != null){
+      this.visitId = parseInt(id);
+      this.isLoading = true;
+      this.outpatientVisitsService.getOutpatientVisit(parseInt(id)).subscribe((result: any) => {
+        console.log(result);
+        this.outpatient_visit = result.outpatient_visit;
+        this.setVisit(this.outpatient_visit);
+        this.isLoading = false;
+      }, error => {
+        if (error?.error?.message) {
+          this.toastr.error(error?.error?.message);
+          this.service.logout();
+        }
+        this.isLoading = false;
+        console.log(error);
+      });
+    }
     }
   }
+
   imageCaptured(image: WebcamImage) {
     this.toastr.success("Patient Image Captured!");
     this.patientImage = image;
@@ -340,6 +429,9 @@ export class CreateOpVisitComponent implements OnInit {
         if (error?.error?.errors?.location) {
           this.toastr.error(error?.error?.location);
         }
+        if (error?.error?.errors?.patient) {
+          this.toastr.error(error?.error?.patient);
+        }
         if (error?.error?.errors?.main_type) {
           this.toastr.error(error?.error?.main_type);
         }
@@ -352,17 +444,17 @@ export class CreateOpVisitComponent implements OnInit {
         if (error?.error?.errors?.plan) {
           this.toastr.error(error?.error?.plan);
         }
-        if (error?.error?.errors?.dob) {
-          this.toastr.error(error?.error?.dob);
+        if (error?.error?.errors?.department) {
+          this.toastr.error(error?.error?.department);
         }
-        if (error?.error?.errors?.salutation) {
-          this.toastr.error(error?.error?.salutation);
+        if (error?.error?.errors?.doctor) {
+          this.toastr.error(error?.error?.doctor);
         }
-        if (error?.error?.errors?.gender) {
-          this.toastr.error(error?.error?.gender);
+        if (error?.error?.errors?.consultation_type) {
+          this.toastr.error(error?.error?.consultation_type);
         }
-        if (error?.error?.errors?.first_name) {
-          this.toastr.error(error?.error?.first_name);
+        if (error?.error?.errors?.consultation_fees) {
+          this.toastr.error(error?.error?.consultation_fees);
         }
         if (error?.error?.errors?.other_names) {
           this.toastr.error(error?.error?.other_names);

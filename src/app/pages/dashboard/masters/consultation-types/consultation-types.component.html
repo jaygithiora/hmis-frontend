@@ -57,7 +57,8 @@
                                     </tr>
                                     <tr
                                         *ngIf="
-                                            !isLoading && consultation_types.length == 0
+                                            !isLoading &&
+                                            consultation_types.length == 0
                                         "
                                     >
                                         <td colspan="10" class="text-center">
@@ -75,17 +76,39 @@
                                     >
                                         <td>{{ i + 1 }}</td>
                                         <td>{{ consultation_type.name }}</td>
-                                        <td>{{ consultation_type.department.name }}</td>
-                                        <td>{{ consultation_type.main_type?.name }}</td>
                                         <td>
-                                            {{ consultation_type.sub_type.name }}
+                                            {{
+                                                consultation_type.department
+                                                    .name
+                                            }}
                                         </td>
                                         <td>
-                                            {{ consultation_type.location.name }}
+                                            {{
+                                                consultation_type.main_type
+                                                    ?.name
+                                            }}
                                         </td>
-                                        <td>{{ consultation_type.consultation_fees }}</td>
                                         <td>
-                                            {{ formatDate(consultation_type.created_at) }}
+                                            {{
+                                                consultation_type.sub_type.name
+                                            }}
+                                        </td>
+                                        <td>
+                                            {{
+                                                consultation_type.location.name
+                                            }}
+                                        </td>
+                                        <td>
+                                            {{
+                                                consultation_type.consultation_fees
+                                            }}
+                                        </td>
+                                        <td>
+                                            {{
+                                                formatDate(
+                                                    consultation_type.created_at
+                                                )
+                                            }}
                                         </td>
                                         <td>
                                             <span
@@ -95,7 +118,9 @@
                                             >
                                             <span
                                                 class="badge badge-secondary btn-pill"
-                                                *ngIf="!consultation_type.status"
+                                                *ngIf="
+                                                    !consultation_type.status
+                                                "
                                                 >In-Active</span
                                             >
                                         </td>
@@ -103,7 +128,10 @@
                                             <button
                                                 class="btn btn-primary btn-sm"
                                                 (click)="
-                                                    openModal(content, consultation_type)
+                                                    openModal(
+                                                        content,
+                                                        consultation_type
+                                                    )
                                                 "
                                             >
                                                 <i class="fas fa-edit"></i> Edit
@@ -122,7 +150,9 @@
 
 <ng-template #content let-modal>
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Add/Edit Consultation Type</h4>
+        <h4 class="modal-title" id="modal-basic-title">
+            Add/Edit Consultation Type
+        </h4>
         <button
             type="button"
             class="btn-close close"

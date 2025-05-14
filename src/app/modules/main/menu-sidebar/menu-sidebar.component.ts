@@ -307,6 +307,48 @@ export const MENU = [
     ]
   },
   {
+    name: 'Cashier',
+    iconClasses: 'fas fa-cash-register',
+    children: [
+      {
+        name: 'Bills',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/settings/doctors']
+      },
+      {
+        name: 'Next Of Kin',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/settings/next-of-kin-relations']
+      },
+      {
+        name: 'Payment Modes',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/settings/payment-modes']
+      },
+    ]
+  },
+  {
+    name: 'Triage',
+    iconClasses: 'fas fa-thermometer',
+    children: [
+      {
+        name: 'Categories',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/triage/categories']
+      },
+      {
+        name: 'Triage Items',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/settings/next-of-kin-relations']
+      },
+      {
+        name: 'Triage List',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/settings/payment-modes']
+      },
+    ]
+  },
+  {
     name: 'Settings',
     iconClasses: 'fas fa-cog',
     children: [
@@ -319,6 +361,11 @@ export const MENU = [
         name: 'Next Of Kin',
         iconClasses: 'fas fa-circle icon-small',
         path: ['/dashboard/settings/next-of-kin-relations']
+      },
+      {
+        name: 'Payment Modes',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/settings/payment-modes']
       },
     ]
   },

@@ -60,6 +60,8 @@ import { CreateOpVisitComponent } from '@pages/dashboard/visit-management/create
 import { CreateIpVisitComponent } from '@pages/dashboard/visit-management/create-ip-visit/create-ip-visit.component';
 import { VisitOpListComponent } from '@pages/dashboard/visit-management/visit-op-list/visit-op-list.component';
 import { VisitIpListComponent } from '@pages/dashboard/visit-management/visit-ip-list/visit-ip-list.component';
+import { PaymentModesComponent } from '@pages/dashboard/settings/payment-modes/payment-modes.component';
+import { TriageCategoriesComponent } from '@pages/dashboard/triage/triage-categories/triage-categories.component';
 
 const routes: Routes = [
   {
@@ -260,11 +262,19 @@ const routes: Routes = [
         component:CreateOpVisitComponent
       },
       {
+        path:'visits/op/edit/:id',
+        component:CreateOpVisitComponent
+      },
+      {
         path:'visits/ip/create',
         component:CreateIpVisitComponent
       },
       {
         path:'visits/ip/create/:patient_id',
+        component:CreateIpVisitComponent
+      },
+      {
+        path:'visits/ip/create/edit/:id',
         component:CreateIpVisitComponent
       },
       {
@@ -275,6 +285,11 @@ const routes: Routes = [
         path:'visits/ip/list',
         component:VisitIpListComponent
       },
+      //triage
+      {
+        path:'triage/categories',
+        component: TriageCategoriesComponent
+      },
       //settings
       {
         path: 'settings/doctors',
@@ -283,6 +298,10 @@ const routes: Routes = [
       {
         path: 'settings/next-of-kin-relations',
         component: NextOfKinRelationsComponent
+      },
+      {
+        path: 'settings/payment-modes',
+        component: PaymentModesComponent
       },
       //settings
       {

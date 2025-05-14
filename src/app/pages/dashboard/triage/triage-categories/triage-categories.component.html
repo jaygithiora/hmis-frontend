@@ -1,4 +1,4 @@
-<app-content-header [title]="'Next of Kin Relations'"></app-content-header>
+<app-content-header [title]="'Triage Categories'"></app-content-header>
 <section class="content">
   <div class="container-fluid">
     <div class="row">
@@ -9,7 +9,7 @@
               <div class="col">
                 <h6>
                   <i class="fas fa-user-md"></i>
-                  Next of Kin Relations
+                  Triage Categories
                 </h6>
               </div>
               <div class="col text-right">
@@ -35,34 +35,34 @@
                       <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
                         <span class="sr-only">Loading...</span>
                       </div>
-                      Loading Next of Kin Relations...
+                      Loading Triage Categories...
                     </div>
                   </td>
                 </tr>
-                <tr *ngIf="!isLoading && next_of_kin_relations.length == 0">
+                <tr *ngIf="!isLoading && triage_categories.length == 0">
                   <td colspan="9" class="text-center">
                     <div class="alert alert-secondary">
                       <i class="fas fa-ban"></i> No
-                      <b>Next Of Kin Relations</b> Found!
+                      <b>Triage Categories</b> Found!
                     </div>
                   </td>
                 </tr>
                 <tr *ngFor="
-                                        let next_of_kin_relation of next_of_kin_relations;
+                                        let triage_category of triage_categories;
                                         let i = index
                                     ">
                   <td>{{ i + 1 }}</td>
-                  <td>{{ next_of_kin_relation.name }}</td>
+                  <td>{{ triage_category.name }}</td>
                   <td>
-                    {{ formatDate(next_of_kin_relation.created_at) }}
+                    {{ formatDate(triage_category.created_at) }}
                   </td>
                   <td>
-                    <span class="badge badge-primary btn-pill" *ngIf="next_of_kin_relation.status">Active</span>
-                    <span class="badge badge-secondary btn-pill" *ngIf="!next_of_kin_relation.status">In-Active</span>
+                    <span class="badge badge-primary btn-pill" *ngIf="triage_category.status">Active</span>
+                    <span class="badge badge-secondary btn-pill" *ngIf="!triage_category.status">In-Active</span>
                   </td>
                   <td class="text-right">
                     <button class="btn btn-primary btn-sm" (click)="
-                                                openModal(content, next_of_kin_relation)
+                                                openModal(content, triage_category)
                                             ">
                       <i class="fas fa-edit"></i> Edit
                     </button>
@@ -79,13 +79,13 @@
 
 <ng-template #content let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Add/Edit Next of Kin Relation</h4>
+    <h4 class="modal-title" id="modal-basic-title">Add/Edit Triage Category</h4>
     <button type="button" class="btn-close close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <i class="fas fa-times"></i>
     </button>
   </div>
   <div class="modal-body">
-    <form [formGroup]="nextOfKinRelationsForm" (submit)="addLocation()">
+    <form [formGroup]="triageCategoriesForm" (submit)="addLocation()">
       <input type="hidden" formControlName="id" />
       <div class="mb-3">
         <label>Name</label>
