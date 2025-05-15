@@ -62,6 +62,7 @@ import { VisitOpListComponent } from '@pages/dashboard/visit-management/visit-op
 import { VisitIpListComponent } from '@pages/dashboard/visit-management/visit-ip-list/visit-ip-list.component';
 import { PaymentModesComponent } from '@pages/dashboard/settings/payment-modes/payment-modes.component';
 import { TriageCategoriesComponent } from '@pages/dashboard/triage/triage-categories/triage-categories.component';
+import { TriageItemsComponent } from '@pages/dashboard/triage/triage-items/triage-items.component';
 
 const routes: Routes = [
   {
@@ -289,6 +290,10 @@ const routes: Routes = [
       {
         path:'triage/categories',
         component: TriageCategoriesComponent
+      },
+      {
+        path:'triage/items',
+        component: TriageItemsComponent
       },
       //settings
       {

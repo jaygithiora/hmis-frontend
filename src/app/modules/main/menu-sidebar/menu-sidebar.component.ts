@@ -339,12 +339,12 @@ export const MENU = [
       {
         name: 'Triage Items',
         iconClasses: 'fas fa-circle icon-small',
-        path: ['/dashboard/settings/next-of-kin-relations']
+        path: ['/dashboard/triage/items']
       },
       {
         name: 'Triage List',
         iconClasses: 'fas fa-circle icon-small',
-        path: ['/dashboard/settings/payment-modes']
+        path: ['/dashboard/triage/list']
       },
     ]
   },

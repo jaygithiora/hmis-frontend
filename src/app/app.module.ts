@@ -103,6 +103,7 @@ import { VisitOpListComponent } from './pages/dashboard/visit-management/visit-o
 import { VisitIpListComponent } from './pages/dashboard/visit-management/visit-ip-list/visit-ip-list.component';
 import { PaymentModesComponent } from './pages/dashboard/settings/payment-modes/payment-modes.component';
 import { TriageCategoriesComponent } from './pages/dashboard/triage/triage-categories/triage-categories.component';
+import { TriageItemsComponent } from './pages/dashboard/triage/triage-items/triage-items.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -189,7 +190,8 @@ registerLocaleData(localeEn, 'en-EN');
         VisitOpListComponent,
         VisitIpListComponent,
         PaymentModesComponent,
-        TriageCategoriesComponent
+        TriageCategoriesComponent,
+        TriageItemsComponent
     ],
     bootstrap: [AppComponent],
     imports: [
