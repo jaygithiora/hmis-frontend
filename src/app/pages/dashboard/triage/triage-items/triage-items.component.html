@@ -26,8 +26,8 @@
                 <th>Name</th>
                 <th>Category</th>
                 <th>Item Type</th>
-                <th>Min</th>
-                <th>Max</th>
+                <th>Range</th>
+                <th>Units</th>
                 <th>Required</th>
                 <th>Status</th>
                 <th class="text-right">Action</th>
@@ -43,7 +43,7 @@
                     </div>
                   </td>
                 </tr>
-                <tr *ngIf="!isLoading && doctors.length == 0">
+                <tr *ngIf="!isLoading && triage_items.length == 0">
                   <td colspan="9" class="text-center">
                     <div class="alert alert-secondary">
                       <i class="fas fa-ban"></i> No
@@ -52,25 +52,30 @@
                   </td>
                 </tr>
                 <tr *ngFor="
-                                        let doctor of doctors;
+                                        let triage_item of triage_items;
                                         let i = index
                                     ">
                   <td>{{ i + 1 }}</td>
-                  <td>{{ doctor.name }}</td>
-                  <td>{{ doctor.department.name }}</td>
-                  <td>{{ doctor.location.name }}</td>
-                  <td>{{ doctor.user.firstname }} {{ doctor.user.lastname }}</td>
-                  <td>{{ doctor.consultation_fees }}</td>
+                  <td>{{ triage_item.name }}</td>
+                  <td>{{ triage_item.triage_category.name }}</td>
+                  <td>{{ triage_item.item_types }}</td>
+                  <td>{{ triage_item.min_value }} - {{ triage_item.max_value }}</td>
+                  <td>{{ triage_item.units }}</td>
                   <td>
-                    {{ formatDate(doctor.created_at) }}
+                    <span class="text-primary" *ngIf="triage_item.is_required">YES</span>
+                    <span class="text-secondary" *ngIf="!triage_item.is_required">NO</span>
                   </td>
+                  <!--
                   <td>
-                    <span class="badge badge-primary btn-pill" *ngIf="doctor.status">Active</span>
-                    <span class="badge badge-secondary btn-pill" *ngIf="!doctor.status">In-Active</span>
+                    {{ formatDate(triage_item.created_at) }}
+                  </td>-->
+                  <td>
+                    <span class="badge badge-primary btn-pill" *ngIf="triage_item.status">Active</span>
+                    <span class="badge badge-secondary btn-pill" *ngIf="!triage_item.status">In-Active</span>
                   </td>
                   <td class="text-right">
                     <button class="btn btn-primary btn-sm" (click)="
-                                                openModal(content, doctor)
+                                                openModal(content, triage_item)
                                             ">
                       <i class="fas fa-edit"></i> Edit
                     </button>
@@ -87,43 +92,53 @@
 
 <ng-template #content let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Add/Edit Doctor</h4>
+    <h4 class="modal-title" id="modal-basic-title">Add/Edit Triage Item</h4>
     <button type="button" class="btn-close close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <i class="fas fa-times"></i>
     </button>
   </div>
   <div class="modal-body">
-    <form [formGroup]="doctorsForm" (submit)="addLocation()">
+    <form [formGroup]="triageItemsForm" (submit)="addLocation()">
       <input type="hidden" formControlName="id" />
       <div class="mb-3">
         <label>Name</label>
         <input class="form-control" placeholder="Name" formControlName="name" s />
       </div>
       <div class="mb-3">
-        <label>Department</label>
-        <ng-select [items]="departments" bindLabel="name" bindValue="id" [typeahead]="searchDepartments$" [loading]="loadingDepartments"
-          [(ngModel)]="selectedDepartmentOption" placeholder="Search for department" (change)="onItemSelect($event)"
-          formControlName="department"></ng-select>
+        <label>Triage Category</label>
+        <ng-select [items]="triage_categories" bindLabel="name" bindValue="id" [typeahead]="search$" [loading]="loading"
+          [(ngModel)]="selectedOption" placeholder="Search for Triage Category" (change)="onItemSelect($event)"
+          formControlName="category"></ng-select>
       </div>
       <div class="mb-3">
-        <label>Consultation Fees</label>
-        <input type='number' class="form-control" placeholder="Consultation Fees" formControlName="consultation_fees"/>
+        <label>Item Types</label>
+        <select class="form-control custom-select" formControlName="item_type">
+          <option value="text">Text</option>
+          <option value="number">Number</option>
+          <option value="integer">Integer</option>
+          <option value="textarea">Textarea</option>
+          <option value="checkbox">Checkbox</option>
+          <option value="choices">Choices</option>
+        </select>
       </div>
       <div class="mb-3">
-        <label>User Link</label>
-        <ng-select [items]="users" bindLabel="name" bindValue="id" [typeahead]="searchUsers$" [loading]="loadingUsers"
-          [(ngModel)]="selectedUserOption" placeholder="Search for user" (change)="onItemSelect($event)"
-          formControlName="user"></ng-select>
+        <label>Unit of measure</label>
+        <input type="text" class="form-control" formControlName="units" placeholder="Unit of measure"/>
       </div>
       <div class="mb-3">
-        <label>Location</label>
-        <ng-select [items]="locations" bindLabel="name" bindValue="id" [typeahead]="searchLocations$" [loading]="loadingLocations"
-          [(ngModel)]="selectedLocationOption" placeholder="Search for Location" (change)="onItemSelect($event)"
-          formControlName="location"></ng-select>
+        <label>Minimum Value</label>
+        <input type="number" class="form-control" formControlName="min_value" placeholder="Minimum Value"/>
       </div>
-      <div class="mb-3 d-none">
-        <label>Description</label>
-        <textarea rows="5" class="form-control" placeholder="Description" formControlName="description"></textarea>
+      <div class="mb-3">
+        <label>Maximum Value</label>
+        <input type="number" class="form-control" formControlName="max_value" placeholder="Maximum Value"/>
+      </div>
+      <div class="mb-3">
+        <label>Required</label>
+        <select class="form-control custom-select" formControlName="required">
+          <option value="1">YES</option>
+          <option value="0">NO</option>
+        </select>
       </div>
       <div class="mb-3">
         <label>Status</label>

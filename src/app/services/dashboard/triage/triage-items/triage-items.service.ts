@@ -8,10 +8,10 @@ import { Observable } from 'rxjs';
 })
 export class TriageItemsService {
   constructor(private http: HttpClient,@Inject(API_BASE_URL) private baseUrl:string) { }
-    getTriageCategories(page:number = 1, search:string=""):Observable<any>{
-      return this.http.get(`${this.baseUrl}/api/dashboard/triage/categories?page=${page}&search=${search}`);
+    getTriageItems(page:number = 1, search:string=""):Observable<any>{
+      return this.http.get(`${this.baseUrl}/api/dashboard/triage/items?page=${page}&search=${search}`);
     }
-    updateTriageCategory(inputData:any){
-      return this.http.post(`${this.baseUrl}/api/dashboard/triage/categories/add`, inputData);
+    updateTriageItem(inputData:any){
+      return this.http.post(`${this.baseUrl}/api/dashboard/triage/items/add`, inputData);
     }
 }
