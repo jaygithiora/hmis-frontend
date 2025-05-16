@@ -1,0 +1,206 @@
+<app-content-header [title]="'Patient Bill'"></app-content-header>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form
+                            [formGroup]="billForm"
+                            (ngSubmit)="updatePatient()"
+                        >
+                            <input
+                                type="hidden"
+                                formControlName="id"
+                                value="0"
+                            />
+                            <div class="row">
+                                <div class="col-sm-4 p-3">
+                                    <img
+                                        [src]="imageUrl"
+                                        class="img-fluid w-100 img-thumbnail"
+                                    />
+                                </div>
+                                <div class="col-sm-8">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-lg-4 mb-3">
+                                            <label
+                                                >Patient Code<span
+                                                    class="text-danger"
+                                                    >*</span
+                                                ></label
+                                            ><input type='text' class="form-control" placeholder="Patient Code" formControlName="patient_code" readonly/>
+                                        </div>
+                                        
+                                        <div class="col-sm-6 col-lg-4 mb-3">
+                                            <label
+                                                >Gender<span class="text-danger"
+                                                    >*</span
+                                                ></label
+                                            >
+                                            <select
+                                                class="form-control custom-select"
+                                                formControlName="gender"
+                                            >
+                                                <option disabled>
+                                                    Select Gender
+                                                </option>
+                                                <option value="MALE">
+                                                    MALE
+                                                </option>
+                                                <option value="FEMALE">
+                                                    FEMALE
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6 col-lg-4 mb-3">
+                                            <label
+                                                >Date of Birth<span
+                                                    class="text-danger"
+                                                    >*</span
+                                                ></label
+                                            >
+                                            <input
+                                                type="date"
+                                                class="form-control"
+                                                formControlName="dob"
+                                                placeholder="Date of Birth"
+                                            />
+                                        </div>
+                                        <div class="col-sm-6 col-lg-4 mb-3">
+                                            <label
+                                                >First Name<span
+                                                    class="text-danger"
+                                                    >*</span
+                                                ></label
+                                            >
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                placeholder="First Name"
+                                                formControlName="first_name"
+                                            />
+                                        </div>
+                                        <div class="col-sm-6 col-lg-4 mb-3">
+                                            <label
+                                                >Other Name<span
+                                                    class="text-danger"
+                                                    >*</span
+                                                ></label
+                                            >
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                placeholder="Other Names"
+                                                formControlName="other_names"
+                                            />
+                                        </div>
+                                        <div class="col-sm-6 col-lg-4 mb-3">
+                                            <label
+                                                >ID No.<span class="text-danger"
+                                                    >*</span
+                                                ></label
+                                            >
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                placeholder="ID Number"
+                                                formControlName="id_number"
+                                            />
+                                        </div>
+                                        <div class="col-sm-6 col-lg-4 mb-3">
+                                            <label
+                                                >Member/Staff No.<span
+                                                    class="text-danger"
+                                                    >*</span
+                                                ></label
+                                            >
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                placeholder="Member Number"
+                                                formControlName="member_number"
+                                            />
+                                        </div>
+                                        <div class="col-sm-6 col-lg-4 mb-3">
+                                            <label
+                                                >Member Type<span
+                                                    class="text-danger"
+                                                    >*</span
+                                                ></label
+                                            >
+                                            <select
+                                                class="form-control custom-select"
+                                                formControlName="member_type"
+                                            >
+                                                <option disabled>
+                                                    Select Member Type
+                                                </option>
+                                                <option value="PRIMARY">
+                                                    PRIMARY
+                                                </option>
+                                                <option value="DEPEDENT">
+                                                    DEPENDANT
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6 col-lg-4 mb-3">
+                                            <label
+                                                >Consultation Fees<span
+                                                    class="text-danger"
+                                                    >*</span
+                                                ></label
+                                            >
+                                            <input type="number" class="form-control" placeholder="Consultation Fee" formControlName="consultation_fees"/>
+                                        </div>
+                                        
+                                <div class="col-sm-6 col-lg-4 mb-3">
+                                    <label
+                                        >Status<span class="text-danger"
+                                            >*</span
+                                        ></label
+                                    ><select
+                                        class="form-control custom-select"
+                                        formControlName="status"
+                                    >
+                                        <option value="active">Active</option>
+                                        <option value="pending">Pending</option>
+                                        <option value="cancelled">Cancelled</option>
+                                        <option value="review">Review</option>
+                                        <option value="completed">Completed</option>
+                                    </select>
+                                </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12 text-right">
+                                <button
+                                    class="btn btn-primary"
+                                    [disabled]="isLoading"
+                                    (click)="updatePatient()"
+                                >
+                                    <span *ngIf="isLoading">
+                                        <div
+                                            class="spinner-border spinner-border-sm"
+                                            role="status"
+                                        >
+                                            <span class="sr-only"
+                                                >Loading...</span
+                                            >
+                                        </div>
+                                        Saving...
+                                    </span>
+                                    <span *ngIf="!isLoading">
+                                        <i class="fas fa-paper-plane"></i>&nbsp;
+                                        Update Bill
+                                    </span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

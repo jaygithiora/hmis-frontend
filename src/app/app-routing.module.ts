@@ -63,6 +63,8 @@ import { VisitIpListComponent } from '@pages/dashboard/visit-management/visit-ip
 import { PaymentModesComponent } from '@pages/dashboard/settings/payment-modes/payment-modes.component';
 import { TriageCategoriesComponent } from '@pages/dashboard/triage/triage-categories/triage-categories.component';
 import { TriageItemsComponent } from '@pages/dashboard/triage/triage-items/triage-items.component';
+import { BillsComponent } from '@pages/dashboard/bills/bills/bills.component';
+import { BillViewComponent } from '@pages/dashboard/bills/bill-view/bill-view.component';
 
 const routes: Routes = [
   {
@@ -285,6 +287,15 @@ const routes: Routes = [
       {
         path:'visits/ip/list',
         component:VisitIpListComponent
+      },
+      //bills
+      {
+        path: 'bills/list',
+        component: BillsComponent
+      },
+      {
+        path: 'bills/list/view/:id',
+        component: BillViewComponent
       },
       //triage
       {

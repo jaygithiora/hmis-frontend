@@ -313,7 +313,7 @@ export const MENU = [
       {
         name: 'Bills',
         iconClasses: 'fas fa-circle icon-small',
-        path: ['/dashboard/settings/doctors']
+        path: ['/dashboard/bills/list']
       },
       {
         name: 'Next Of Kin',

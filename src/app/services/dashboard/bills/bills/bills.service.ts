@@ -1,0 +1,21 @@
+import { API_BASE_URL } from '@/tokens/api-base-url.token';
+import { HttpClient } from '@angular/common/http';
+import { Inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class BillsService {
+
+constructor(private http: HttpClient,@Inject(API_BASE_URL) private baseUrl:string) { }
+  getBills(page:number = 1, search:string=""):Observable<any>{
+    return this.http.get(`${this.baseUrl}/api/dashboard/bills?page=${page}&search=${search}`);
+  }
+  getBill(id:number):Observable<any>{
+    return  this.http.get(`${this.baseUrl}/api/dashboard/bills/view/${id}`);
+  }
+  updateBill(inputData:any){
+    return this.http.post(`${this.baseUrl}/api/dashboard/triage/categories/add`, inputData);
+  }
+}
