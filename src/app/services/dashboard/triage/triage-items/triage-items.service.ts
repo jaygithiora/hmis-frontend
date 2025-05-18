@@ -14,4 +14,19 @@ export class TriageItemsService {
     updateTriageItem(inputData:any){
       return this.http.post(`${this.baseUrl}/api/dashboard/triage/items/add`, inputData);
     }
+    getTriageItem(id:number):Observable<any>{
+      return this.http.get(`${this.baseUrl}/api/dashboard/triage/items/view/${id}`);
+    }
+    getTriageItemInterpretations(page:number = 1, id:number):Observable<any>{
+      return this.http.get(`${this.baseUrl}/api/dashboard/triage/items/interpretations/${id}?page=${page}`);
+    }
+    updateTriageItemInterpretation(inputData:any){
+      return this.http.post(`${this.baseUrl}/api/dashboard/triage/items/interpretations/add`, inputData);
+    }
+    getTriageItemChoices(page:number = 1, id:number):Observable<any>{
+      return this.http.get(`${this.baseUrl}/api/dashboard/triage/items/choices/${id}?page=${page}`);
+    }
+    updateTriageItemChoice(inputData:any){
+      return this.http.post(`${this.baseUrl}/api/dashboard/triage/items/choices/add`, inputData);
+    }
 }

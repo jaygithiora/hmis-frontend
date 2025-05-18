@@ -106,6 +106,8 @@ import { TriageCategoriesComponent } from './pages/dashboard/triage/triage-categ
 import { TriageItemsComponent } from './pages/dashboard/triage/triage-items/triage-items.component';
 import { BillsComponent } from './pages/dashboard/bills/bills/bills.component';
 import { BillViewComponent } from './pages/dashboard/bills/bill-view/bill-view.component';
+import { ColorPickerDirective } from 'ngx-color-picker';
+import { TriageItemComponent } from './pages/dashboard/triage/triage-item/triage-item.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -195,7 +197,8 @@ registerLocaleData(localeEn, 'en-EN');
         TriageCategoriesComponent,
         TriageItemsComponent,
         BillsComponent,
-        BillViewComponent
+        BillViewComponent,
+        TriageItemComponent
     ],
     bootstrap: [AppComponent],
     imports: [
@@ -215,7 +218,8 @@ registerLocaleData(localeEn, 'en-EN');
         FontAwesomeModule,
         NgbModule,
         NgSelectComponent,
-        WebcamModule
+        WebcamModule,
+        ColorPickerDirective
     ],
     providers: [provideHttpClient(withInterceptorsFromDi()),provideHttpClient(withInterceptors([tokenInterceptor])), {provide:API_BASE_URL, useValue: environment.apiBaseUrl}]
 })

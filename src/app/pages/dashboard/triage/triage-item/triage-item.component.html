@@ -1,0 +1,271 @@
+<app-content-header [title]="triage_item !=null? triage_item.name:'Triage Items'"></app-content-header>
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <!--<div class="card-header">
+            <div class="row">
+              <div class="col">
+                <h6>
+                  <i class="fas fa-user-md"></i>
+                  Triage Items
+                </h6>
+              </div>
+              <div class="col text-right">
+                <button class="btn btn-primary btn-sm" (click)="openModal(content, null)">
+                  <i class="fas fa-plus"></i> Add Triage Item
+                </button>
+              </div>
+            </div>
+          </div>-->
+          <div class="card-body">
+            <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+              <li [ngbNavItem]="1">
+                <a ngbNavLink><b>{{ triage_item?.name }}</b> Interpretations</a>
+                <ng-template ngbNavContent>
+                  <div class="mb-2 text-right">
+                    <button class="btn btn-primary btn-sm" (click)="openModal(content, null)">
+                      <i class="fas fa-plus"></i> Add Interpretation
+                    </button>
+                  </div>
+                  <table class="table">
+                    <thead>
+                      <th>ID</th>
+                      <th>Interpretation</th>
+                      <th>Range</th>
+                      <th>color</th>
+                      <th>Status</th>
+                      <th class="text-right">Action</th>
+                    </thead>
+                    <tbody>
+                      <tr *ngIf="isLoading">
+                        <td colspan="7" class="text-center">
+                          <div class="alert alert-secondary">
+                            <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+                              <span class="sr-only">Loading...</span>
+                            </div>
+                            Loading Triage Item Interpretations...
+                          </div>
+                        </td>
+                      </tr>
+                      <tr *ngIf="!isLoading && triage_item_interpretations.length == 0">
+                        <td colspan="9" class="text-center">
+                          <div class="alert alert-secondary">
+                            <i class="fas fa-ban"></i> No
+                            <b>Triage Item Interpretations</b> found!
+                          </div>
+                        </td>
+                      </tr>
+                      <tr *ngFor="
+                                        let triage_item_interpretation of triage_item_interpretations;
+                                        let i = index
+                                    ">
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ triage_item_interpretation.interpretation }}</td>
+                        <td>{{ triage_item_interpretation.min_value }} - {{ triage_item_interpretation.max_value }} ({{
+                          triage_item?.units }})</td>
+                        <td> <span [style.background]="triage_item_interpretation.color"
+                            class="badge">{{triage_item_interpretation.color}}</span></td>
+                        <!--
+                  <td>
+                    {{ formatDate(triage_item.created_at) }}
+                  </td>-->
+                        <td>
+                          <span class="badge badge-primary btn-pill"
+                            *ngIf="triage_item_interpretation.status">Active</span>
+                          <span class="badge badge-secondary btn-pill"
+                            *ngIf="!triage_item_interpretation.status">In-Active</span>
+                        </td>
+                        <td class="text-right">
+                          <button class="btn btn-primary btn-sm" (click)="
+                                                openModal(content, triage_item_interpretation)
+                                            "><i class="fas fa-edit"></i>
+                            Edit</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="text-right p-2">
+                    Showing <b>{{ fromItems }}</b> to <b>{{ toItems }}</b> of <b>{{ totalItems }}</b> Entries
+                  </div>
+                  <div class="d-flex justify-content-end">
+                    <ngb-pagination [(page)]="currentPage" [pageSize]="perPage" [collectionSize]="totalItems"
+                      (pageChange)="loadPage($event, triage_item?.id)"></ngb-pagination>
+                  </div>
+                </ng-template>
+              </li>
+              <li [ngbNavItem]="2">
+                <a ngbNavLink><b>{{ triage_item?.name }}</b> Choices</a>
+                <ng-template ngbNavContent>
+
+                  <div class="mb-2 text-right">
+                    <button class="btn btn-primary btn-sm" (click)="openModal2(content2, null)">
+                      <i class="fas fa-plus"></i> Add Choice
+                    </button>
+                  </div>
+                  <table class="table">
+                    <thead>
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Status</th>
+                      <th class="text-right">Action</th>
+                    </thead>
+                    <tbody>
+                      <tr *ngIf="isLoading">
+                        <td colspan="4" class="text-center">
+                          <div class="alert alert-secondary">
+                            <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+                              <span class="sr-only">Loading...</span>
+                            </div>
+                            Loading Triage Item Choices...
+                          </div>
+                        </td>
+                      </tr>
+                      <tr *ngIf="!isLoading && triage_item_choices.length == 0">
+                        <td colspan="9" class="text-center">
+                          <div class="alert alert-secondary">
+                            <i class="fas fa-ban"></i> No
+                            <b>Triage Item Choices</b> found!
+                          </div>
+                        </td>
+                      </tr>
+                      <tr *ngFor="
+                                        let triage_item_choice of triage_item_choices;
+                                        let i = index
+                                    ">
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ triage_item_choice.name }}</td>
+                        <!--
+                  <td>
+                    {{ formatDate(triage_item.created_at) }}
+                  </td>-->
+                        <td>
+                          <span class="badge badge-primary btn-pill"
+                            *ngIf="triage_item_choice.status">Active</span>
+                          <span class="badge badge-secondary btn-pill"
+                            *ngIf="!triage_item_choice.status">In-Active</span>
+                        </td>
+                        <td class="text-right">
+                          <button class="btn btn-primary btn-sm" (click)="
+                                                openModal2(content2, triage_item_choice)
+                                            "><i class="fas fa-edit"></i>
+                            Edit</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="text-right p-2">
+                    Showing <b>{{ fromItems1 }}</b> to <b>{{ toItems1 }}</b> of <b>{{ totalItems1 }}</b> Entries
+                  </div>
+                  <div class="d-flex justify-content-end">
+                    <ngb-pagination [(page)]="currentPage1" [pageSize]="perPage1" [collectionSize]="totalItems1"
+                      (pageChange)="loadChoicesPage($event, triage_item?.id)"></ngb-pagination>
+                  </div>
+
+                </ng-template>
+              </li>
+            </ul>
+
+            <div [ngbNavOutlet]="nav" class="mt-2"></div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Add/Edit Triage Item Interpretation</h4>
+    <button type="button" class="btn-close close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="triageItemsForm" (submit)="addLocation()">
+      <input type="hidden" formControlName="id" />
+      <input type="hidden" formControlName="triage_item" />
+      <div class="mb-3">
+        <label>Interpretation</label>
+        <input class="form-control" placeholder="Interpretation" formControlName="interpretation" />
+      </div>
+      <!--
+      <div class="mb-3">
+        <label>Triage Category</label>
+        <ng-select [items]="triage_categories" bindLabel="name" bindValue="id" [typeahead]="search$" [loading]="loading"
+          [(ngModel)]="selectedOption" placeholder="Search for Triage Category" (change)="onItemSelect($event)"
+          formControlName="category"></ng-select>
+      </div>-->
+      <div class="mb-3">
+        <label>Minimum Value</label>
+        <input type="number" class="form-control" formControlName="min_value" placeholder="Minimum Value" />
+      </div>
+      <div class="mb-3">
+        <label>Maximum Value</label>
+        <input type="number" class="form-control" formControlName="max_value" placeholder="Maximum Value" />
+      </div>
+      <div class="mb-3">
+        <label>Color</label>
+        <input [(colorPicker)]="color" formControlName='color' class="form-control" [style.background]="color"
+          [value]="color" readonly />
+      </div>
+      <div class="mb-3">
+        <label>Status</label>
+        <select class="form-control custom-select" formControlName="status">
+          <option value="1">Active</option>
+          <option value="0">Inactive</option>
+        </select>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.close('Save click')">
+      Close
+    </button>
+    <button type="button" class="btn btn-primary" [disabled]="isLoading" (click)="addLocation()">
+      <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+        <span class="sr-only">Loading...</span>
+      </div>
+      Save Changes
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #content2 let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Add/Edit Triage Item Choice</h4>
+    <button type="button" class="btn-close close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="triageItemChoicesForm" (submit)="addTriageItemChoice()">
+      <input type="hidden" formControlName="id" />
+      <input type="hidden" formControlName="triage_item" />
+      <div class="mb-3">
+        <label>Name</label>
+        <input class="form-control" placeholder="Name" formControlName="name" />
+      </div>
+      <div class="mb-3">
+        <label>Status</label>
+        <select class="form-control custom-select" formControlName="status">
+          <option value="1">Active</option>
+          <option value="0">Inactive</option>
+        </select>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.close('Save click')">
+      Close
+    </button>
+    <button type="button" class="btn btn-primary" [disabled]="isLoading" (click)="addTriageItemChoice()">
+      <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+        <span class="sr-only">Loading...</span>
+      </div>
+      Save Changes
+    </button>
+  </div>
+</ng-template>
