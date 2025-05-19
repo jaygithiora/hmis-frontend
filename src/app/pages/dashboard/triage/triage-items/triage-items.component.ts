@@ -111,7 +111,7 @@ export class TriageItemsComponent implements OnInit {
       this.triageItemsForm.get("min_value").setValue("");
       this.triageItemsForm.get("max_value").setValue("");
       this.triageItemsForm.get("units").setValue("");
-      this.triageItemsForm.get("required").setValue("");
+      this.triageItemsForm.get("required").setValue(1);
       this.triageItemsForm.get("status").setValue("");
       this.triageItemsForm.get("status").setValue(1);
     }
