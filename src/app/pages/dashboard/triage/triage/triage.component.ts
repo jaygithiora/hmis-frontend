@@ -16,6 +16,7 @@ import { Subject, debounceTime, tap, switchMap } from 'rxjs';
   styleUrl: './triage.component.scss'
 })
 export class TriageComponent implements OnInit {
+  disabled = false;
   private modalRef: NgbModalRef;
   public isLoading: boolean = true;
   loading: boolean = false;
@@ -23,7 +24,7 @@ export class TriageComponent implements OnInit {
   triage: any;
   triage_items:any[] = [];
 
-  triageForm!: FormGroup;     
+  triageForm!: FormGroup;
 
   triageItems: any[] = [];
   selectedItems: number[] = [];
@@ -74,7 +75,7 @@ export class TriageComponent implements OnInit {
         this.isLoading = false;
         console.log(error);
       });
-      
+
     } else {
       this.router.navigate(["dashboard/triage/list"]);
     }
@@ -114,7 +115,7 @@ buildForm(fields: any[]) {
       this.triageForm.get("status").setValue(1);
     }
   }
- 
+
   addTriage() {
     this.triageForm.get("color").setValue(this.color);
     if (this.triageForm.valid) {

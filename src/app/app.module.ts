@@ -49,7 +49,7 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import { FrontendComponent } from './pages/frontend/frontend.component';
 import { IndexComponent } from './pages/frontend/index/index.component';
 import { API_BASE_URL } from './tokens/api-base-url.token';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAccordionModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { tokenInterceptor } from './interceptors/token.interceptor';
 import { HospitalDataComponent } from './pages/dashboard/masters/hospital-data/hospital-data.component';
 import { LocationsComponent } from './pages/dashboard/masters/locations/locations.component';
@@ -223,7 +223,8 @@ registerLocaleData(localeEn, 'en-EN');
         NgbModule,
         NgSelectComponent,
         WebcamModule,
-        ColorPickerDirective
+        ColorPickerDirective,
+        NgbAccordionModule
     ],
     providers: [provideHttpClient(withInterceptorsFromDi()),provideHttpClient(withInterceptors([tokenInterceptor])), {provide:API_BASE_URL, useValue: environment.apiBaseUrl}]
 })
