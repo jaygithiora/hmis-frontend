@@ -23,6 +23,8 @@ export class TriageItemComponent implements OnInit {
 
   triageItemsForm!: FormGroup;
   triageItemChoicesForm!: FormGroup;
+  triageItemOperationsForm!: FormGroup;
+  triageItemOperationItemsForm!: FormGroup;
 
   triage_item_interpretations: any[] = [];// Store fetched items
   totalItems = 0;     // Total number of items
@@ -36,14 +38,25 @@ export class TriageItemComponent implements OnInit {
   currentPage1 = 1;    // Current page number
   fromItems1 = 0; //from items
   toItems1 = 0; //to items
-  perPage1 = 10;       // Items per page
+  perPage1 = 10;       // Items per pagetems per page
+
+  triage_item_operations: any[] = [];// Store fetched items
+  totalItems2 = 0;     // Total number of items
+  currentPage2 = 1;    // Current page number
+  fromItems2 = 0; //from items
+  toItems2 = 0; //to items
+  perPage2 = 10;       // Items per page
+
+  triageItems: any[] = [];
+  selectedItems: number[] = [];
+  searchInput$ = new Subject<string>();
 
   color: string = '#000000';
   active = 1;
 
   constructor(private triageItemsService: TriageItemsService, private triageCategoriesService: TriageCategoriesService,
     private modalService: NgbModal, private fb: FormBuilder, private toastr: ToastrService, private service: AuthService,
-  private router: Router, private activatedRoute:ActivatedRoute) {
+    private router: Router, private activatedRoute: ActivatedRoute) {
     this.triageItemsForm = this.fb.group({
       id: ['0', [Validators.required]],
       interpretation: ['', [Validators.required]],
@@ -59,13 +72,27 @@ export class TriageItemComponent implements OnInit {
       triage_item: ['', [Validators.required]],
       status: ['1', [Validators.required]]
     });
+    this.triageItemOperationsForm = this.fb.group({
+      id: ['0', [Validators.required]],
+      operation: ['', [Validators.required]],
+      triage_item: ['', [Validators.required]],
+      status: ['1', [Validators.required]]
+    });
+    this.triageItemOperationItemsForm = this.fb.group({
+      id: ['0', [Validators.required]],
+      triage_item_operation: ['', [Validators.required]],
+      triage_items: [[], [Validators.required]],
+      status: ['1', [Validators.required]]
+    });
+    this.loadOptions();
   }
 
   ngOnInit() {
     const id = this.activatedRoute.snapshot.paramMap.get("id");
-    if(id != null){
+    if (id != null) {
       this.triageItemsForm.get("triage_item").setValue(id);
       this.triageItemChoicesForm.get("triage_item").setValue(id);
+      this.triageItemOperationsForm.get("triage_item").setValue(id);
       this.isLoading = true;
       this.triageItemsService.getTriageItem(parseInt(id)).subscribe((result: any) => {
         this.triage_item = result.triage_item;
@@ -78,14 +105,28 @@ export class TriageItemComponent implements OnInit {
         this.isLoading = false;
         console.log(error);
       });
-    this.loadPage(1, parseInt(id));
-    this.loadChoicesPage(1, parseInt(id));
-    }else{
+      this.loadPage(1, parseInt(id));
+      this.loadChoicesPage(1, parseInt(id));
+      this.loadOperationsPage(1, parseInt(id));
+    } else {
       this.router.navigate(["dashboard/triage/items"]);
     }
   }
+  loadOptions() {
+    this.searchInput$.pipe(
+      debounceTime(300),
+      tap(() => this.loading = true),
+      switchMap(term => this.triageItemsService.getTriageItems()),
+      tap(() => this.isLoading = false)
+    ).subscribe(data => {
+      this.triageItems = data.triage_items.data;
+    });
+  }
+  onItemSelect(event: any) {
+    console.log('Selected item:', event);
+  }
 
-  loadPage(page: number, id:number):void {
+  loadPage(page: number, id: number): void {
     this.isLoading = true;
     this.triageItemsService.getTriageItemInterpretations(page, id).subscribe((result: any) => {
       this.isLoading = false;
@@ -101,7 +142,7 @@ export class TriageItemComponent implements OnInit {
     });
   }
 
-  loadChoicesPage(page: number, id:number):void {
+  loadChoicesPage(page: number, id: number): void {
     this.isLoading = true;
     this.triageItemsService.getTriageItemChoices(page, id).subscribe((result: any) => {
       this.isLoading = false;
@@ -111,6 +152,21 @@ export class TriageItemComponent implements OnInit {
       this.currentPage1 = result.triage_item_choices.current_page; // Set the current page
       this.toItems1 = result.triage_item_choices.to; // Set to Items
       this.fromItems1 = result.triage_item_choices.from; // Set from Items
+    }, error => {
+      this.isLoading = false;
+      console.log(error);
+    });
+  }
+  loadOperationsPage(page: number, id: number): void {
+    this.isLoading = true;
+    this.triageItemsService.getTriageItemOperations(page, id).subscribe((result: any) => {
+      this.isLoading = false;
+      this.triage_item_operations = result.triage_item_operations.data;// Set the items
+      this.totalItems2 = result.triage_item_operations.total; // Total number of items
+      this.perPage2 = result.triage_item_operations.per_page; // Items per page
+      this.currentPage2 = result.triage_item_operations.current_page; // Set the current page
+      this.toItems2 = result.triage_item_operations.to; // Set to Items
+      this.fromItems2 = result.triage_item_operations.from; // Set from Items
     }, error => {
       this.isLoading = false;
       console.log(error);
@@ -147,6 +203,30 @@ export class TriageItemComponent implements OnInit {
       this.triageItemChoicesForm.get("name").setValue("");
       this.triageItemChoicesForm.get("status").setValue(1);
     }
+  }
+  openModal3(content: TemplateRef<any>, triage_item_operation: any) {
+    this.modalRef = this.modalService.open(content, { centered: true });
+    if (triage_item_operation != null) {
+      this.triageItemOperationsForm.get("id").setValue(triage_item_operation.id);
+      this.triageItemOperationsForm.get("operation").setValue(triage_item_operation.operations);
+      this.triageItemOperationsForm.get("status").setValue(triage_item_operation.status);
+    } else {
+      this.triageItemOperationsForm.get("id").setValue(0);
+      this.triageItemOperationsForm.get("operation").setValue("+");
+      this.triageItemOperationsForm.get("status").setValue(1);
+    }
+  }
+  openModal4(content: TemplateRef<any>, triage_item_operation: any) {
+    this.modalRef = this.modalService.open(content, { centered: true });
+    this.triageItemOperationItemsForm.get("triage_item_operation").setValue(triage_item_operation.id);
+    this.triageItems = [];
+    this.selectedItems = [];
+    triage_item_operation.triage_item_operation_items.forEach(element => {
+      console.log(element);
+      this.triageItems.push(element.triage_item);
+      this.selectedItems.push(element.id);
+    });
+    this.triageItemOperationsForm.get("status").setValue(triage_item_operation.status);
   }
   addLocation() {
     this.triageItemsForm.get("color").setValue(this.color);
@@ -216,6 +296,77 @@ export class TriageItemComponent implements OnInit {
         }
         if (error?.error?.errors?.units) {
           this.toastr.error(error?.error?.errors?.units);
+        }
+        if (error?.error?.message) {
+          this.toastr.error(error?.error?.message);
+          this.service.logout();
+          this.modalRef?.close();
+        }
+        this.isLoading = false;
+        console.log(error);
+      });
+    } else {
+      this.toastr.error("Please fill in all the required fields before proceeding!");
+    }
+  }
+  addTriageItemOperation() {
+    if (this.triageItemOperationsForm.valid) {
+      this.isLoading = true;
+      this.triageItemsService.updateTriageItemOperation(this.triageItemOperationsForm.getRawValue()).subscribe((result: any) => {
+        this.isLoading = false;
+        if (result.success) {
+          this.toastr.success(result.success);
+          this.loadOperationsPage(1, this.triage_item?.id);
+          this.modalRef?.close();
+        }
+      }, error => {
+        if (error?.error?.errors?.id) {
+          this.toastr.error(error?.error?.errors?.id);
+        }
+        if (error?.error?.errors?.operation) {
+          this.toastr.error(error?.error?.errors?.operation);
+        }
+        if (error?.error?.errors?.triage_item) {
+          this.toastr.error(error?.error?.errors?.triage_item);
+        }
+        if (error?.error?.errors?.status) {
+          this.toastr.error(error?.error?.errors?.status);
+        }
+        if (error?.error?.message) {
+          this.toastr.error(error?.error?.message);
+          this.service.logout();
+          this.modalRef?.close();
+        }
+        this.isLoading = false;
+        console.log(error);
+      });
+    } else {
+      this.toastr.error("Please fill in all the required fields before proceeding!");
+    }
+  }
+
+  addTriageItemOperationItem() {
+    if (this.triageItemOperationItemsForm.valid) {
+      this.isLoading = true;
+      this.triageItemsService.updateTriageItemOperationItem(this.triageItemOperationItemsForm.getRawValue()).subscribe((result: any) => {
+        this.isLoading = false;
+        if (result.success) {
+          this.toastr.success(result.success);
+          this.loadOperationsPage(1, this.triage_item?.id);
+          this.modalRef?.close();
+        }
+      }, error => {
+        if (error?.error?.errors?.id) {
+          this.toastr.error(error?.error?.errors?.id);
+        }
+        if (error?.error?.errors?.triage_item_operation) {
+          this.toastr.error(error?.error?.errors?.triage_item_operation);
+        }
+        if (error?.error?.errors?.triage_items) {
+          this.toastr.error(error?.error?.errors?.triage_items);
+        }
+        if (error?.error?.errors?.status) {
+          this.toastr.error(error?.error?.errors?.status);
         }
         if (error?.error?.message) {
           this.toastr.error(error?.error?.message);
