@@ -108,6 +108,8 @@ import { BillsComponent } from './pages/dashboard/bills/bills/bills.component';
 import { BillViewComponent } from './pages/dashboard/bills/bill-view/bill-view.component';
 import { ColorPickerDirective } from 'ngx-color-picker';
 import { TriageItemComponent } from './pages/dashboard/triage/triage-item/triage-item.component';
+import { TriageListComponent } from './pages/dashboard/triage/triage-list/triage-list.component';
+import { TriageComponent } from './pages/dashboard/triage/triage/triage.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -198,7 +200,9 @@ registerLocaleData(localeEn, 'en-EN');
         TriageItemsComponent,
         BillsComponent,
         BillViewComponent,
-        TriageItemComponent
+        TriageItemComponent,
+        TriageListComponent,
+        TriageComponent
     ],
     bootstrap: [AppComponent],
     imports: [

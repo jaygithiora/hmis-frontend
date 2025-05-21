@@ -66,6 +66,8 @@ import { TriageItemsComponent } from '@pages/dashboard/triage/triage-items/triag
 import { BillsComponent } from '@pages/dashboard/bills/bills/bills.component';
 import { BillViewComponent } from '@pages/dashboard/bills/bill-view/bill-view.component';
 import { TriageItemComponent } from '@pages/dashboard/triage/triage-item/triage-item.component';
+import { TriageListComponent } from '@pages/dashboard/triage/triage-list/triage-list.component';
+import { TriageComponent } from '@pages/dashboard/triage/triage/triage.component';
 
 const routes: Routes = [
   {
@@ -310,6 +312,14 @@ const routes: Routes = [
       {
         path:'triage/items/view/:id',
         component: TriageItemComponent
+      },
+      {
+        path: 'triage/list',
+        component: TriageListComponent
+      },
+      {
+        path: 'triage/view/:id',
+        component: TriageComponent
       },
       //settings
       {

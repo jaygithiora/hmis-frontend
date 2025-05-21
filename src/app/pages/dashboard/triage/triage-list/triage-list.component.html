@@ -1,0 +1,93 @@
+<app-content-header [title]="'Triage List'"></app-content-header>
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-header">
+            <div class="row">
+              <div class="col">
+                <h6>
+                  <i class="fas fa-user-md"></i>
+                  Triage List
+                </h6>
+              </div>
+              <!--
+              <div class="col text-right">
+                <button class="btn btn-primary btn-sm" (click)="openModal(content, null)">
+                  <i class="fas fa-plus"></i> Add Triage Item
+                </button>
+              </div>-->
+            </div>
+          </div>
+          <div class="card-body">
+            <table class="table">
+              <thead>
+                <th>ID</th>
+                <th>Patient Code</th>
+                <th>Visit Code</th>
+                <th>Patient Name</th>
+                <th>Department</th>
+                <th>Consultation Type</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th class="text-right">Action</th>
+              </thead>
+              <tbody>
+                <tr *ngIf="isLoading">
+                    <td colspan="9" class="text-center">
+                    <div class="alert alert-secondary">
+                      <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+                        <span class="sr-only">Loading...</span>
+                      </div>
+                      Loading Triage Items...
+                    </div>
+                  </td>
+                </tr>
+                <tr *ngIf="!isLoading && outpatient_visit_triages.length == 0">
+                  <td colspan="9" class="text-center">
+                    <div class="alert alert-secondary">
+                      <i class="fas fa-ban"></i> No
+                      <b>Triage Items</b> found!
+                    </div>
+                  </td>
+                </tr>
+                <tr *ngFor="
+                                        let outpatient_visit_triage of outpatient_visit_triages;
+                                        let i = index
+                                    ">
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ outpatient_visit_triage.outpatient_visit.patient.code }}</td>
+                  <td>{{ outpatient_visit_triage.outpatient_visit.code }}</td>
+                  <td>{{ outpatient_visit_triage.outpatient_visit.patient.first_name }} {{ outpatient_visit_triage.outpatient_visit.patient.other_names }}</td>
+                  <td>{{ outpatient_visit_triage.outpatient_visit.department.name }}</td>
+                  <td>{{ outpatient_visit_triage.outpatient_visit.consultation_type.name }}</td>
+                  <td>{{ formatDate(outpatient_visit_triage.created_at) }}</td>
+                  <td>
+                    <span class="badge badge-primary btn-pill" *ngIf="outpatient_visit_triage.status">Active</span>
+                    <span class="badge badge-secondary btn-pill" *ngIf="!outpatient_visit_triage.status">In-Active</span>
+                  </td>
+                  <td class="text-right">
+                    <div ngbDropdown container="body">
+                      <button type="button" class="btn btn-outline-primary btn-sm pr-3 pl-3 border-0" ngbDropdownToggle>
+                        <i class="fas fa-ellipsis-v"></i>
+                      </button>
+                      <div ngbDropdownMenu>
+                        <a ngbDropdownItem [routerLink]="
+                                                        '/dashboard/triage/view/' +
+                                                        outpatient_visit_triage.id
+                                                    "><i class="fas fa-eye"></i>
+                          View</a>
+                        <!--<div class="dropdown-divider"></div>-->
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
