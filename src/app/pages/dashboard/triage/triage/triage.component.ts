@@ -32,6 +32,8 @@ export class TriageComponent implements OnInit {
 
   color: string = '#000000';
   active = 1;
+  activeIds:string = "custom-panel-triage,";
+  age;
 
   constructor(private triageService: TriageService,
     private modalService: NgbModal, private fb: FormBuilder, private toastr: ToastrService, private service: AuthService,
@@ -54,6 +56,7 @@ export class TriageComponent implements OnInit {
       this.isLoading = true;
       this.triageService.getTriage(parseInt(id)).subscribe((result: any) => {
         this.triage = result.outpatient_visit_triage;
+        this.age = this.getAgeDetails(this.triage?.outpatient_visit?.patient?.dob);
         this.isLoading = false;
       }, error => {
         if (error?.error?.message) {
@@ -80,20 +83,36 @@ export class TriageComponent implements OnInit {
       this.router.navigate(["dashboard/triage/list"]);
     }
   }
-buildForm(fields: any[]) {
+buildForm(triage_categories: any[]) {
   const group: any = {"id":["0", [Validators.required]], "triage_id":["", [Validators.required]]};
 
-  fields.forEach(field => {
-    const validators = field.is_required ? [Validators.required] : [];
+  triage_categories.forEach(triage_category => {
+    this.activeIds = this.activeIds+",custom-panel-"+triage_category.id;
+    triage_category.triage_items.forEach(triage_item =>{
+    const validators = triage_item.is_required ? [Validators.required] : [];
 
-    if (field.type === 'checkbox') {
-      group[field.name] = [false, validators];
+    if (triage_item.type === 'checkbox') {
+      group[triage_item.name] = [false, validators];
     } else {
-      group[field.name] = [null, validators];
-    }
+      group[triage_item.name] = [null, validators];
+    }});
   });
-
   this.triageForm = this.fb.group(group);
+}
+
+ getAgeDetails(dob: string) {
+  const birthDate = moment(dob);
+  const today = moment();
+
+  const years = today.diff(birthDate, 'years');
+  birthDate.add(years, 'years');
+
+  const months = today.diff(birthDate, 'months');
+  birthDate.add(months, 'months');
+
+  const days = today.diff(birthDate, 'days');
+
+  return { years, months, days };
 }
 
   openModal(content: TemplateRef<any>, triage_item_interpretation: any) {

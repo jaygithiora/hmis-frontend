@@ -1,183 +1,293 @@
 <app-content-header [title]="'Patient Triage'"></app-content-header>
 <section class="content">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-sm-12">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <form [formGroup]="triageForm" (submit)="addTriage()">
+                    <input type="hidden" formControlName="id" />
+                    <input type="hidden" formControlName="triage_id" />
+                    <ngb-accordion #a="ngbAccordion" [activeIds]="activeIds">
+                        <ngb-panel id="custom-panel-triage">
+                            <ng-template ngbPanelHeader let-opened="opened">
+                                <div
+                                    class="d-flex align-items-center justify-content-between"
+                                >
+                                    <button ngbPanelToggle class="btn">
+                                        <h5 class="m-0">Visit Details</h5>
+                                    </button>
+                                    <button
+                                        ngbPanelToggle
+                                        class="btn btn-link p-0"
+                                    >
+                                        <i
+                                            class="fas fa-minus"
+                                            *ngIf="opened"
+                                        ></i
+                                        ><i
+                                            class="fas fa-plus"
+                                            *ngIf="!opened"
+                                        ></i>
+                                    </button>
+                                </div>
+                            </ng-template>
+                            <ng-template ngbPanelContent>
+                                <div class="row">
+                                    <div
+                                        class="col-sm-6 col-md-4 col-lg-3 col-xl-2"
+                                    >
+                                        <label>Patient Code:</label>
+                                        <p>
+                                            {{
+                                                triage?.outpatient_visit
+                                                    ?.patient?.code
+                                            }}
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="col-sm-6 col-md-4 col-lg-3 col-xl-2"
+                                    >
+                                        <label>Visit Code:</label>
+                                        <p>
+                                            {{ triage?.outpatient_visit?.code }}
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="col-sm-6 col-md-4 col-lg-3 col-xl-2"
+                                    >
+                                        <label>Patient Name:</label>
+                                        <p>
+                                            {{
+                                                triage?.outpatient_visit
+                                                    ?.patient?.first_name
+                                            }}
+                                            {{
+                                                triage?.outpatient_visit
+                                                    ?.patient?.other_names
+                                            }}
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="col-sm-6 col-md-4 col-lg-3 col-xl-2"
+                                    >
+                                        <label>Department:</label>
+                                        <p>
+                                            {{
+                                                triage?.outpatient_visit
+                                                    ?.department?.name
+                                            }}
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="col-sm-6 col-md-4 col-lg-3 col-xl-2"
+                                    >
+                                        <label>Consultation Type:</label>
+                                        <p>
+                                            {{
+                                                triage?.outpatient_visit
+                                                    ?.consultation_type?.name
+                                            }}
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="col-sm-6 col-md-4 col-lg-3 col-xl-2"
+                                    >
+                                        <label>Date Of Birth:</label>
+                                        <p>
+                                            {{
+                                                triage?.outpatient_visit
+                                                    ?.patient?.dob
+                                            }}
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="col-sm-6 col-md-4 col-lg-3 col-xl-2"
+                                    >
+                                        <label>Age:</label>
+                                        <p>
+                                            <span *ngIf="age?.years > 0"
+                                                ><b>{{ age?.years }}</b>
+                                                Years</span
+                                            >
+                                            <span
+                                                *ngIf="
+                                                    age?.years <= 0 &&
+                                                    age?.months
+                                                "
+                                                ><b>{{ age?.months }}</b>
+                                                Months</span
+                                            >
+                                            <span
+                                                *ngIf="
+                                                    age?.years <= 0
+                                                "
+                                                ><b>{{ age.days }}</b>
+                                                Days</span
+                                            >
+                                        </p>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </ngb-panel>
+                        <ngb-panel
+                            *ngFor="let triage_item of triage_items"
+                            [id]="'custom-panel-' + triage_item.id"
+                        >
+                            <ng-template ngbPanelHeader let-opened="opened">
+                                <div
+                                    class="d-flex align-items-center justify-content-between"
+                                >
+                                    <button ngbPanelToggle class="btn">
+                                        <h5 class="m-0">
+                                            {{ triage_item.name }}
+                                        </h5>
+                                    </button>
+                                    <button
+                                        ngbPanelToggle
+                                        class="btn btn-link p-0"
+                                    >
+                                        <i
+                                            class="fas fa-minus"
+                                            *ngIf="opened"
+                                        ></i
+                                        ><i
+                                            class="fas fa-plus"
+                                            *ngIf="!opened"
+                                        ></i>
+                                    </button>
+                                </div>
+                            </ng-template>
+                            <ng-template ngbPanelContent>
+                                <div class="row">
+                                    <div
+                                        class="col-sm-6 col-md-4 col-lg-3 mb-3"
+                                        *ngFor="
+                                            let ti of triage_item.triage_items
+                                        "
+                                    >
+                                        <label
+                                            *ngIf="ti.item_types != 'checkbox'"
+                                            >{{ ti.name }}</label
+                                        >
+                                        <!--input text-->
+                                        <input
+                                            *ngIf="
+                                                ti.item_types === 'text' ||
+                                                ti.item_types === 'number' ||
+                                                ti.item_types === 'integer'
+                                            "
+                                            [type]="
+                                                ti.item_types === 'integer'
+                                                    ? 'number'
+                                                    : ti.item_types
+                                            "
+                                            class="form-control"
+                                            placeholder="{{ ti.name }}"
+                                            formControlName="{{ ti.name }}"
+                                        />
+                                        <!-- Select -->
+                                        <select
+                                            *ngIf="ti.item_types === 'choices'"
+                                            [formControlName]="ti.name"
+                                        >
+                                            <option
+                                                *ngFor="
+                                                    let option of ti.triage_item_choices
+                                                "
+                                                [value]="option.id"
+                                            >
+                                                {{ option.name }}
+                                            </option>
+                                        </select>
 
-        <form [formGroup]="triageForm" (submit)="addTriage()">
-        <ngb-accordion #a="ngbAccordion" activeIds="custom-panel-1, custom-panel-2">
-          <ngb-panel id="custom-panel-1">
-            <ng-template ngbPanelHeader let-opened="opened">
-              <div class="d-flex align-items-center justify-content-between">
-                <button ngbPanelToggle class="btn">
-                  <h5 class="m-0">Visit Details</h5>
-                </button>
-                <button ngbPanelToggle class="btn btn-link p-0"><i class='fas fa-minus' *ngIf="opened"></i><i
-                    class='fas fa-plus' *ngIf="!opened"></i></button>
-              </div>
-            </ng-template>
-            <ng-template ngbPanelContent>
+                                        <!-- Checkbox -->
+                                        <input
+                                            *ngIf="ti.item_types === 'checkbox'"
+                                            type="checkbox"
+                                            [id]="ti.id"
+                                            [formControlName]="ti.name"
+                                        />
+                                        <label
+                                            [for]="ti.id"
+                                            *ngIf="ti.item_types === 'checkbox'"
+                                            >{{ ti.name }}</label
+                                        >
 
-            <div class="row">
-              <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
-                <label>Patient Code:</label>
-                <p>
-                  {{
-                  triage?.outpatient_visit?.patient?.code
-                  }}
-                </p>
-              </div>
-              <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
-                <label>Visit Code:</label>
-                <p>{{ triage?.outpatient_visit?.code }}</p>
-              </div>
-              <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
-                <label>Patient Name:</label>
-                <p>
-                  {{
-                  triage?.outpatient_visit?.patient
-                  ?.first_name
-                  }}
-                  {{
-                  triage?.outpatient_visit?.patient
-                  ?.other_names
-                  }}
-                </p>
-              </div>
-              <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
-                <label>Department:</label>
-                <p>
-                  {{
-                  triage?.outpatient_visit?.department
-                  ?.name
-                  }}
-                </p>
-              </div>
-              <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
-                <label>Consultation Type:</label>
-                <p>
-                  {{
-                  triage?.outpatient_visit
-                  ?.consultation_type?.name
-                  }}
-                </p>
-              </div>
-              <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
-                <label>Date Of Birth:</label>
-                <p>
-                  {{ triage?.outpatient_visit?.patient?.dob }}
-                </p>
-              </div>
-              <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
-                <label>Date:</label>
-                <p>{{ formatDate(triage?.created_at) }}</p>
-              </div>
+                                        <!-- Textarea -->
+                                        <textarea
+                                            *ngIf="ti.item_types === 'textarea'"
+                                            [formControlName]="ti.name"
+                                            [placeholder]="ti.name"
+                                            class="form-control"
+                                        ></textarea>
+
+                                        <div
+                                            class="text-danger small"
+                                            *ngIf="
+                                                triageForm.get(ti.name)
+                                                    .invalid &&
+                                                triageForm.get(ti.name).touched
+                                            "
+                                        >
+                                            *{{ ti.name }} is required.
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </ngb-panel>
+                    </ngb-accordion>
+
+                    <div class="card shadow-sm border">
+                        <div class="card-body">
+                            <div class="mb-3 text-right">
+                                <button class="btn btn-primary">
+                                    <i class="fab fa-airbnb"></i> Save Changes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
-            </ng-template>
-          </ngb-panel>
-
-          <ngb-panel id="custom-panel-2">
-            <ng-template ngbPanelHeader let-opened="opened">
-              <div class="d-flex align-items-center justify-content-between">
-                <button ngbPanelToggle class="btn">
-                  <h5 class="m-0">Vitals</h5>
-                </button>
-                <button ngbPanelToggle class="btn btn-link p-0"><i class='fas fa-minus' *ngIf="opened"></i><i
-                    class='fas fa-plus' *ngIf="!opened"></i></button>
-              </div>
-            </ng-template>
-            <ng-template ngbPanelContent>
-              <input type="hidden" formControlName="id" />
-              <input type="hidden" formControlName="triage_id" />
-              <input type="hidden" formControlName="triage_item" />
-              <div class="row">
-                <div class="col-sm-6 col-md-4 col-lg-3 mb-3" *ngFor="let triage_item of triage_items">
-                  <label>{{ triage_item.name }}</label>
-                  <!--input text-->
-                  <input *ngIf="
-                                            triage_item.item_types === 'text' ||
-                                            triage_item.item_types ===
-                                                'number' ||
-                                            triage_item.item_types === 'integer'
-                                        " [type]="
-                                            triage_item.item_types === 'integer'
-                                                ? 'number'
-                                                : triage_item.item_types
-                                        " class="form-control" placeholder="{{ triage_item.name }}"
-                    formControlName="{{ triage_item.name }}" />
-                  <!-- Select -->
-                  <select *ngIf="
-                                            triage_item.item_types === 'choices'
-                                        " [formControlName]="triage_item.name">
-                    <option *ngFor="
-                                                let option of triage_item.triage_item_choices
-                                            " [value]="option.id">
-                      {{ option.name }}
-                    </option>
-                  </select>
-
-                  <!-- Checkbox -->
-                  <input *ngIf="
-                                            triage_item.item_types ===
-                                            'checkbox'
-                                        " type="checkbox" [id]="triage_item.id" [formControlName]="triage_item.name" />
-                  <label [for]="triage_item.id" *ngIf="
-                                            triage_item.item_types ===
-                                            'checkbox'
-                                        ">{{
-                    triage_item.name
-                    }}</label>
-
-                  <div class="text-danger small" *ngIf="
-                                            triageForm.get(triage_item.name)
-                                                .invalid &&
-                                            triageForm.get(triage_item.name)
-                                                .touched
-                                        ">
-                    *{{triage_item.name}} is required.
-                  </div>
-                </div>
-              </div>
-            </ng-template>
-          </ngb-panel>
-        </ngb-accordion>
-
-
-          <div class="card shadow-sm border">
-            <div class="card-body">
-
-              <div class="mb-3 text-right">
-                <button class="btn btn-primary">
-                  <i class="fab fa-airbnb"></i> Save Changes
-                </button>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
+        </div>
     </div>
-  </div>
 </section>
 
 <ng-template #content let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">
-      Add/Edit Triage Item Interpretation
-    </h4>
-    <button type="button" class="btn-close close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-      <i class="fas fa-times"></i>
-    </button>
-  </div>
-  <div class="modal-body"></div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline-secondary" (click)="modal.close('Save click')">
-      Close
-    </button>
-    <button type="button" class="btn btn-primary" [disabled]="isLoading" (click)="addTriage()">
-      <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
-        <span class="sr-only">Loading...</span>
-      </div>
-      Save Changes
-    </button>
-  </div>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">
+            Add/Edit Triage Item Interpretation
+        </h4>
+        <button
+            type="button"
+            class="btn-close close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="modal-body"></div>
+    <div class="modal-footer">
+        <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="modal.close('Save click')"
+        >
+            Close
+        </button>
+        <button
+            type="button"
+            class="btn btn-primary"
+            [disabled]="isLoading"
+            (click)="addTriage()"
+        >
+            <div
+                class="spinner-border spinner-border-sm"
+                role="status"
+                *ngIf="isLoading"
+            >
+                <span class="sr-only">Loading...</span>
+            </div>
+            Save Changes
+        </button>
+    </div>
 </ng-template>
