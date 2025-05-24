@@ -374,15 +374,21 @@
     <form [formGroup]="triageItemOperationsForm" (submit)="addTriageItemOperation()">
       <input type="hidden" formControlName="id" />
       <input type="hidden" formControlName="triage_item" />
+      <input type="hidden" formControlName="formula" />
       <div class="mb-3">
-        <label>Operation</label>
-        <select class="form-control custom-select" formControlName="operation">
-          <option value="+">Add</option>
-          <option value="-">Minus</option>
-          <option value="*">Multiply</option>
-          <option value="/">Divide</option>
-          <option value="average">Average</option>
-        </select>
+        <label>Operations</label>
+        <div class="input-group">
+        <textarea readonly class="form-control" placeholder="Triage Operations">{{ formula }}</textarea>
+        <div class="input-group-append">
+        <span class="input-group-text bg-white" (click)="clearFormula()"><i class="fas fa-trash"></i></span>
+        </div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label>Triage Items</label>
+        <ng-select [items]="triageItems" bindLabel="name" bindValue="id" [typeahead]="searchInput$" [loading]="loading"
+          [(ngModel)]="selectedItem" placeholder="Search for Triage Item" (change)="onItemSelect($event)" [multiple]="false"
+          formControlName="triage_items"></ng-select>
       </div>
       <div class="mb-3">
         <label>Status</label>
@@ -419,7 +425,7 @@
       <input type="hidden" formControlName="triage_item_operation" />
       <div class="mb-3">
         <label>Triage Items</label>
-        
+
         <ng-select [items]="triageItems" bindLabel="name" bindValue="id" [typeahead]="searchInput$" [loading]="isLoading"
           [(ngModel)]="selectedItems" placeholder="Search for Triage Category" (change)="onItemSelect($event)" [multiple]="true"
           formControlName="triage_items"></ng-select>

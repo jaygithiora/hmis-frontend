@@ -11,6 +11,9 @@ export class TriageItemsService {
     getTriageItems(page:number = 1, search:string=""):Observable<any>{
       return this.http.get(`${this.baseUrl}/api/dashboard/triage/items?page=${page}&search=${search}`);
     }
+    getTriageItemsWithOperations(page:number = 1, search:string=""):Observable<any>{
+      return this.http.get(`${this.baseUrl}/api/dashboard/triage/items/with_operations?page=${page}&search=${search}`);
+    }
     updateTriageItem(inputData:any){
       return this.http.post(`${this.baseUrl}/api/dashboard/triage/items/add`, inputData);
     }

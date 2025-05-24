@@ -49,10 +49,12 @@ export class TriageItemComponent implements OnInit {
 
   triageItems: any[] = [];
   selectedItems: number[] = [];
+  selectedItem;
   searchInput$ = new Subject<string>();
 
   color: string = '#000000';
   active = 1;
+  formula:string = "";
 
   constructor(private triageItemsService: TriageItemsService, private triageCategoriesService: TriageCategoriesService,
     private modalService: NgbModal, private fb: FormBuilder, private toastr: ToastrService, private service: AuthService,
@@ -74,7 +76,8 @@ export class TriageItemComponent implements OnInit {
     });
     this.triageItemOperationsForm = this.fb.group({
       id: ['0', [Validators.required]],
-      operation: ['', [Validators.required]],
+      formula: ['', [Validators.required]],
+      triage_items: ['', [Validators.required]],
       triage_item: ['', [Validators.required]],
       status: ['1', [Validators.required]]
     });
@@ -116,16 +119,27 @@ export class TriageItemComponent implements OnInit {
     this.searchInput$.pipe(
       debounceTime(300),
       tap(() => this.loading = true),
-      switchMap(term => this.triageItemsService.getTriageItems()),
-      tap(() => this.isLoading = false)
+      switchMap(term => this.triageItemsService.getTriageItemsWithOperations(1, term)),
+      tap(() => this.loading = false)
     ).subscribe(data => {
       this.triageItems = data.triage_items.data;
     });
   }
   onItemSelect(event: any) {
-    console.log('Selected item:', event);
+    if(event.id != this.triage_item.id){
+    let formula = this.triageItemOperationsForm.get("formula")?.value??"";
+    this.formula += `${event.name} `
+  formula += `{{${event.name}}}`;
+    this.triageItemOperationsForm.get("formula")?.setValue(formula);
+    }else{
+      this.toastr.error(event.name+" cannot be added to its own triage operation");
+    }
   }
 
+  clearFormula(){
+    this.triageItemOperationsForm.get("formula")?.reset();
+    this.formula = "";
+  }
   loadPage(page: number, id: number): void {
     this.isLoading = true;
     this.triageItemsService.getTriageItemInterpretations(page, id).subscribe((result: any) => {

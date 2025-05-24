@@ -83,6 +83,7 @@ export class TriageComponent implements OnInit {
       this.router.navigate(["dashboard/triage/list"]);
     }
   }
+
 buildForm(triage_categories: any[]) {
   const group: any = {"id":["0", [Validators.required]], "triage_id":["", [Validators.required]]};
 
@@ -98,6 +99,18 @@ buildForm(triage_categories: any[]) {
     }});
   });
   this.triageForm = this.fb.group(group);
+  this.setupDynamicDependencies(triage_categories);
+}
+
+setupDynamicDependencies(triage_categories: any[]) {
+   triage_categories.forEach(triage_category => {
+    triage_category.triage_items.forEach(triage_item =>{
+      console.log(triage_item?.triage_item_operation?.operations);
+      triage_item.triage_item_operation?.triage_item_operation_items?.forEach(tioi=>{
+        console.log(tioi.triage_item);
+      })
+    });
+  });
 }
 
  getAgeDetails(dob: string) {
