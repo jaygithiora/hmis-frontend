@@ -349,6 +349,17 @@ export const MENU = [
     ]
   },
   {
+    name: 'Consultation',
+    iconClasses: 'fas fa-notes-medical',
+    children: [
+      {
+        name: 'Consultation List',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/consultation/list']
+      },
+    ]
+  },
+  {
     name: 'Settings',
     iconClasses: 'fas fa-cog',
     children: [

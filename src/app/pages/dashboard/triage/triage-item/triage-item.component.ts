@@ -54,7 +54,7 @@ export class TriageItemComponent implements OnInit {
 
   color: string = '#000000';
   active = 1;
-  formula:string = "";
+  formula: string = "";
 
   constructor(private triageItemsService: TriageItemsService, private triageCategoriesService: TriageCategoriesService,
     private modalService: NgbModal, private fb: FormBuilder, private toastr: ToastrService, private service: AuthService,
@@ -110,7 +110,7 @@ export class TriageItemComponent implements OnInit {
       });
       this.loadPage(1, parseInt(id));
       this.loadChoicesPage(1, parseInt(id));
-      this.loadOperationsPage(1, parseInt(id));
+      this.loadOperationsPage(parseInt(id));
     } else {
       this.router.navigate(["dashboard/triage/items"]);
     }
@@ -126,17 +126,17 @@ export class TriageItemComponent implements OnInit {
     });
   }
   onItemSelect(event: any) {
-    if(event.id != this.triage_item.id){
-    let formula = this.triageItemOperationsForm.get("formula")?.value??"";
-    this.formula += `${event.name} `
-  formula += `{{${event.name}}}`;
-    this.triageItemOperationsForm.get("formula")?.setValue(formula);
-    }else{
-      this.toastr.error(event.name+" cannot be added to its own triage operation");
+    if (event.id != this.triage_item.id) {
+      let formula = this.triageItemOperationsForm.get("formula")?.value ?? "";
+      this.formula += `${event.name} `
+      formula += `{{${event.name}}}`;
+      this.triageItemOperationsForm.get("formula")?.setValue(formula);
+    } else {
+      this.toastr.error(event.name + " cannot be added to its own triage operation");
     }
   }
 
-  clearFormula(){
+  clearFormula() {
     this.triageItemOperationsForm.get("formula")?.reset();
     this.formula = "";
   }
@@ -171,16 +171,17 @@ export class TriageItemComponent implements OnInit {
       console.log(error);
     });
   }
-  loadOperationsPage(page: number, id: number): void {
+  loadOperationsPage(id: number): void {
     this.isLoading = true;
-    this.triageItemsService.getTriageItemOperations(page, id).subscribe((result: any) => {
+    this.triageItemsService.getTriageItemOperations(id).subscribe((result: any) => {
       this.isLoading = false;
-      this.triage_item_operations = result.triage_item_operations.data;// Set the items
-      this.totalItems2 = result.triage_item_operations.total; // Total number of items
-      this.perPage2 = result.triage_item_operations.per_page; // Items per page
-      this.currentPage2 = result.triage_item_operations.current_page; // Set the current page
-      this.toItems2 = result.triage_item_operations.to; // Set to Items
-      this.fromItems2 = result.triage_item_operations.from; // Set from Items
+
+      let formula = this.triageItemOperationsForm.get("formula")?.value ?? "";
+      this.formula = "";
+      this.triage_item_operations = result.triage_item_operations.forEach(element => {
+        this.formula += `${element.triage_item_formula.name} `
+        formula += `{{${element.triage_item_formula.name}}}`;
+      });
     }, error => {
       this.isLoading = false;
       console.log(error);
@@ -330,7 +331,7 @@ export class TriageItemComponent implements OnInit {
         this.isLoading = false;
         if (result.success) {
           this.toastr.success(result.success);
-          this.loadOperationsPage(1, this.triage_item?.id);
+          this.loadOperationsPage(this.triage_item?.id);
           this.modalRef?.close();
         }
       }, error => {
@@ -366,7 +367,7 @@ export class TriageItemComponent implements OnInit {
         this.isLoading = false;
         if (result.success) {
           this.toastr.success(result.success);
-          this.loadOperationsPage(1, this.triage_item?.id);
+          this.loadOperationsPage(this.triage_item?.id);
           this.modalRef?.close();
         }
       }, error => {

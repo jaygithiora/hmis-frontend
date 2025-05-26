@@ -1,14 +1,11 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '@services/auth/auth.service';
-import { TriageCategoriesService } from '@services/dashboard/triage/triage-categories/triage-categories.service';
-import { TriageItemsService } from '@services/dashboard/triage/triage-items/triage-items.service';
 import { TriageService } from '@services/dashboard/triage/triage/triage.service';
+import { Parser } from 'expr-eval';
 import moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
-import { Subject, debounceTime, tap, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-triage',
@@ -17,42 +14,30 @@ import { Subject, debounceTime, tap, switchMap } from 'rxjs';
 })
 export class TriageComponent implements OnInit {
   disabled = false;
-  private modalRef: NgbModalRef;
   public isLoading: boolean = true;
   loading: boolean = false;
 
   triage: any;
-  triage_items:any[] = [];
+  triage_items: any[] = [];
 
   triageForm!: FormGroup;
 
-  triageItems: any[] = [];
-  selectedItems: number[] = [];
-  searchInput$ = new Subject<string>();
-
-  color: string = '#000000';
   active = 1;
-  activeIds:string = "custom-panel-triage,";
-  age;
+  activeIds: string = "custom-panel-triage,";
+  age: any;
 
-  constructor(private triageService: TriageService,
-    private modalService: NgbModal, private fb: FormBuilder, private toastr: ToastrService, private service: AuthService,
-    private router: Router, private activatedRoute: ActivatedRoute) {
-    /*this.triageForm = this.fb.group({
+  constructor(private triageService: TriageService, private fb: FormBuilder, private toastr: ToastrService, private service: AuthService,
+    private router: Router, private activatedRoute: ActivatedRoute, private cdr:ChangeDetectorRef) {
+    this.triageForm = this.fb.group({
       id: ['0', [Validators.required]],
       triage_id: ['', [Validators.required]],
-      triage_item: ['', [Validators.required]],
-      color: [this.color, [Validators.required]],
-      min_value: [''],
-      max_value: [''],
-      status: ['1', [Validators.required]]
-    });*/
+    });
   }
 
   ngOnInit() {
     const id = this.activatedRoute.snapshot.paramMap.get("id");
     if (id != null) {
-      //this.triageForm.get("triage_id").setValue(id);
+      this.triageForm.get("triage_id").setValue(id);
       this.isLoading = true;
       this.triageService.getTriage(parseInt(id)).subscribe((result: any) => {
         this.triage = result.outpatient_visit_triage;
@@ -84,105 +69,152 @@ export class TriageComponent implements OnInit {
     }
   }
 
-buildForm(triage_categories: any[]) {
-  const group: any = {"id":["0", [Validators.required]], "triage_id":["", [Validators.required]]};
+  buildForm(triage_categories: any[]) {
+    const group: any = { "id": ["0", [Validators.required]], "triage_id": [this.triage?.id, [Validators.required]] };
 
-  triage_categories.forEach(triage_category => {
-    this.activeIds = this.activeIds+",custom-panel-"+triage_category.id;
-    triage_category.triage_items.forEach(triage_item =>{
-    const validators = triage_item.is_required ? [Validators.required] : [];
+    triage_categories.forEach(triage_category => {
+      this.activeIds = this.activeIds + ",custom-panel-" + triage_category.id;
+      triage_category.triage_items.forEach(triage_item => {
+        const validators = triage_item.is_required ? [Validators.required] : [];
 
-    if (triage_item.type === 'checkbox') {
-      group[triage_item.name] = [false, validators];
-    } else {
-      group[triage_item.name] = [null, validators];
-    }});
-  });
-  this.triageForm = this.fb.group(group);
-  this.setupDynamicDependencies(triage_categories);
-}
-
-setupDynamicDependencies(triage_categories: any[]) {
-   triage_categories.forEach(triage_category => {
-    triage_category.triage_items.forEach(triage_item =>{
-      console.log(triage_item?.triage_item_operation?.operations);
-      triage_item.triage_item_operation?.triage_item_operation_items?.forEach(tioi=>{
-        console.log(tioi.triage_item);
-      })
+        if (triage_item.type === 'checkbox') {
+          group[triage_item.name] = [false, validators];
+        } else {
+          group[triage_item.name] = [null, validators];
+        }
+      });
     });
-  });
-}
+    this.triageForm = this.fb.group(group);
+    this.setupDynamicDependencies(triage_categories);
+  }
 
- getAgeDetails(dob: string) {
-  const birthDate = moment(dob);
-  const today = moment();
+  setupDynamicDependencies(triage_categories: any[]) {
+    const parser = new Parser();
+    triage_categories.forEach(triage_category => {
+      triage_category.triage_items.forEach(triage_item => {
+        const dependencies: string[] = [];
+        let formula = '';
 
-  const years = today.diff(birthDate, 'years');
-  birthDate.add(years, 'years');
+        // Build formula and track dependent fields
+        triage_item.triage_item_operations?.forEach(op => {
+          const fieldName = op.triage_item_formula.name;
 
-  const months = today.diff(birthDate, 'months');
-  birthDate.add(months, 'months');
+          // Replace field name with variable in formula
+          formula += fieldName;
 
-  const days = today.diff(birthDate, 'days');
+          if (!dependencies.includes(fieldName)) {
+            dependencies.push(fieldName);
+          }
 
-  return { years, months, days };
-}
+          // Add operation
+          if (op.operator) {
+            formula += ` ${op.operator} `;
+          }
+        });
 
-  openModal(content: TemplateRef<any>, triage_item_interpretation: any) {
-    this.modalRef = this.modalService.open(content, { centered: true });
-    if (triage_item_interpretation != null) {
-      this.triageForm.get("id").setValue(triage_item_interpretation.id);
-      this.triageForm.get("interpretation").setValue(triage_item_interpretation.interpretation);
-      this.color = triage_item_interpretation.color;
-      //this.triageForm.get("color").setValue(triage_item_interpretation.color);
-      this.triageForm.get("min_value").setValue(triage_item_interpretation.min_value);
-      this.triageForm.get("max_value").setValue(triage_item_interpretation.max_value);
-      this.triageForm.get("status").setValue(triage_item_interpretation.status);
-    } else {
-      this.triageForm.get("id").setValue(0);
-      this.triageForm.get("interpretation").setValue("");
-      this.triageForm.get("color").setValue(this.color);
-      this.triageForm.get("min_value").setValue("");
-      this.triageForm.get("max_value").setValue("");
-      this.triageForm.get("status").setValue(1);
-    }
+        const updateFormula = () => {
+          const values: Record<string, number> = {};
+
+          dependencies.forEach(dep => {
+            const val = parseFloat(this.triageForm.get(dep)?.value) || 0;
+            values[dep] = val;
+          });
+
+          try {
+            const expr = parser.parse(formula);
+            const result = expr.evaluate(values);
+
+            this.triageForm.get(triage_item.name)?.setValue(result.toFixed(2), { emitEvent: false });
+          } catch (err) {
+            //console.warn(`Failed to compute formula for ${triage_item.name}`, err);
+          }
+        };
+
+        // Subscribe to changes in dependent fields
+        dependencies.forEach(dep => {
+          this.triageForm.get(dep)?.valueChanges.subscribe(updateFormula);
+        });
+
+        // Optionally evaluate once on load
+        updateFormula();
+      });
+    });
+    /*triage_categories.forEach(triage_category => {
+      triage_category.triage_items.forEach(triage_item => {
+        const fields: string[] = [];
+        const updateFormula = () => {
+          const context: any = {};
+          let formula = "";
+          triage_item.triage_item_operations?.forEach(triage_item_operation => {
+            console.log(triage_item_operation);
+            const item = triage_item_operation.triage_item_formula.name;
+            if (triage_item_operation.triage_item_formula.triage_category != null) {
+              context[item] = parseFloat(this.triageForm.get(item)?.value) || 1;
+              formula += `${context[item]}`;
+              if (!fields.includes(item)) {
+                fields.push(item);
+              }
+            } else {
+              context[item] = item;
+              formula += `${context[item]}`;
+            }
+          });
+          try {
+            // WARNING: Using `eval()` safely only if trusted formula input
+            const value = eval(formula);
+            this.triageForm.get(triage_item.name)?.setValue(value?.toFixed(2), { emitEvent: false });
+          } catch (err) {
+            console.warn(`Formula evaluation failed for ${triage_item.name}`, err);
+          }
+          console.log(formula);
+        };
+        //subscribe to changes of dependencies
+        fields.forEach(dep => {
+          console.log("Kaende!!");
+          this.triageForm.get(dep)?.valueChanges.subscribe(updateFormula);
+        });
+        updateFormula();
+      });
+    });*/
+  }
+
+  getAgeDetails(dob: string) {
+    const birthDate = moment(dob);
+    const today = moment();
+
+    const years = today.diff(birthDate, 'years');
+    birthDate.add(years, 'years');
+
+    const months = today.diff(birthDate, 'months');
+    birthDate.add(months, 'months');
+
+    const days = today.diff(birthDate, 'days');
+
+    return { years, months, days };
   }
 
   addTriage() {
-    this.triageForm.get("color").setValue(this.color);
     if (this.triageForm.valid) {
       this.isLoading = true;
       this.triageService.updateTriage(this.triageForm.getRawValue()).subscribe((result: any) => {
         this.isLoading = false;
         if (result.success) {
           this.toastr.success(result.success);
+          this.router.navigate(["dashboard/triage/list"])
         }
       }, error => {
-        if (error?.error?.errors?.id) {
+        /*if (error?.error?.errors?.id) {
           this.toastr.error(error?.error?.errors?.id);
         }
-        if (error?.error?.errors?.interpretation) {
-          this.toastr.error(error?.error?.errors?.interpretation);
-        }
-        if (error?.error?.errors?.color) {
-          this.toastr.error(error?.error?.errors?.color);
-        }
-        if (error?.error?.errors?.min_value) {
-          this.toastr.error(error?.error?.errors?.min_value);
-        }
-        if (error?.error?.errors?.min_value) {
-          this.toastr.error(error?.error?.errors?.min_value);
-        }
-        if (error?.error?.errors?.triage_item) {
-          this.toastr.error(error?.error?.errors?.triage_item);
-        }
-        if (error?.error?.errors?.units) {
-          this.toastr.error(error?.error?.errors?.units);
-        }
+        if (error?.error?.errors?.triage_id) {
+          this.toastr.error(error?.error?.errors?.triage_id);
+        }*/
         if (error?.error?.message) {
           this.toastr.error(error?.error?.message);
           this.service.logout();
-          this.modalRef?.close();
+        }
+        if (error.error.errors) {
+          this.handleValidationErrors(error.error.errors);
         }
         this.isLoading = false;
         console.log(error);
@@ -192,6 +224,14 @@ setupDynamicDependencies(triage_categories: any[]) {
     }
   }
 
+  handleValidationErrors(errors: { [key: string]: string[] }) {
+    Object.keys(errors).forEach(field => {
+      const control = this.triageForm.get(field);
+      if (control) {
+        control.setErrors({ serverError: errors[field][0] }); // Show only first error
+      }
+    });
+  }
 
   formatDate(date: string) {
     return moment.utc(date).local().format('D MMMM, YYYY h:mma');
