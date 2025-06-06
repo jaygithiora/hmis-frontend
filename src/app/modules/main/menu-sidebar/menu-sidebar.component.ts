@@ -378,6 +378,11 @@ export const MENU = [
         iconClasses: 'fas fa-circle icon-small',
         path: ['/dashboard/settings/payment-modes']
       },
+      {
+        name: 'Statuses',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/settings/statuses']
+      },
     ]
   },
   {

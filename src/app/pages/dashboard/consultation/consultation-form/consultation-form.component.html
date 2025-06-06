@@ -1,0 +1,580 @@
+<app-content-header [title]="'Patient Consultation'"></app-content-header>
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12">
+        <form [formGroup]="consultationForm" (submit)="addConsultation()">
+          <input type="hidden" formControlName="id" />
+          <input type="hidden" formControlName="consultation_id" />
+
+          <ngb-accordion #a="ngbAccordion" [activeIds]="activeIds">
+            <ngb-panel id="custom-panel-patient">
+              <ng-template ngbPanelHeader let-opened="opened">
+                <div class="d-flex align-items-center justify-content-between">
+                  <button ngbPanelToggle class="btn">
+                    <h5 class="m-0">Patient Visit Details</h5>
+                  </button>
+                  <button ngbPanelToggle class="btn btn-link p-0">
+                    <i class="fas fa-minus" *ngIf="opened"></i><i class="fas fa-plus" *ngIf="!opened"></i>
+                  </button>
+                </div>
+              </ng-template>
+              <ng-template ngbPanelContent>
+                <div class="row">
+                  <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
+                    <label>Patient Code:</label>
+                    <p>
+                      {{
+                      consultation?.outpatient_visit
+                      ?.patient?.code
+                      }}
+                    </p>
+                  </div>
+                  <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
+                    <label>Visit Code:</label>
+                    <p>
+                      {{ consultation?.outpatient_visit?.code }}
+                    </p>
+                  </div>
+                  <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
+                    <label>Patient Name:</label>
+                    <p>
+                      {{
+                      consultation?.outpatient_visit
+                      ?.patient?.first_name
+                      }}
+                      {{
+                      consultation?.outpatient_visit
+                      ?.patient?.other_names
+                      }}
+                    </p>
+                  </div>
+                  <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
+                    <label>Department:</label>
+                    <p>
+                      {{
+                      consultation?.outpatient_visit
+                      ?.department?.name
+                      }}
+                    </p>
+                  </div>
+                  <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
+                    <label>Consultation Type:</label>
+                    <p>
+                      {{
+                      consultation?.outpatient_visit
+                      ?.consultation_type?.name
+                      }}
+                    </p>
+                  </div>
+                  <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
+                    <label>Date Of Birth:</label>
+                    <p>
+                      {{
+                      consultation?.outpatient_visit
+                      ?.patient?.dob
+                      }}
+                    </p>
+                  </div>
+                  <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
+                    <label>Age:</label>
+                    <p>
+                      <span *ngIf="age?.years > 0"><b>{{ age?.years }}</b>
+                        Years</span>
+                      <span *ngIf="
+                                                    age?.years <= 0 &&
+                                                    age?.months
+                                                "><b>{{ age?.months }}</b>
+                        Months</span>
+                      <span *ngIf="
+                                                    age?.years <= 0
+                                                "><b>{{ age?.days }}</b>
+                        Days</span>
+                    </p>
+                  </div>
+                </div>
+              </ng-template>
+            </ngb-panel>
+
+            <ngb-panel [id]="'custom-panel-triage'">
+              <ng-template ngbPanelHeader let-opened="opened">
+                <div class="d-flex align-items-center justify-content-between">
+                  <button ngbPanelToggle class="btn">
+                    <h5 class="m-0">
+                      Triage Details
+                    </h5>
+                  </button>
+                  <button ngbPanelToggle class="btn btn-link p-0">
+                    <i class="fas fa-minus" *ngIf="opened"></i><i class="fas fa-plus" *ngIf="!opened"></i>
+                  </button>
+                </div>
+              </ng-template>
+              <ng-template ngbPanelContent>
+                <div class="row" *ngIf="consultation != null">
+                  <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2"
+                    *ngFor="let triage_item of consultation?.outpatient_visit?.outpatient_visit_triage?.patient_triage">
+                    <label>{{ triage_item?.triage_item?.name }}</label>
+                    <p>{{ triage_item?.triage_value}} {{ triage_item?.triage_item?.units }}</p>
+                  </div>
+                </div>
+              </ng-template>
+            </ngb-panel>
+
+            <ngb-panel [id]="'custom-panel-consultation'">
+              <ng-template ngbPanelHeader let-opened="opened">
+                <div class="d-flex align-items-center justify-content-between">
+                  <button ngbPanelToggle class="btn">
+                    <!--<h5 class="m-0">
+                      Consultation
+                    </h5>-->
+                    <span><b>Consultation</b> (Click '+' to add/view Family medical history, Social history, Patient
+                      surgical history, Allergies, Patient complants)</span>
+                  </button>
+                  <button ngbPanelToggle class="btn btn-link p-0">
+                    <i class="fas fa-minus" *ngIf="opened"></i><i class="fas fa-plus" *ngIf="!opened"></i>
+                  </button>
+                </div>
+              </ng-template>
+              <ng-template ngbPanelContent>
+
+                <!--Patient Complaints-->
+                <div class='alert alert-primary mt-2 border'>
+                  <div class="row d-flex align-items-center">
+                    <div class="col">
+                      <h6>Patient Allergy</h6>
+                    </div>
+                    <div class="col text-right">
+                      <button class="btn btn-light btn-sm" (click)="addFormAllergy()"><i class="fas fa-plus"></i> Add
+                        New</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <th>#</th>
+                      <th>Allergy Type</th>
+                      <th>Allergy</th>
+                      <th>Since When</th>
+                      <th>Duration</th>
+                      <th>Severity</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </thead>
+                    <tbody>
+                      <!-- Display existing allergies -->
+                      <tr *ngFor="let item of formAllergies.controls; let i = index" [formGroup]="$any(item)">
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ item.value.allergyType }}</td>
+                        <td>{{ item.value.allergy }}</td>
+                        <td>{{ item.value.sinceWhen }}</td>
+                        <td>{{ item.value.duration }}</td>
+                        <td>{{ item.value.severity }}</td>
+                        <td>{{ item.value.status }}</td>
+                        <td>
+                          <button class="btn text-danger" (click)="removeAllergy(i)">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      <!-- Input row for adding new allergy -->
+                      <tr [formGroup]="newAllergyGroup">
+                        <td>#</td>
+                        <td>
+                          <ng-select [items]="allergies" bindLabel="name" bindValue="id" formControlName="allergyType"
+                            placeholder="Type of allergy"></ng-select>
+                        </td>
+                        <td>
+                          <input type="text" formControlName="allergy" placeholder="Allergy" class="form-control" />
+                        </td>
+                        <td>
+                          <input type="text" formControlName="sinceWhen" placeholder="Since When"
+                            class="form-control" />
+                        </td>
+                        <td>
+                          <ng-select [items]="durations" bindLabel="name" bindValue="id" formControlName="duration"
+                            placeholder="Duration"></ng-select>
+                        </td>
+                        <td>
+                          <ng-select [items]="severity" bindLabel="name" bindValue="id" formControlName="severity"
+                            placeholder="Severity"></ng-select>
+                        </td>
+                        <td>
+                          <ng-select [items]="statuses" bindLabel="name" bindValue="id" formControlName="status"
+                            placeholder="Status"></ng-select>
+                        </td>
+                        <td>
+                          <button class="btn btn-primary" (click)="addFormAllergy()">
+                            <i class="fas fa-plus"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!--Complaints-->
+                <div class="alert alert-primary mt-1">
+                  <h6><i class="fas fa-notes-medical"></i> Patient Complaints</h6>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <b class="pb-2">Chief Complaint</b>
+                    <textarea class="form-control" formControlName="chief_complaints" placeholder="Chief Complaints" rows="10"></textarea>
+                  </div>
+                  <div class="col">
+                    <b class="pb-2">History Complain</b>
+                    <textarea class="form-control" formControlName='history_complaints' placeholder="History Complaints" rows="10"></textarea>
+                  </div>
+                </div>
+
+                <!--Patient Complaints-->
+                <div class='alert alert-primary mt-2 border'>
+                  <div class="row d-flex align-items-center">
+                    <div class="col">
+                      <h6><i class='fas fa-lungs'></i> Review of Systems</h6>
+                    </div>
+                    <div class="col text-right">
+                      <button class="btn btn-light btn-sm"><i class="fas fa-plus"></i> Add New</button>
+                    </div>
+                  </div>
+                </div>
+                <table class="table">
+                  <thead>
+                    <th>#</th>
+                    <th>System</th>
+                    <th>Remarks</th>
+                    <th>Action</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <!--Patient Medical History-->
+                <div class='alert alert-primary mt-2 border'>
+                  <div class="row d-flex align-items-center">
+                    <div class="col">
+                      <h6><i class='fas fa-notes-medical'></i> Patient Medical History</h6>
+                    </div>
+                    <div class="col text-right">
+                      <button class="btn btn-light btn-sm"><i class="fas fa-plus"></i> Add New</button>
+                    </div>
+                  </div>
+                </div>
+                <table class="table">
+                  <thead>
+                    <th>#</th>
+                    <th>Surgery</th>
+                    <th>Date</th>
+                    <th>Remarks</th>
+                    <th>Action</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <!--Social History-->
+                <div class='alert alert-primary mt-2 border'>
+                  <div class="row d-flex align-items-center">
+                    <div class="col">
+                      <h6><i class='fas fa-share-alt'></i> Social History</h6>
+                    </div>
+                    <div class="col text-right">
+                      <button class="btn btn-light btn-sm"><i class="fas fa-plus"></i> Add New</button>
+                    </div>
+                  </div>
+                </div>
+                <table class="table">
+                  <thead>
+                    <th>#</th>
+                    <th>Social Habits</th>
+                    <th>Date</th>
+                    <th>Remarks</th>
+                    <th>Action</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+
+
+                <!--Family Medical History-->
+                <div class='alert alert-primary mt-2 border'>
+                  <div class="row d-flex align-items-center">
+                    <div class="col">
+                      <h6><i class='fas fa-notes-medical'></i> Family Medical History</h6>
+                    </div>
+                    <div class="col text-right">
+                      <button class="btn btn-light btn-sm"><i class="fas fa-plus"></i> Add New</button>
+                    </div>
+                  </div>
+                </div>
+                <table class="table">
+                  <thead>
+                    <th>#</th>
+                    <th>Relationship</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+
+              </ng-template>
+            </ngb-panel>
+
+          </ngb-accordion>
+
+          <!--Diagnosis-->
+          <div class="card shadow-sm border">
+            <div class="card-body">
+              <div class='alert alert-primary mt-2 border'>
+                <div class="row d-flex align-items-center">
+                  <div class="col">
+                    <h6><i class='fas fa-disease'></i> DIAGNOSIS (Mandatory)</h6>
+                  </div>
+                  <div class="col text-right">
+                    <button class="btn btn-light btn-sm"><i class="fas fa-plus"></i> Add New</button>
+                  </div>
+                </div>
+              </div>
+              <table class="table">
+                <thead>
+                  <th>#</th>
+                  <th>Diagnosis</th>
+                  <th>Diagnosis Type</th>
+                  <th>Diagnosis Level</th>
+                  <th></th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!--laboratory test-->
+          <div class="card shadow-sm border">
+            <div class="card-body">
+              <div class='alert alert-primary mt-2 border'>
+                <div class="row d-flex align-items-center">
+                  <div class="col">
+                    <h6><i class='fas fa-vials'></i> LABORATORY TEST</h6>
+                  </div>
+                  <div class="col text-right">
+                    <button class="btn btn-light btn-sm"><i class="fas fa-plus"></i> Add New</button>
+                  </div>
+                </div>
+              </div>
+              <table class="table">
+                <thead>
+                  <th>#</th>
+                  <th>Laboratory Test</th>
+                  <th>Rate</th>
+                  <th></th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="2">Totals:</td>
+                    <td>0.00</td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!--Radiology Test-->
+          <div class="card shadow-sm border">
+            <div class="card-body">
+              <div class='alert alert-primary mt-2 border'>
+                <div class="row d-flex align-items-center">
+                  <div class="col">
+                    <h6><i class='fas fa-x-ray'></i> RADIOLOGY TEST</h6>
+                  </div>
+                  <div class="col text-right">
+                    <button class="btn btn-light btn-sm"><i class="fas fa-plus"></i> Add New</button>
+                  </div>
+                </div>
+              </div>
+              <table class="table">
+                <thead>
+                  <th>#</th>
+                  <th>Radiology Test</th>
+                  <th>Rate</th>
+                  <th></th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="2">Totals:</td>
+                    <td>0.00</td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!--Services/Procedures-->
+          <div class="card shadow-sm border">
+            <div class="card-body">
+              <div class='alert alert-primary mt-2 border'>
+                <div class="row d-flex align-items-center">
+                  <div class="col">
+                    <h6><i class='fas fa-user-nurse'></i> SERVICES/PROCEDURES</h6>
+                  </div>
+                  <div class="col text-right">
+                    <button class="btn btn-light btn-sm"><i class="fas fa-plus"></i> Add New</button>
+                  </div>
+                </div>
+              </div>
+              <table class="table">
+                <thead>
+                  <th>#</th>
+                  <th>Service/Procedure</th>
+                  <th>Units</th>
+                  <th>Rate</th>
+                  <th>Amount</th>
+                  <th></th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="4">Totals:</td>
+                    <td>0.00</td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!--Pharmacy-->
+          <div class="card shadow-sm border">
+            <div class="card-body">
+              <div class='alert alert-primary mt-2 border'>
+                <div class="row d-flex align-items-center">
+                  <div class="col">
+                    <h6><i class='fas fa-capsules'></i> PHARMACY</h6>
+                  </div>
+                  <div class="col text-right">
+                    <button class="btn btn-light btn-sm"><i class="fas fa-plus"></i> Add New</button>
+                  </div>
+                </div>
+              </div>
+              <table class="table">
+                <thead>
+                  <th>#</th>
+                  <th>Medicine Name</th>
+                  <th>Stock</th>
+                  <th>Strength</th>
+                  <th>Unit</th>
+                  <th>Dose</th>
+                  <th>Measure</th>
+                  <th>Freq</th>
+                  <th>Days</th>
+                  <th>Route</th>
+                  <th>Qty</th>
+                  <th>Rate</th>
+                  <th>Amount</th>
+                  <th></th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="4">Totals:</td>
+                    <td>0.00</td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!--Sick Leave-->
+          <div class="card shadow-sm border">
+            <div class="card-body">
+              <div class='alert alert-primary mt-2 border'>
+                <div class="row d-flex align-items-center">
+                  <div class="col">
+                    <h6><i class='fas fa-calendar-alt'></i> SICK LEAVE</h6>
+                  </div>
+                  <div class="col text-right">
+                    <button class="btn btn-light btn-sm"><i class="fas fa-plus"></i> Add New</button>
+                  </div>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <th>#</th>
+                    <th>From Date</th>
+                    <th>To Date</th>
+                    <th>Days</th>
+                    <th>Work Related</th>
+                    <th>Type of Sick Leave</th>
+                    <th>Review Date</th>
+                    <th>Light Duty From</th>
+                    <th>Light Duty To</th>
+                    <th>Days</th>
+                    <th>Remarks</th>
+                    <th></th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td colspan="4">Totals:</td>
+                      <td>0.00</td>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!--Grand Totals-->
+          <div class="card shadow-sm border">
+            <div class="card-body">
+              <div class='alert alert-primary mt-2 border'>
+                <div class="row d-flex align-items-center">
+                  <div class="col">
+                    <h6><i class='fas fa-calculator'></i> GRAND TOTALS</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="">
+                <h3>Total Amount:<br />
+                  <b>KES 0.00</b>
+                </h3>
+              </div>
+            </div>
+          </div>
+
+          <div class="card shadow-sm border">
+            <div class="card-body">
+              <div class="mb-3 text-right">
+                <button type="button" class="btn btn-primary" [disabled]="isLoading" (click)="addConsultation()">
+                  <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                  <i class="fab fa-airbnb" *ngIf="!isLoading"></i> Save Changes
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

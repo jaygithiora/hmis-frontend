@@ -111,6 +111,8 @@ import { TriageItemComponent } from './pages/dashboard/triage/triage-item/triage
 import { TriageListComponent } from './pages/dashboard/triage/triage-list/triage-list.component';
 import { TriageComponent } from './pages/dashboard/triage/triage/triage.component';
 import { ConsultationListComponent } from './pages/dashboard/consultation/consultation-list/consultation-list.component';
+import { StatusesComponent } from './pages/dashboard/settings/statuses/statuses.component';
+import { ConsultationFormComponent } from './pages/dashboard/consultation/consultation-form/consultation-form.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -204,7 +206,9 @@ registerLocaleData(localeEn, 'en-EN');
         TriageItemComponent,
         TriageListComponent,
         TriageComponent,
-        ConsultationListComponent
+        ConsultationListComponent,
+        StatusesComponent,
+        ConsultationFormComponent
     ],
     bootstrap: [AppComponent],
     imports: [

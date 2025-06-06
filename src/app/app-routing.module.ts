@@ -69,6 +69,8 @@ import { TriageItemComponent } from '@pages/dashboard/triage/triage-item/triage-
 import { TriageListComponent } from '@pages/dashboard/triage/triage-list/triage-list.component';
 import { TriageComponent } from '@pages/dashboard/triage/triage/triage.component';
 import { ConsultationListComponent } from '@pages/dashboard/consultation/consultation-list/consultation-list.component';
+import { StatusesComponent } from '@pages/dashboard/settings/statuses/statuses.component';
+import { ConsultationFormComponent } from '@pages/dashboard/consultation/consultation-form/consultation-form.component';
 
 const routes: Routes = [
   {
@@ -327,6 +329,10 @@ const routes: Routes = [
         path: 'consultation/list',
         component: ConsultationListComponent
       },
+      {
+        path: 'consultation/view/:id',
+        component: ConsultationFormComponent
+      },
       //settings
       {
         path: 'settings/doctors',
@@ -339,6 +345,10 @@ const routes: Routes = [
       {
         path: 'settings/payment-modes',
         component: PaymentModesComponent
+      },
+      {
+        path: 'settings/statuses',
+        component: StatusesComponent
       },
       //settings
       {
