@@ -3,9 +3,11 @@ import { FormGroup, FormBuilder, Validators, FormControl, FormArray } from '@ang
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '@services/auth/auth.service';
 import { ConsultationService } from '@services/dashboard/consultation/consultation.service';
+import { SystemsService } from '@services/dashboard/settings/systems/systems.service';
 import { Parser } from 'expr-eval';
 import moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
+import { debounceTime, distinctUntilChanged, Subject, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-consultation-form',
@@ -14,29 +16,35 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ConsultationFormComponent implements OnInit {
   disabled = false;
-  public isLoading: boolean = true;
+  isLoading: boolean = true;
   loading: boolean = false;
+  loadingSystems: boolean = false;
 
   consultation: any;
+  systems: any[] = [];
+  searchSystems$ = new Subject<string>();
+  selectedSystemOption: any;
 
   consultationForm!: FormGroup;
   newAllergyGroup: FormGroup;
+  systemsGroup: FormGroup;
 
   active = 1;
   activeIds: string = "custom-panel-patient,custom-panel-triage,custom-panel-consultation";
   age: any;
 
-  allergies = [{id:"Drug Allergy", name:"Drug Allergy"}, {id:"Food Allergy", name:"Food Allergy"}, {id:"Other Allergies", name: "Other Allergies"}];
-  durations = [{id:"Year(s)", name:"Year(s)"}, {id:"Month(s)", name:"Month(s)"}, {id:"Day(s)", name: "Day(s)"}];
-  severity = [{id:"Severe", name:"Severe"}, {id:"Mild", name:"Mild"}];
-  statuses = [{id:"Active", name:"Active"}, {id:"Inactive", name:"Inactive"}];
+  allergies = [{ id: "Drug Allergy", name: "Drug Allergy" }, { id: "Food Allergy", name: "Food Allergy" }, { id: "Other Allergies", name: "Other Allergies" }];
+  durations = [{ id: "Year(s)", name: "Year(s)" }, { id: "Month(s)", name: "Month(s)" }, { id: "Day(s)", name: "Day(s)" }];
+  severity = [{ id: "Severe", name: "Severe" }, { id: "Mild", name: "Mild" }];
+  statuses = [{ id: "Active", name: "Active" }, { id: "Inactive", name: "Inactive" }];
 
   constructor(private consultationService: ConsultationService, private fb: FormBuilder, private toastr: ToastrService, private service: AuthService,
-    private router: Router, private activatedRoute: ActivatedRoute, private cdr:ChangeDetectorRef) {
+    private router: Router, private activatedRoute: ActivatedRoute, private systemsService: SystemsService) {
     this.consultationForm = this.fb.group({
       id: ['0', [Validators.required]],
       consultation_id: ['', [Validators.required]],
       form_allergies: this.fb.array([]),
+      form_systems: this.fb.array([]),
       chief_complaints: ['', [Validators.required]],
       history_complaints: [''],
     });
@@ -49,8 +57,29 @@ export class ConsultationFormComponent implements OnInit {
       severity: [null, Validators.required],
       status: [null, Validators.required],
     });
+
+    this.systemsGroup = this.fb.group({
+      system: [null, Validators.required],
+      remarks: ['', Validators.required],
+    });
+
+    this.setupSearch();
   }
 
+  setupSearch() {
+    this.searchSystems$
+      .pipe(
+        debounceTime(300),  // Wait for the user to stop typing for 300ms
+        distinctUntilChanged(),  // Only search if the query has changed
+        tap(() => this.loadingSystems = true),  // Show the loading spinner
+        switchMap(term => this.systemsService.getSystems(1, term))  // Switch to a new observable for each search term
+      )
+      .subscribe((results: any) => {
+        console.log(results);
+        this.systems = results.systems.data;
+        this.loadingSystems = false;  // Hide the loading spinner when the API call finishes
+      });
+  }
   get formAllergies(): FormArray {
     return this.consultationForm.get('form_allergies') as FormArray;
   }
@@ -65,7 +94,23 @@ export class ConsultationFormComponent implements OnInit {
   removeAllergy(index: number) {
     this.formAllergies.removeAt(index);
   }
+  get formSystems(): FormArray {
+    return this.consultationForm.get('form_systems') as FormArray;
+  }
 
+  addSystem() {
+    if (this.systemsGroup.valid) {
+      this.formSystems.push(this.fb.group(this.systemsGroup.value));
+      this.systemsGroup.reset(); // Clear input fields
+    }
+  }
+
+  removeSystem(index: number) {
+    this.formSystems.removeAt(index);
+  }
+  onSystemSelect(event: any) {
+    console.log(event);
+  }
   ngOnInit() {
     const id = this.activatedRoute.snapshot.paramMap.get("id");
     if (id != null) {

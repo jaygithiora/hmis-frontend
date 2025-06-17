@@ -71,6 +71,7 @@ import { TriageComponent } from '@pages/dashboard/triage/triage/triage.component
 import { ConsultationListComponent } from '@pages/dashboard/consultation/consultation-list/consultation-list.component';
 import { StatusesComponent } from '@pages/dashboard/settings/statuses/statuses.component';
 import { ConsultationFormComponent } from '@pages/dashboard/consultation/consultation-form/consultation-form.component';
+import { SystemsComponent } from '@pages/dashboard/settings/systems/systems.component';
 
 const routes: Routes = [
   {
@@ -349,6 +350,10 @@ const routes: Routes = [
       {
         path: 'settings/statuses',
         component: StatusesComponent
+      },
+      {
+        path: 'settings/systems',
+        component: SystemsComponent
       },
       //settings
       {

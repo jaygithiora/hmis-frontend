@@ -1,0 +1,128 @@
+<app-content-header [title]="'Systems'"></app-content-header>
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-header">
+            <div class="row">
+              <div class="col">
+                <h6>
+                  <i class="fas fa-lungs"></i>
+                  Systems
+                </h6>
+              </div>
+              <div class="col text-right">
+                <button class="btn btn-primary btn-sm" (click)="openModal(content, null)">
+                  <i class="fas fa-plus"></i> Add System
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+                  <table class="table">
+                    <thead>
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Description</th>
+                      <th>Status</th>
+                      <th class="text-right">Action</th>
+                    </thead>
+                    <tbody>
+                      <tr *ngIf="isLoading">
+                        <td colspan="5" class="text-center">
+                          <div class="alert alert-secondary">
+                            <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+                              <span class="sr-only">Loading...</span>
+                            </div>
+                            Loading Systems...
+                          </div>
+                        </td>
+                      </tr>
+                      <tr *ngIf="!isLoading && systems.length == 0">
+                        <td colspan="5" class="text-center">
+                          <div class="alert alert-secondary">
+                            <i class="fas fa-ban"></i> No
+                            <b>Systems</b> found!
+                          </div>
+                        </td>
+                      </tr>
+                      <tr *ngFor="
+                                        let system of systems;
+                                        let i = index
+                                    ">
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ system.name }}</td>
+                        <td>{{ system.description }}</td>
+                        <!--
+                  <td>
+                    {{ formatDate(triage_item.created_at) }}
+                  </td>-->
+                        <td>
+                          <span class="badge badge-primary btn-pill"
+                            *ngIf="system.status">Active</span>
+                          <span class="badge badge-secondary btn-pill"
+                            *ngIf="!system.status">Inactive</span>
+                        </td>
+                        <td class="text-right">
+                          <button class="btn btn-primary btn-sm" (click)="
+                                                openModal(content, system)
+                                            "><i class="fas fa-edit"></i>
+                            Edit</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="text-right p-2">
+                    Showing <b>{{ fromItems }}</b> to <b>{{ toItems }}</b> of <b>{{ totalItems }}</b> Entries
+                  </div>
+                  <div class="d-flex justify-content-end">
+                    <ngb-pagination [(page)]="currentPage" [pageSize]="perPage" [collectionSize]="totalItems"
+                      (pageChange)="loadPage($event)"></ngb-pagination>
+                  </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Add/Edit Status</h4>
+    <button type="button" class="btn-close close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="systemsForm" (submit)="addSystem()">
+      <input type="hidden" formControlName="id" />
+      <div class="mb-3">
+        <label>Name</label>
+        <input class="form-control" placeholder="Name" formControlName="name" />
+      </div>
+      <div class="mb-3">
+        <label>Description</label>
+        <textarea class="form-control" placeholder="Description" formControlName="description"></textarea>
+      </div>
+      <div class="mb-3">
+        <label>Status</label>
+        <select class="form-control custom-select" formControlName="status">
+          <option value="1">Active</option>
+          <option value="0">Inactive</option>
+        </select>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.close('Save click')">
+      Close
+    </button>
+    <button type="button" class="btn btn-primary" [disabled]="isLoading" (click)="addSystem()">
+      <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+        <span class="sr-only">Loading...</span>
+      </div>
+      Save Changes
+    </button>
+  </div>
+</ng-template>

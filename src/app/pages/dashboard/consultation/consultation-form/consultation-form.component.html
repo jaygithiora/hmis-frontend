@@ -220,11 +220,13 @@
                 <div class="row">
                   <div class="col">
                     <b class="pb-2">Chief Complaint</b>
-                    <textarea class="form-control" formControlName="chief_complaints" placeholder="Chief Complaints" rows="10"></textarea>
+                    <textarea class="form-control" formControlName="chief_complaints" placeholder="Chief Complaints"
+                      rows="10"></textarea>
                   </div>
                   <div class="col">
                     <b class="pb-2">History Complain</b>
-                    <textarea class="form-control" formControlName='history_complaints' placeholder="History Complaints" rows="10"></textarea>
+                    <textarea class="form-control" formControlName='history_complaints' placeholder="History Complaints"
+                      rows="10"></textarea>
                   </div>
                 </div>
 
@@ -247,8 +249,34 @@
                     <th>Action</th>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td></td>
+                    <!-- Display existing systems -->
+                    <tr *ngFor="let item of formSystems.controls; let i = index" [formGroup]="$any(item)">
+                      <td>{{ i + 1 }}</td>
+                      <td>{{ item.value.system }}</td>
+                      <td>{{ item.value.remarks }}</td>
+                      <td>
+                        <button class="btn text-danger" (click)="removeSystem(i)">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <!-- Input row for adding new allergy -->
+                    <tr [formGroup]="systemsGroup">
+                      <td>#</td>
+                      <td>
+                         <!--[(ngModel)]="selectedSystemOption"-->
+                        <ng-select [items]="systems" bindLabel="name" bindValue="id" [typeahead]="searchSystems$"
+                          [loading]="loadingSystems" placeholder="Search for Systems"
+                          (change)="onSystemSelect($event)" formControlName="system"></ng-select>
+                      </td>
+                      <td>
+                        <input type="text" formControlName="remarks" placeholder="Remarks" class="form-control" />
+                      </td>
+                      <td>
+                        <button class="btn btn-primary" (click)="addSystem()">
+                          <i class="fas fa-plus"></i>
+                        </button>
+                      </td>
                     </tr>
                   </tbody>
                 </table>

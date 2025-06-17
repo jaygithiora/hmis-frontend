@@ -383,6 +383,11 @@ export const MENU = [
         iconClasses: 'fas fa-circle icon-small',
         path: ['/dashboard/settings/statuses']
       },
+      {
+        name: 'Systems',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/settings/systems']
+      },
     ]
   },
   {
