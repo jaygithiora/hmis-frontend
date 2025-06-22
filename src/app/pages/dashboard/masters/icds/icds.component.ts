@@ -26,8 +26,6 @@ export class IcdsComponent implements OnInit {
     private fb: FormBuilder, private toastr: ToastrService, private service: AuthService) {
     this.icdForm = this.fb.group({
       id: ['0', [Validators.required]],
-      group_name: ['', [Validators.required]],
-      group_code: ['', [Validators.required]],
       icd_name: ['', [Validators.required]],
       icd_code: ['', [Validators.required]],
       status: ['1', [Validators.required]]
@@ -60,15 +58,11 @@ export class IcdsComponent implements OnInit {
       this.icdForm.get("id").setValue(icd.id);
       this.icdForm.get("icd_name").setValue(icd.name);
       this.icdForm.get("icd_code").setValue(icd.code);
-      this.icdForm.get("group_name").setValue(icd.group_name);
-      this.icdForm.get("group_code").setValue(icd.group_code);
       this.icdForm.get("status").setValue(icd.status);
     } else {
       this.icdForm.get("id").setValue(0);
       this.icdForm.get("icd_name").setValue("");
       this.icdForm.get("icd_code").setValue("");
-      this.icdForm.get("group_name").setValue("");
-      this.icdForm.get("group_code").setValue("");
       this.icdForm.get("status").setValue(1);
     }
   }
@@ -85,12 +79,6 @@ export class IcdsComponent implements OnInit {
       }, error => {
         if (error?.error?.errors?.id) {
           this.toastr.error(error?.error?.errors?.id);
-        }
-        if (error?.error?.errors?.group_name) {
-          this.toastr.error(error?.error?.errors?.group_name);
-        }
-        if (error?.error?.errors?.group_code) {
-          this.toastr.error(error?.error?.errors?.group_code);
         }
         if (error?.error?.errors?.icd_code) {
           this.toastr.error(error?.error?.errors?.icd_code);

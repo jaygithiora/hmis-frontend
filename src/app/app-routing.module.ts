@@ -72,6 +72,9 @@ import { ConsultationListComponent } from '@pages/dashboard/consultation/consult
 import { StatusesComponent } from '@pages/dashboard/settings/statuses/statuses.component';
 import { ConsultationFormComponent } from '@pages/dashboard/consultation/consultation-form/consultation-form.component';
 import { SystemsComponent } from '@pages/dashboard/settings/systems/systems.component';
+import { MedicalHistoriesComponent } from '@pages/dashboard/settings/medical-histories/medical-histories.component';
+import { SurgerySettingsComponent } from '@pages/dashboard/settings/surgery-settings/surgery-settings.component';
+import { SocialHistoriesComponent } from '@pages/dashboard/settings/social-histories/social-histories.component';
 
 const routes: Routes = [
   {
@@ -354,6 +357,18 @@ const routes: Routes = [
       {
         path: 'settings/systems',
         component: SystemsComponent
+      },
+      {
+        path: 'settings/medical-histories',
+        component: MedicalHistoriesComponent
+      },
+      {
+        path: 'settings/surgeries',
+        component: SurgerySettingsComponent
+      },
+      {
+        path: 'settings/social-histories',
+        component: SocialHistoriesComponent
       },
       //settings
       {

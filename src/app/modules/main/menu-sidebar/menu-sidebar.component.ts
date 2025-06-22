@@ -388,6 +388,21 @@ export const MENU = [
         iconClasses: 'fas fa-circle icon-small',
         path: ['/dashboard/settings/systems']
       },
+      {
+        name: 'Medical Histories',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/settings/medical-histories']
+      },
+      {
+        name: 'Surgeries',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/settings/surgeries']
+      },
+      {
+        name: 'Social Histories',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/settings/social-histories']
+      },
     ]
   },
   {

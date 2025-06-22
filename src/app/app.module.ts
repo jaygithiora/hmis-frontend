@@ -114,6 +114,9 @@ import { ConsultationListComponent } from './pages/dashboard/consultation/consul
 import { StatusesComponent } from './pages/dashboard/settings/statuses/statuses.component';
 import { ConsultationFormComponent } from './pages/dashboard/consultation/consultation-form/consultation-form.component';
 import { SystemsComponent } from './pages/dashboard/settings/systems/systems.component';
+import { MedicalHistoriesComponent } from './pages/dashboard/settings/medical-histories/medical-histories.component';
+import { SurgerySettingsComponent } from './pages/dashboard/settings/surgery-settings/surgery-settings.component';
+import { SocialHistoriesComponent } from './pages/dashboard/settings/social-histories/social-histories.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -210,7 +213,10 @@ registerLocaleData(localeEn, 'en-EN');
         ConsultationListComponent,
         StatusesComponent,
         ConsultationFormComponent,
-        SystemsComponent
+        SystemsComponent,
+        MedicalHistoriesComponent,
+        SurgerySettingsComponent,
+        SocialHistoriesComponent
     ],
     bootstrap: [AppComponent],
     imports: [

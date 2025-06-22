@@ -26,8 +26,6 @@
                         <table class="table">
                             <thead>
                                 <th>ID</th>
-                                <th>Group Name</th>
-                                <th>Group Code</th>
                                 <th>ICD Name</th>
                                 <th>ICD Code</th>
                                 <th>Date</th>
@@ -36,7 +34,7 @@
                             </thead>
                             <tbody>
                                 <tr *ngIf="isLoading">
-                                    <td colspan="8" class="text-center">
+                                    <td colspan="6" class="text-center">
                                         <div class="alert alert-secondary">
                                             <div
                                                 class="spinner-border spinner-border-sm"
@@ -52,7 +50,7 @@
                                     </td>
                                 </tr>
                                 <tr *ngIf="!isLoading && icds.length == 0">
-                                    <td colspan="8" class="text-center">
+                                    <td colspan="6" class="text-center">
                                         <div class="alert alert-secondary">
                                             <i class="fas fa-ban"></i> No
                                             <b>ICD Found!</b>
@@ -66,8 +64,6 @@
                                     "
                                 >
                                     <td>{{ i + 1 }}</td>
-                                    <td>{{ icd.group_name }}</td>
-                                    <td>{{ icd.group_code }}</td>
                                     <td>{{ icd.name }}</td>
                                     <td>{{ icd.code }}</td>
                                     <td>
@@ -120,24 +116,6 @@
     <div class="modal-body">
         <form [formGroup]="icdForm" (submit)="addLocation()">
             <input type="hidden" formControlName="id" />
-            <div class="mb-3">
-                <label>Group Name</label>
-                <input
-                    class="form-control"
-                    placeholder="Group Name"
-                    formControlName="group_name"
-                    s
-                />
-            </div>
-            <div class="mb-3">
-                <label>Group Code</label>
-                <input
-                    class="form-control"
-                    placeholder="Group Code"
-                    formControlName="group_code"
-                    s
-                />
-            </div>
             <div class="mb-3">
                 <label>ICD Name</label>
                 <input

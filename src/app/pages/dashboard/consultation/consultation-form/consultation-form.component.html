@@ -144,12 +144,11 @@
                       <h6>Patient Allergy</h6>
                     </div>
                     <div class="col text-right">
-                      <button class="btn btn-light btn-sm" (click)="addFormAllergy()"><i class="fas fa-plus"></i> Add
-                        New</button>
+                      <!--<button class="btn btn-light btn-sm" (click)="addFormAllergy()"><i class="fas fa-plus"></i> Add
+                        New</button>-->
                     </div>
                   </div>
                 </div>
-                <div class="table-responsive">
                   <table class="table">
                     <thead>
                       <th>#</th>
@@ -159,9 +158,14 @@
                       <th>Duration</th>
                       <th>Severity</th>
                       <th>Status</th>
-                      <th>Action</th>
+                      <th  class="text-right">Action</th>
                     </thead>
                     <tbody>
+                      <tr>
+                        <td colspan="8" *ngIf="formAllergies.controls.length == 0">
+                          <div class="alert alert-secondary">No <b>Allergies</b> yet. Add below and click the '+' button to add here</div>
+                        </td>
+                      </tr>
                       <!-- Display existing allergies -->
                       <tr *ngFor="let item of formAllergies.controls; let i = index" [formGroup]="$any(item)">
                         <td>{{ i + 1 }}</td>
@@ -170,8 +174,8 @@
                         <td>{{ item.value.sinceWhen }}</td>
                         <td>{{ item.value.duration }}</td>
                         <td>{{ item.value.severity }}</td>
-                        <td>{{ item.value.status }}</td>
-                        <td>
+                        <td>{{ showStatus(item.value.status) }}</td>
+                        <td  class="text-right">
                           <button class="btn text-danger" (click)="removeAllergy(i)">
                             <i class="fas fa-trash"></i>
                           </button>
@@ -203,7 +207,7 @@
                           <ng-select [items]="statuses" bindLabel="name" bindValue="id" formControlName="status"
                             placeholder="Status"></ng-select>
                         </td>
-                        <td>
+                        <td  class="text-right">
                           <button class="btn btn-primary" (click)="addFormAllergy()">
                             <i class="fas fa-plus"></i>
                           </button>
@@ -211,7 +215,6 @@
                       </tr>
                     </tbody>
                   </table>
-                </div>
 
                 <!--Complaints-->
                 <div class="alert alert-primary mt-1">
@@ -236,9 +239,10 @@
                     <div class="col">
                       <h6><i class='fas fa-lungs'></i> Review of Systems</h6>
                     </div>
+                    <!--
                     <div class="col text-right">
                       <button class="btn btn-light btn-sm"><i class="fas fa-plus"></i> Add New</button>
-                    </div>
+                    </div>-->
                   </div>
                 </div>
                 <table class="table">
@@ -246,15 +250,20 @@
                     <th>#</th>
                     <th>System</th>
                     <th>Remarks</th>
-                    <th>Action</th>
+                    <th  class="text-right">Action</th>
                   </thead>
                   <tbody>
+                      <tr>
+                        <td colspan="4" *ngIf="formSystems.controls.length == 0">
+                          <div class="alert alert-secondary">No <b>Systems</b> yet. Add below and click the '+' button to add here</div>
+                        </td>
+                      </tr>
                     <!-- Display existing systems -->
                     <tr *ngFor="let item of formSystems.controls; let i = index" [formGroup]="$any(item)">
                       <td>{{ i + 1 }}</td>
-                      <td>{{ item.value.system }}</td>
+                      <td>{{selectedSystems[i].name }}</td>
                       <td>{{ item.value.remarks }}</td>
-                      <td>
+                      <td  class="text-right">
                         <button class="btn text-danger" (click)="removeSystem(i)">
                           <i class="fas fa-trash"></i>
                         </button>
@@ -265,14 +274,14 @@
                       <td>#</td>
                       <td>
                          <!--[(ngModel)]="selectedSystemOption"-->
-                        <ng-select [items]="systems" bindLabel="name" bindValue="id" [typeahead]="searchSystems$"
+                        <ng-select [items]="systems" bindLabel="name" bindValue="id" [typeahead]="searchSystems$" [(ngModel)]="selectedSystemOption"
                           [loading]="loadingSystems" placeholder="Search for Systems"
-                          (change)="onSystemSelect($event)" formControlName="system"></ng-select>
+                          formControlName="system"></ng-select>
                       </td>
                       <td>
                         <input type="text" formControlName="remarks" placeholder="Remarks" class="form-control" />
                       </td>
-                      <td>
+                      <td  class="text-right">
                         <button class="btn btn-primary" (click)="addSystem()">
                           <i class="fas fa-plus"></i>
                         </button>
@@ -287,22 +296,116 @@
                     <div class="col">
                       <h6><i class='fas fa-notes-medical'></i> Patient Medical History</h6>
                     </div>
+                    <!--
                     <div class="col text-right">
                       <button class="btn btn-light btn-sm"><i class="fas fa-plus"></i> Add New</button>
-                    </div>
+                    </div>-->
                   </div>
                 </div>
                 <table class="table">
                   <thead>
                     <th>#</th>
-                    <th>Surgery</th>
-                    <th>Date</th>
+                    <th>Medical History</th>
                     <th>Remarks</th>
-                    <th>Action</th>
+                    <th  class="text-right">Action</th>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td></td>
+
+                      <tr>
+                        <td colspan="4" *ngIf="formMedicalHistory.controls.length == 0">
+                          <div class="alert alert-secondary">No <b>Medical Histories</b> yet. Add below and click the '+' button to add here</div>
+                        </td>
+                      </tr>
+                    <!-- Display existing systems -->
+                    <tr *ngFor="let item of formMedicalHistory.controls; let i = index" [formGroup]="$any(item)">
+                      <td>{{ i + 1 }}</td>
+                      <td>{{selectedMedicalHistories[i].name }}</td>
+                      <td>{{ item.value.remarks }}</td>
+                      <td  class="text-right">
+                        <button class="btn text-danger" (click)="removeMedicalHistory(i)">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <!-- Input row for adding new allergy -->
+                    <tr [formGroup]="medicalHistoryGroup">
+                      <td>#</td>
+                      <td>
+                         <!--[(ngModel)]="selectedSystemOption"-->
+                        <ng-select [items]="medical_histories" bindLabel="name" bindValue="id" [typeahead]="searchMedicalHistories$" [(ngModel)]="selectedMedicalHistoryOption"
+                          [loading]="loadingMedicalHistories" placeholder="Search Medical History"
+                          formControlName="medical_history"></ng-select>
+                      </td>
+                      <td>
+                        <input type="text" formControlName="remarks" placeholder="Remarks" class="form-control" />
+                      </td>
+                      <td  class="text-right">
+                        <button class="btn btn-primary" (click)="addMedicalHistory()">
+                          <i class="fas fa-plus"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <!--Patient Surgical History-->
+                <div class='alert alert-primary mt-2 border'>
+                  <div class="row d-flex align-items-center">
+                    <div class="col">
+                      <h6><i class='fas fa-brain'></i> Patient Surgical History</h6>
+                    </div>
+                    <!--
+                    <div class="col text-right">
+                      <button class="btn btn-light btn-sm"><i class="fas fa-plus"></i> Add New</button>
+                    </div>-->
+                  </div>
+                </div>
+                <table class="table">
+                  <thead>
+                    <th>#</th>
+                    <th>Surgical History</th>
+                    <th>Surgery Date</th>
+                    <th>Remarks</th>
+                    <th  class="text-right">Action</th>
+                  </thead>
+                  <tbody>
+                      <tr>
+                        <td colspan="5" *ngIf="formSurgery.controls.length == 0">
+                          <div class="alert alert-secondary">No <b>Patient Surgical History</b> yet. Add below and click the '+' button to add here</div>
+                        </td>
+                      </tr>
+                    <!-- Display existing systems -->
+                    <tr *ngFor="let item of formSurgery.controls; let i = index" [formGroup]="$any(item)">
+                      <td>{{ i + 1 }}</td>
+                      <td>{{selectedSurgeries[i].name }}</td>
+                      <td>{{item.value.date }}</td>
+                      <td>{{ item.value.remarks }}</td>
+                      <td  class="text-right">
+                        <button class="btn text-danger" (click)="removeSurgery(i)">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <!-- Input row for adding new allergy -->
+                    <tr [formGroup]="surgeryGroup">
+                      <td>#</td>
+                      <td>
+                         <!--[(ngModel)]="selectedSystemOption"-->
+                        <ng-select [items]="surgeries" bindLabel="name" bindValue="id" [typeahead]="searchSurgeries$" [(ngModel)]="selectedSurgeryOption"
+                          [loading]="loadingSurgeries" placeholder="Search Surgery"
+                          formControlName="surgery"></ng-select>
+                      </td>
+                      <td>
+                        <input type="date" formControlName="date" placeholder="Surgery Date" class="form-control" />
+                      </td>
+                      <td>
+                        <input type="text" formControlName="remarks" placeholder="Remarks" class="form-control" />
+                      </td>
+                      <td  class="text-right">
+                        <button class="btn btn-primary" (click)="addSurgery()">
+                          <i class="fas fa-plus"></i>
+                        </button>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -313,26 +416,53 @@
                     <div class="col">
                       <h6><i class='fas fa-share-alt'></i> Social History</h6>
                     </div>
+                    <!--
                     <div class="col text-right">
                       <button class="btn btn-light btn-sm"><i class="fas fa-plus"></i> Add New</button>
-                    </div>
+                    </div>-->
                   </div>
                 </div>
                 <table class="table">
                   <thead>
                     <th>#</th>
-                    <th>Social Habits</th>
-                    <th>Date</th>
-                    <th>Remarks</th>
-                    <th>Action</th>
+                    <th>Social History</th>
+                    <th class="text-right">Action</th>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td></td>
+                  <tbody>
+
+                      <tr>
+                        <td colspan="4" *ngIf="formSocialHistory.controls.length == 0">
+                          <div class="alert alert-secondary">No <b>Social Histories</b> yet. Add below and click the '+' button to add here</div>
+                        </td>
+                      </tr>
+                    <!-- Display existing systems -->
+                    <tr *ngFor="let item of formSocialHistory.controls; let i = index" [formGroup]="$any(item)">
+                      <td>{{ i + 1 }}</td>
+                      <td>{{selectedSocialHistories[i].name }}</td>
+                      <td class="text-right">
+                        <button class="btn text-danger" (click)="removeSocialHistory(i)">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <!-- Input row for adding new allergy -->
+                    <tr [formGroup]="socialHistoryGroup">
+                      <td>#</td>
+                      <td>
+                         <!--[(ngModel)]="selectedSystemOption"-->
+                        <ng-select [items]="social_histories" bindLabel="name" bindValue="id" [typeahead]="searchSocialHistories$" [(ngModel)]="selectedSocialHistoryOption"
+                          [loading]="loadingSocialHistories" placeholder="Search Social History"
+                           formControlName="social_history"></ng-select>
+                      </td>
+                      <td class="text-right">
+                        <button class="btn btn-primary" (click)="addSocialHistory()">
+                          <i class="fas fa-plus"></i>
+                        </button>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
-
 
                 <!--Family Medical History-->
                 <div class='alert alert-primary mt-2 border'>
@@ -340,12 +470,14 @@
                     <div class="col">
                       <h6><i class='fas fa-notes-medical'></i> Family Medical History</h6>
                     </div>
+                    <!--
                     <div class="col text-right">
                       <button class="btn btn-light btn-sm"><i class="fas fa-plus"></i> Add New</button>
-                    </div>
+                    </div>-->
                   </div>
                 </div>
-                <table class="table">
+                <div class="table-responsive">
+                <table class="table mb-5">
                   <thead>
                     <th>#</th>
                     <th>Relationship</th>
@@ -353,11 +485,42 @@
                     <th>Action</th>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td></td>
+                      <tr>
+                        <td colspan="4" *ngIf="formFamilyMedicalHistory.controls.length == 0">
+                          <div class="alert alert-secondary">No <b>Family Medical History</b> yet. Add below and click the '+' button to add here</div>
+                        </td>
+                      </tr>
+                    <!-- Display existing systems -->
+                    <tr *ngFor="let item of formFamilyMedicalHistory.controls; let i = index" [formGroup]="$any(item)">
+                      <td>{{ i + 1 }}</td>
+                      <td>{{selectedFamilyMedicalHistories[i].name }}</td>
+                      <td>{{ item.value.description }}</td>
+                      <td  class="text-right">
+                        <button class="btn text-danger" (click)="removeFamilyMedicalHistory(i)">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <!-- Input row for adding new allergy -->
+                    <tr [formGroup]="familyMedicalHistoryGroup">
+                      <td>#</td>
+                      <td>
+                         <!--[(ngModel)]="selectedSystemOption"-->
+                        <ng-select [items]="family_medical_histories" bindLabel="name" bindValue="id" [typeahead]="searchFamilyMedicalHistories$" [(ngModel)]="selectedFamilyMedicalHistoryOption"
+                          [loading]="loadingFamilyMedicalHistories" placeholder="Search Family Relationship" formControlName="family_medical_history"></ng-select>
+                      </td>
+                      <td>
+                        <input type="text" formControlName="description" placeholder="Description" class="form-control" />
+                      </td>
+                      <td  class="text-right">
+                        <button class="btn btn-primary" (click)="addFamilyMedicalHistory()">
+                          <i class="fas fa-plus"></i>
+                        </button>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
+                </div>
 
               </ng-template>
             </ngb-panel>
@@ -372,9 +535,10 @@
                   <div class="col">
                     <h6><i class='fas fa-disease'></i> DIAGNOSIS (Mandatory)</h6>
                   </div>
+                  <!--
                   <div class="col text-right">
                     <button class="btn btn-light btn-sm"><i class="fas fa-plus"></i> Add New</button>
-                  </div>
+                  </div>-->
                 </div>
               </div>
               <table class="table">
@@ -383,13 +547,51 @@
                   <th>Diagnosis</th>
                   <th>Diagnosis Type</th>
                   <th>Diagnosis Level</th>
-                  <th></th>
+                  <th class="text-right">Action</th>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td></td>
-                  </tr>
-                </tbody>
+
+                      <tr>
+                        <td colspan="8" *ngIf="formDiagnosis.controls.length == 0">
+                          <div class="alert alert-secondary">No <b>Diagnosis</b> yet. Add below and click the '+' button to add here</div>
+                        </td>
+                      </tr>
+                    <!-- Display existing systems -->
+                    <tr *ngFor="let item of formDiagnosis.controls; let i = index" [formGroup]="$any(item)">
+                      <td>{{ i + 1 }}</td>
+                      <td>{{selectedDiagnosis[i].name }}</td>
+                      <td>{{ item.value.diagnosis_type }}</td>
+                      <td>{{ item.value.diagnosis_level }}</td>
+                      <td  class="text-right">
+                        <button class="btn text-danger" (click)="removeDiagnosis(i)">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <!-- Input row for adding new allergy -->
+                    <tr [formGroup]="diagnosisGroup">
+                      <td>#</td>
+                      <td>
+                         <!--[(ngModel)]="selectedSystemOption"-->
+                        <ng-select [items]="diagnosis" bindLabel="name" bindValue="id" [typeahead]="searchDiagnosis$" [(ngModel)]="selectedDiagnosisOption"
+                          [loading]="loadingDiagnosis" placeholder="Search Diagnosis"
+                          formControlName="diagnosis"></ng-select>
+                      </td>
+                        <td>
+                          <ng-select [items]="diagnosis_types" bindLabel="name" bindValue="id" formControlName="diagnosis_type"
+                            placeholder="Diagnosis Type"></ng-select>
+                        </td>
+                        <td>
+                          <ng-select [items]="diagnosis_levels" bindLabel="name" bindValue="id" formControlName="diagnosis_level"
+                            placeholder="Diagnosis Level"></ng-select>
+                        </td>
+                      <td  class="text-right">
+                        <button class="btn btn-primary" (click)="addDiagnosis()">
+                          <i class="fas fa-plus"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
               </table>
             </div>
           </div>
@@ -402,9 +604,10 @@
                   <div class="col">
                     <h6><i class='fas fa-vials'></i> LABORATORY TEST</h6>
                   </div>
+                  <!--
                   <div class="col text-right">
                     <button class="btn btn-light btn-sm"><i class="fas fa-plus"></i> Add New</button>
-                  </div>
+                  </div>-->
                 </div>
               </div>
               <table class="table">
@@ -412,12 +615,47 @@
                   <th>#</th>
                   <th>Laboratory Test</th>
                   <th>Rate</th>
-                  <th></th>
+                  <th class="text-right">Action</th>
                 </thead>
                 <tbody>
+                      <tr>
+                        <td colspan="8" *ngIf="formLabRate.controls.length == 0">
+                          <div class="alert alert-secondary">No <b>Laboratory Tests</b> yet. Add below and click the '+' button to add here</div>
+                        </td>
+                      </tr>
+                    <!-- Display existing systems -->
+                    <tr *ngFor="let item of formLabRate.controls; let i = index" [formGroup]="$any(item)">
+                      <td>{{ i + 1 }}</td>
+                      <td>{{selectedLabRates[i].laboratory_test.name }}</td>
+                      <td>KES {{ selectedLabRates[i].amount}}</td>
+                      <td  class="text-right">
+                        <button class="btn text-danger" (click)="removeLabRate(i)">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <!-- Input row for adding new allergy -->
+                    <tr [formGroup]="labRateGroup">
+                      <td>#</td>
+                      <td>
+                         <!--[(ngModel)]="selectedSystemOption"-->
+                        <ng-select [items]="lab_rates" bindLabel="laboratory_test.name" bindValue="id" [typeahead]="searchLabRates$" [(ngModel)]="selectedLabRateOption"
+                          [loading]="loadingLabRates" placeholder="Search Lab"
+                          formControlName="lab_rate"></ng-select>
+                      </td>
+                        <td>
+                          KES {{ showRate(lab_rates, selectedLabRateOption) }}
+                        </td>
+                      <td  class="text-right">
+                        <button class="btn btn-primary" (click)="addLabRate()">
+                          <i class="fas fa-plus"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <!--Price-->
                   <tr>
                     <td colspan="2">Totals:</td>
-                    <td>0.00</td>
+                    <td>KES <b>{{ labTotals }}</b></td>
                     <td></td>
                   </tr>
                 </tbody>
@@ -433,9 +671,10 @@
                   <div class="col">
                     <h6><i class='fas fa-x-ray'></i> RADIOLOGY TEST</h6>
                   </div>
+                  <!--
                   <div class="col text-right">
                     <button class="btn btn-light btn-sm"><i class="fas fa-plus"></i> Add New</button>
-                  </div>
+                  </div>-->
                 </div>
               </div>
               <table class="table">
@@ -443,12 +682,47 @@
                   <th>#</th>
                   <th>Radiology Test</th>
                   <th>Rate</th>
-                  <th></th>
+                  <th class="text-right">Action</th>
                 </thead>
                 <tbody>
+                      <tr>
+                        <td colspan="5" *ngIf="formRadRate.controls.length == 0">
+                          <div class="alert alert-secondary">No <b>Radiology Tests</b> yet. Add below and click the '+' button to add here</div>
+                        </td>
+                      </tr>
+                    <!-- Display existing systems -->
+                    <tr *ngFor="let item of formRadRate.controls; let i = index" [formGroup]="$any(item)">
+                      <td>{{ i + 1 }}</td>
+                      <td>{{selectedRadRates[i].radiology_item.name }}</td>
+                      <td>KES {{ selectedRadRates[i].amount}}</td>
+                      <td  class="text-right">
+                        <button class="btn text-danger" (click)="removeRadRate(i)">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <!-- Input row for adding new allergy -->
+                    <tr [formGroup]="radRateGroup">
+                      <td>#</td>
+                      <td>
+                         <!--[(ngModel)]="selectedSystemOption"-->
+                        <ng-select [items]="rad_rates" bindLabel="radiology_item.name" bindValue="id" [typeahead]="searchRadRates$" [(ngModel)]="selectedRadRateOption"
+                          [loading]="loadingRadRates" placeholder="Search Radiology"
+                          formControlName="rad_rate"></ng-select>
+                      </td>
+                        <td>
+                          KES {{ showRate(rad_rates, selectedRadRateOption) }}
+                        </td>
+                      <td  class="text-right">
+                        <button class="btn btn-primary" (click)="addRadRate()">
+                          <i class="fas fa-plus"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <!--Price-->
                   <tr>
                     <td colspan="2">Totals:</td>
-                    <td>0.00</td>
+                    <td>KES <b>{{ radTotals }}</b></td>
                     <td></td>
                   </tr>
                 </tbody>
@@ -464,9 +738,10 @@
                   <div class="col">
                     <h6><i class='fas fa-user-nurse'></i> SERVICES/PROCEDURES</h6>
                   </div>
+                  <!--
                   <div class="col text-right">
                     <button class="btn btn-light btn-sm"><i class="fas fa-plus"></i> Add New</button>
-                  </div>
+                  </div>-->
                 </div>
               </div>
               <table class="table">
@@ -476,12 +751,46 @@
                   <th>Units</th>
                   <th>Rate</th>
                   <th>Amount</th>
-                  <th></th>
+                  <th class="text-right">Action</th>
                 </thead>
                 <tbody>
+                      <tr>
+                        <td colspan="5" *ngIf="formServiceRate.controls.length == 0">
+                          <div class="alert alert-secondary">No <b>Service/Procedure</b> yet. Add below and click the '+' button to add here</div>
+                        </td>
+                      </tr>
+                    <!-- Display existing systems -->
+                    <tr *ngFor="let item of formServiceRate.controls; let i = index" [formGroup]="$any(item)">
+                      <td>{{ i + 1 }}</td>
+                      <td>{{selectedServiceRates[i].service_item.name }}</td>
+                      <td>KES {{ selectedServiceRates[i].amount}}</td>
+                      <td  class="text-right">
+                        <button class="btn text-danger" (click)="removeServiceRate(i)">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <!-- Input row for adding new allergy -->
+                    <tr [formGroup]="serviceRateGroup">
+                      <td>#</td>
+                      <td>
+                         <!--[(ngModel)]="selectedSystemOption"-->
+                        <ng-select [items]="service_rates" bindLabel="service_item.name" bindValue="id" [typeahead]="searchServiceRates$" [(ngModel)]="selectedServiceRateOption"
+                          [loading]="loadingServiceRates" placeholder="Search Service/Procedure"
+                          formControlName="service_rate"></ng-select>
+                      </td>
+                        <td>
+                          KES {{ showRate(service_rates, selectedServiceRateOption) }}
+                        </td>
+                      <td  class="text-right">
+                        <button class="btn btn-primary" (click)="addServiceRate()">
+                          <i class="fas fa-plus"></i>
+                        </button>
+                      </td>
+                    </tr>
                   <tr>
                     <td colspan="4">Totals:</td>
-                    <td>0.00</td>
+                    <td>KES {{ serviceTotals }}</td>
                     <td></td>
                   </tr>
                 </tbody>
@@ -583,7 +892,7 @@
               </div>
               <div class="">
                 <h3>Total Amount:<br />
-                  <b>KES 0.00</b>
+                  <b>KES {{ labTotals+radTotals }}</b>
                 </h3>
               </div>
             </div>
