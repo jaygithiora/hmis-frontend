@@ -97,7 +97,10 @@ export class TriageComponent implements OnInit {
 
         // Build formula and track dependent fields
         triage_item.triage_item_operations?.forEach(op => {
+        console.log("Triage Item Operation:",op);
+          if(op.triage_item_formula){
           const fieldName = op.triage_item_formula.name;
+
 
           // Replace field name with variable in formula
           formula += fieldName;
@@ -105,11 +108,12 @@ export class TriageComponent implements OnInit {
           if (!dependencies.includes(fieldName)) {
             dependencies.push(fieldName);
           }
-
+        }else{
           // Add operation
-          if (op.operator) {
-            formula += ` ${op.operator} `;
+          if (op.operation) {
+            formula += ` ${op.operation.name} `;
           }
+        }
         });
 
         const updateFormula = () => {

@@ -323,6 +323,12 @@
           [multiple]="false" formControlName="triage_items"></ng-select>
       </div>
       <div class="mb-3">
+        <label>Operations</label>
+        <ng-select [items]="operations" bindLabel="name" bindValue="id" [typeahead]="searchOperationInput$" [loading]="loading"
+          [(ngModel)]="selectedOperation" placeholder="Search for Operation" (change)="onOperationSelect($event)"
+          [multiple]="false" formControlName="operation"></ng-select>
+      </div>
+      <div class="mb-3">
         <label>Status</label>
         <select class="form-control custom-select" formControlName="status">
           <option value="1">Active</option>

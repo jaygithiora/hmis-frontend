@@ -22,30 +22,7 @@ export class BillViewComponent implements OnInit {
     private fb: FormBuilder, private router: Router, private activatedRoute:ActivatedRoute) {
     this.billForm = this.fb.group({
       id: ['0', [Validators.required]],
-      patient: ['0'],
-      patient_code: [],
-      location: ['', [Validators.required]],
-      main_type: ['', [Validators.required]],
-      sub_type: ['', [Validators.required]],
-      account: ['', [Validators.required]],
-      plan: ['', [Validators.required]],
-      department: ['', [Validators.required]],
-      doctor: ['', [Validators.required]],
-      consultation_type:['', [Validators.required]],
-      consultation_fees: ['0', [Validators.required]],
-      //validity: [''],
-      //bill_type: [''],
-      //copay: [''],
-      //limit: [''],
-      dob: ['', [Validators.required]],
-      salutation: ['', [Validators.required]],
-      gender: ['', [Validators.required]],
-      first_name: ['', [Validators.required]],
-      other_names: ['', [Validators.required]],
-      id_number: [''],
-      member_number: [''],
-      member_type: ['', [Validators.required]],
-      status: ['active', Validators.required]
+      amount: ['', [Validators.required]],
     });
   }
   
@@ -55,7 +32,10 @@ export class BillViewComponent implements OnInit {
     if (id != null) {
       this.isLoading = true;
       this.billsService.getBill(parseInt(id)).subscribe((result: any) => {
+        console.log(result.bill);
         this.bill = result.bill;
+        this.billForm.get("id").setValue(this.bill.id);
+        this.billForm.get("amount").setValue(this.bill.totals - this.bill.paid);
         this.isLoading = false;
       }, error => {
         if (error?.error?.message) {
@@ -71,7 +51,7 @@ export class BillViewComponent implements OnInit {
     }
   }
 
-  updatePatient() {
+  updateBill() {
     if (this.billForm.valid) {
       /*let formData = new FormData();
       if (this.patientImage != null) {
@@ -83,82 +63,17 @@ export class BillViewComponent implements OnInit {
       this.billsService.updateBill(this.billForm.getRawValue()).subscribe((result: any) => {
         if (result.success) {
           this.toastr.success(result.success);
-          //this.router.navigate(["/dashboard/visits/op/list"]);
+          this.router.navigate(["/dashboard/bills/list"]);
         }
         this.isLoading = false;
       }, error => {
         if (error?.error?.errors?.id) {
           this.toastr.error(error?.error?.id);
         }
-        if (error?.error?.errors?.location) {
-          this.toastr.error(error?.error?.location);
+        if (error?.error?.errors?.amount) {
+          this.toastr.error(error?.error?.amount);
         }
-        if (error?.error?.errors?.patient) {
-          this.toastr.error(error?.error?.patient);
-        }
-        if (error?.error?.errors?.main_type) {
-          this.toastr.error(error?.error?.main_type);
-        }
-        if (error?.error?.errors?.sub_type) {
-          this.toastr.error(error?.error?.sub_type);
-        }
-        if (error?.error?.errors?.account) {
-          this.toastr.error(error?.error?.account);
-        }
-        if (error?.error?.errors?.plan) {
-          this.toastr.error(error?.error?.plan);
-        }
-        if (error?.error?.errors?.department) {
-          this.toastr.error(error?.error?.department);
-        }
-        if (error?.error?.errors?.doctor) {
-          this.toastr.error(error?.error?.doctor);
-        }
-        if (error?.error?.errors?.consultation_type) {
-          this.toastr.error(error?.error?.consultation_type);
-        }
-        if (error?.error?.errors?.consultation_fees) {
-          this.toastr.error(error?.error?.consultation_fees);
-        }
-        if (error?.error?.errors?.other_names) {
-          this.toastr.error(error?.error?.other_names);
-        }
-        if (error?.error?.errors?.id_number) {
-          this.toastr.error(error?.error?.id_number);
-        }
-        if (error?.error?.errors?.member_number) {
-          this.toastr.error(error?.error?.member_number);
-        }
-        if (error?.error?.errors?.member_type) {
-          this.toastr.error(error?.error?.member_type);
-        }
-        if (error?.error?.errors?.blood_group) {
-          this.toastr.error(error?.error?.blood_group);
-        }
-        if (error?.error?.errors?.guardian_name) {
-          this.toastr.error(error?.error?.guardian_name);
-        }
-        if (error?.error?.errors?.patient_location) {
-          this.toastr.error(error?.error?.patient_location);
-        }
-        if (error?.error?.errors?.citizenship) {
-          this.toastr.error(error?.error?.citizenship);
-        }
-        if (error?.error?.errors?.next_of_kin_name) {
-          this.toastr.error(error?.error?.next_of_kin_name);
-        }
-        if (error?.error?.errors?.next_of_kin_phone) {
-          this.toastr.error(error?.error?.next_of_kin_phone);
-        }
-        if (error?.error?.errors?.phone) {
-          this.toastr.error(error?.error?.phone);
-        }
-        if (error?.error?.errors?.next_of_kin_relation) {
-          this.toastr.error(error?.error?.next_of_kin_relation);
-        }
-        if (error?.error?.errors?.status) {
-          this.toastr.error(error?.error?.status);
-        }
+        
         if (error?.error?.message) {
           this.toastr.error(error?.error?.message);
           this.service.logout();

@@ -16,6 +16,6 @@ constructor(private http: HttpClient,@Inject(API_BASE_URL) private baseUrl:strin
     return  this.http.get(`${this.baseUrl}/api/dashboard/bills/view/${id}`);
   }
   updateBill(inputData:any){
-    return this.http.post(`${this.baseUrl}/api/dashboard/triage/categories/add`, inputData);
+    return this.http.post(`${this.baseUrl}/api/dashboard/bills/update`, inputData);
   }
 }

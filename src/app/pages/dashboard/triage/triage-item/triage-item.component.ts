@@ -6,8 +6,8 @@ import moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, debounceTime, distinctUntilChanged, tap, switchMap } from 'rxjs';
 import { TriageItemsService } from '@services/dashboard/triage/triage-items/triage-items.service';
-import { TriageCategoriesService } from '@services/dashboard/triage/triage-categories/triage-categories.service';
 import { ActivatedRoute, Route, Router } from '@angular/router';
+import { OperationsService } from '@services/dashboard/operations/operations.service';
 
 @Component({
   selector: 'app-triage-items',
@@ -52,11 +52,16 @@ export class TriageItemComponent implements OnInit {
   selectedItem;
   searchInput$ = new Subject<string>();
 
+  operations: any[] = [];
+  selectedOperations: number[] = [];
+  selectedOperation;
+  searchOperationInput$ = new Subject<string>();
+
   color: string = '#000000';
   active = 1;
   formula: string = "";
 
-  constructor(private triageItemsService: TriageItemsService, private triageCategoriesService: TriageCategoriesService,
+  constructor(private triageItemsService: TriageItemsService, private operationsService: OperationsService,
     private modalService: NgbModal, private fb: FormBuilder, private toastr: ToastrService, private service: AuthService,
     private router: Router, private activatedRoute: ActivatedRoute) {
     this.triageItemsForm = this.fb.group({
@@ -77,8 +82,9 @@ export class TriageItemComponent implements OnInit {
     this.triageItemOperationsForm = this.fb.group({
       id: ['0', [Validators.required]],
       formula: ['', [Validators.required]],
-      triage_items: ['', [Validators.required]],
+      triage_items: [''],
       triage_item: ['', [Validators.required]],
+      operation:[],
       status: ['1', [Validators.required]]
     });
     this.triageItemOperationItemsForm = this.fb.group({
@@ -124,7 +130,17 @@ export class TriageItemComponent implements OnInit {
     ).subscribe(data => {
       this.triageItems = data.triage_items.data;
     });
+
+    this.searchOperationInput$.pipe(
+      debounceTime(300),
+      tap(() => this.loading = true),
+      switchMap(term => this.operationsService.getOperations(1, term)),
+      tap(() => this.loading = false)
+    ).subscribe(data => {
+      this.operations = data.operations.data;
+    });
   }
+  
   onItemSelect(event: any) {
     if (event.id != this.triage_item.id) {
       let formula = this.triageItemOperationsForm.get("formula")?.value ?? "";
@@ -134,12 +150,23 @@ export class TriageItemComponent implements OnInit {
     } else {
       this.toastr.error(event.name + " cannot be added to its own triage operation");
     }
+    this.triageItemOperationsForm.get('triage_items')?.reset();
+  }
+
+  onOperationSelect(event: any) {
+      let formula = this.triageItemOperationsForm.get("formula")?.value ?? "";
+      this.formula += `${event.name} `
+      formula += `{{${event.name}}}`;
+      this.triageItemOperationsForm.get("formula")?.setValue(formula);
+      this.triageItemOperationsForm.get('operation')?.reset(); // clears ng-select
+
   }
 
   clearFormula() {
     this.triageItemOperationsForm.get("formula")?.reset();
     this.formula = "";
   }
+
   loadPage(page: number, id: number): void {
     this.isLoading = true;
     this.triageItemsService.getTriageItemInterpretations(page, id).subscribe((result: any) => {
@@ -171,6 +198,7 @@ export class TriageItemComponent implements OnInit {
       console.log(error);
     });
   }
+
   loadOperationsPage(id: number): void {
     this.isLoading = true;
     this.triageItemsService.getTriageItemOperations(id).subscribe((result: any) => {
@@ -179,8 +207,13 @@ export class TriageItemComponent implements OnInit {
       let formula = this.triageItemOperationsForm.get("formula")?.value ?? "";
       this.formula = "";
       this.triage_item_operations = result.triage_item_operations.forEach(element => {
-        this.formula += `${element.triage_item_formula.name} `
-        formula += `{{${element.triage_item_formula.name}}}`;
+        if(element.triage_item_formula){
+        this.formula += `${element.triage_item_formula?.name} `
+        formula += `{{${element.triage_item_formula?.name}}}`;
+        }else{
+        this.formula += `${element.operation?.name} `
+        formula += `${element.operation?.name}`;
+        }
       });
     }, error => {
       this.isLoading = false;
