@@ -176,7 +176,7 @@ export class ConsultationFormComponent implements OnInit {
 
     this.serviceRateGroup = this.fb.group({
       service_rate: [null, Validators.required],
-      units: [1, [Validators.required]]
+      units: [1, [Validators.required,Validators.min(1),Validators.pattern(/^[1-9]\d*$/)]]
     });
 
     this.setupSearch();
@@ -287,8 +287,8 @@ export class ConsultationFormComponent implements OnInit {
         switchMap(term => this.serviceRatesService.getServiceRates(1, term))  // Switch to a new observable for each search term
       )
       .subscribe((results: any) => {
-        console.log(results);
-        this.service_rates = results.service_item_rates.data;
+        console.log("Rates Hapa BANA::", results);
+        this.service_rates = results.service_rates.data;
         this.loadingServiceRates = false;  // Hide the loading spinner when the API call finishes
       });
   }
@@ -498,7 +498,7 @@ export class ConsultationFormComponent implements OnInit {
       if (this.serviceRateGroup.valid) {
         this.formServiceRate.push(this.fb.group(this.serviceRateGroup.value));
         this.selectedServiceRates.push(this.service_rates.find(service_rate => service_rate.id == this.selectedServiceRateOption));
-        this.serviceTotals = this.getRateTotals(this.selectedServiceRates);
+        this.serviceTotals = this.getRateTotals(this.selectedServiceRates)*this.serviceRateGroup.get("units").value;
         this.serviceRateGroup.reset();
       }
     }
@@ -516,7 +516,7 @@ export class ConsultationFormComponent implements OnInit {
       this.consultationForm.get("consultation_id").setValue(id);
       this.isLoading = true;
       this.consultationService.getConsultation(parseInt(id)).subscribe((result: any) => {
-        console.log("VISIT:",result);
+        console.log("VISIT:", result);
         this.consultation = result.outpatient_consultation;
         this.age = this.getAgeDetails(this.consultation?.outpatient_visit?.patient?.dob);
         this.isLoading = false;
@@ -551,11 +551,14 @@ export class ConsultationFormComponent implements OnInit {
   showStatus(id: any): string {
     return this.statuses.find(status => status.id == id)?.name;
   }
-  showRate(rates:any[], id: any): string {
-    return rates.find(l => l.id == id)?.amount ?? 0.00;
+  showRate(rates: any[], id: any, units: number = 1): string {
+    const rate = rates.find(r => r.id === id);
+    if (!rate) return '0';
+
+    return (rate.amount * units).toString();
   }
 
-  getRateTotals(rates:any[]): number {
+  getRateTotals(rates: any[]): number {
     return rates.reduce((sum, group) => {
       const amount = group.amount;
       return sum + (parseFloat(amount) || 0);

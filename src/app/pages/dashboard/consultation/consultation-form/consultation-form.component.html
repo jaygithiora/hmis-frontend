@@ -92,6 +92,33 @@
                         Days</span>
                     </p>
                   </div>
+                  <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
+                    <label>Main Type:</label>
+                    <p>
+                      {{
+                      consultation?.outpatient_visit?.patient
+                      ?.main_type?.name
+                      }}
+                    </p>
+                  </div>
+                  <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
+                    <label>Sub Type:</label>
+                    <p>
+                      {{
+                      consultation?.outpatient_visit
+                      ?.patient?.sub_type?.name
+                      }}
+                    </p>
+                  </div>
+                  <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
+                    <label>Account</label>:
+                    <p>
+                      {{
+                      consultation?.outpatient_visit
+                      ?.patient?.account?.name
+                      }}
+                    </p>
+                  </div>
                 </div>
               </ng-template>
             </ngb-panel>
@@ -755,15 +782,17 @@
                 </thead>
                 <tbody>
                       <tr>
-                        <td colspan="5" *ngIf="formServiceRate.controls.length == 0">
+                        <td colspan="6" *ngIf="formServiceRate.controls.length == 0">
                           <div class="alert alert-secondary">No <b>Service/Procedure</b> yet. Add below and click the '+' button to add here</div>
                         </td>
                       </tr>
                     <!-- Display existing systems -->
                     <tr *ngFor="let item of formServiceRate.controls; let i = index" [formGroup]="$any(item)">
                       <td>{{ i + 1 }}</td>
-                      <td>{{selectedServiceRates[i].service_item.name }}</td>
+                      <td>{{selectedServiceRates[i].service.name }}</td>
+                      <td>{{item.value.units }}</td>
                       <td>KES {{ selectedServiceRates[i].amount}}</td>
+                      <td>KES {{ selectedServiceRates[i].amount*item.value.units}}</td>
                       <td  class="text-right">
                         <button class="btn text-danger" (click)="removeServiceRate(i)">
                           <i class="fas fa-trash"></i>
@@ -775,12 +804,16 @@
                       <td>#</td>
                       <td>
                          <!--[(ngModel)]="selectedSystemOption"-->
-                        <ng-select [items]="service_rates" bindLabel="service_item.name" bindValue="id" [typeahead]="searchServiceRates$" [(ngModel)]="selectedServiceRateOption"
+                        <ng-select [items]="service_rates" bindLabel="service.name" bindValue="id" [typeahead]="searchServiceRates$" [(ngModel)]="selectedServiceRateOption"
                           [loading]="loadingServiceRates" placeholder="Search Service/Procedure"
                           formControlName="service_rate"></ng-select>
                       </td>
+                      <td><input type="number" class="form-control" placeholder="Units" formControlName="units"/></td>
                         <td>
                           KES {{ showRate(service_rates, selectedServiceRateOption) }}
+                        </td>
+                        <td>
+                          KES {{ showRate(service_rates, selectedServiceRateOption,serviceRateGroup.get("units")?.value??0) }}
                         </td>
                       <td  class="text-right">
                         <button class="btn btn-primary" (click)="addServiceRate()">
@@ -891,8 +924,8 @@
                 </div>
               </div>
               <div class="">
-                <h3>Total Amount:<br />
-                  <b>KES {{ labTotals+radTotals }}</b>
+                <h3><span class="small">Totals:</span><br />
+                  <b class="text-success"><span class="small">KES</span> {{ labTotals+radTotals }}</b>
                 </h3>
               </div>
             </div>
@@ -905,7 +938,7 @@
                   <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
                     <span class="sr-only">Loading...</span>
                   </div>
-                  <i class="fab fa-airbnb" *ngIf="!isLoading"></i> Save Changes
+                  <i class="fab fa-airbnb" *ngIf="!isLoading"></i> Save Consultation
                 </button>
               </div>
             </div>

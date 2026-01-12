@@ -1,0 +1,174 @@
+<app-content-header [title]="'Product Stock'"></app-content-header>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col">
+                                <h6>
+                                    <i class="fas fa-capsules"></i>
+                                    Product Stock
+                                </h6>
+                            </div>
+                            <div class="col text-right">
+                                <button class="btn btn-primary btn-sm" (click)="openModal(content, null)">
+                                    <i class="fas fa-plus"></i> Add Stock
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <th>ID</th>
+                                    <th>Product Code</th>
+                                    <th>Product Name</th>
+                                    <th>Qty</th>
+                                    <th>Cost</th>
+                                    <th>Selling</th>
+                                    <th>Strength</th>
+                                    <th>Stock</th>
+                                    <th>Date</th>
+                                    <th class="text-right">Action</th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngIf="isLoading">
+                                        <td colspan="10" class="text-center">
+                                            <div class="alert alert-secondary">
+                                                <div class="spinner-border spinner-border-sm" role="status"
+                                                    *ngIf="isLoading">
+                                                    <span class="sr-only">Loading...</span>
+                                                </div>
+                                                Loading Product Stock...
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="
+                                            !isLoading && product_stocks.length == 0
+                                        ">
+                                        <td colspan="10" class="text-center">
+                                            <div class="alert alert-secondary">
+                                                <i class="fas fa-ban"></i> No
+                                                <b>Product Stock</b> Found!
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr *ngFor="
+                                            let product of product_stocks;
+                                            let i = index
+                                        ">
+                                        <td>{{ i + 1 }}</td>
+                                        <td>{{ product?.product?.code }}</td>
+                                        <td>{{ product?.product?.name }}</td>
+                                        <td>
+                                            {{ product.quantity | number:'1.0-0' }}
+                                        </td>
+                                        <td>KES {{ product.cost | number:'1.0-0' }}</td>
+                                        <td>KES {{ product.selling | number:'1.0-0' }}</td>
+                                        <td>{{ product.strength | number:'1.0-0'}}{{ product?.inventory_strength_unit?.name }}</td>
+                                        <td>{{ product.balance }}</td>
+                                        <td>
+                                            {{ formatDate(product.created_at) }}
+                                        </td>
+                                        <!--<td>
+                                            <span class="badge badge-primary btn-pill"
+                                                *ngIf="product.status">Active</span>
+                                            <span class="badge badge-secondary btn-pill"
+                                                *ngIf="!product.status">In-Active</span>
+                                        </td>-->
+                                        <td class="text-right">
+                                            <button class="btn btn-primary btn-sm" (click)="
+                                                    openModal(content, product)
+                                                ">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Add/Edit Product Stock</h4>
+        <button type="button" class="btn-close close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="productStockForm" (submit)="addProductStock()" class="row">
+            <input type="hidden" formControlName="id" />
+            <div class="col-sm-12 mb-3">
+                <label>Product</label>
+                <ng-select [items]="product_stocks" bindLabel="name" bindValue="id" [typeahead]="searchProducts$"
+                    [loading]="loadingProducts" [(ngModel)]="selectedProductOption"
+                    placeholder="Search for product" (change)="onItemSelect($event)"
+                    formControlName="product">
+                </ng-select>
+            </div>
+            <div class="col-sm-12 mb-3">
+                <label>Location</label>
+                <ng-select [items]="locations" bindLabel="name" bindValue="id" [typeahead]="searchLocations$"
+                    [loading]="loadingLocations" [(ngModel)]="selectedLocationsOption"
+                    placeholder="Search Location" (change)="onItemSelect($event)"
+                    formControlName="location">
+                </ng-select>
+            </div>
+            <div class="col-sm-12 mb-3">
+                <label>Store</label>
+                <ng-select [items]="stores" bindLabel="name" bindValue="id" [typeahead]="searchStores$"
+                    [loading]="loadingStores" [(ngModel)]="selectedStoresOption"
+                    placeholder="Search Store" (change)="onItemSelect($event)"
+                    formControlName="store">
+                </ng-select>
+            </div>
+            <div class="col-sm-12 mb-3">
+                <label>Quantity</label>
+                <input type="number" class="form-control" placeholder="Quantity" formControlName="quantity" />
+            </div>
+            <div class="col-sm-6 mb-3">
+                <label>Strength</label>
+                <input type="number" class="form-control" placeholder="Strength" formControlName="strength" />
+            </div>
+            <div class="col-sm-6 mb-3">
+                <label>Strength Unit</label>
+                <ng-select [items]="strength_units" bindLabel="name" bindValue="id" [typeahead]="searchStrengthUnit$"
+                    [loading]="loadingStrengthUnits" [(ngModel)]="selectedStrengthUnitOption"
+                    placeholder="Search for Strength Unit" (change)="onItemSelect($event)"
+                    formControlName="strength_unit"></ng-select>
+            </div>
+            <div class="col-sm-12 mb-3">
+                <label>Cost</label>
+                <input type="number" class="form-control" placeholder="Cost" formControlName="cost" />
+            </div>
+            <div class="col-sm-12 mb-3">
+                <label>Selling</label>
+                <input type="number" class="form-control" placeholder="Selling" formControlName="selling" />
+            </div>
+            <div class="col-sm-12 mb-3">
+                <label>Expiry Date</label>
+                <input type="date" class="form-control" placeholder="Expiry Date" formControlName="expiry_date" />
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.close('Save click')">
+            Close
+        </button>
+        <button type="button" class="btn btn-primary" [disabled]="isLoading" (click)="addProductStock()">
+            <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+                <span class="sr-only">Loading...</span>
+            </div>
+            Save Changes
+        </button>
+    </div>
+</ng-template>

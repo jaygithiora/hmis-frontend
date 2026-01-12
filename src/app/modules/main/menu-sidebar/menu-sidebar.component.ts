@@ -190,6 +190,11 @@ export const MENU = [
         path: ['/dashboard/inventory/dose-measures']
       },
       {
+        name: 'Strength Units',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/inventory/strength-units']
+      },
+      {
         name: 'Products',
         iconClasses: 'fas fa-circle icon-small',
         path: ['/dashboard/inventory/products']
@@ -360,6 +365,17 @@ export const MENU = [
     ]
   },
   {
+    name: 'Stock Management',
+    iconClasses: 'fas fa-pallet',
+    children: [
+      {
+        name: 'Product Stock',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/stocks/products']
+      },
+    ]
+  },
+  {
     name: 'Settings',
     iconClasses: 'fas fa-cog',
     children: [
@@ -402,6 +418,11 @@ export const MENU = [
         name: 'Social Histories',
         iconClasses: 'fas fa-circle icon-small',
         path: ['/dashboard/settings/social-histories']
+      },
+      {
+        name: 'Sick Leave Types',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/settings/sick-leave-types']
       },
     ]
   },

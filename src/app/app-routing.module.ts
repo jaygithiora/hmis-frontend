@@ -75,6 +75,9 @@ import { SystemsComponent } from '@pages/dashboard/settings/systems/systems.comp
 import { MedicalHistoriesComponent } from '@pages/dashboard/settings/medical-histories/medical-histories.component';
 import { SurgerySettingsComponent } from '@pages/dashboard/settings/surgery-settings/surgery-settings.component';
 import { SocialHistoriesComponent } from '@pages/dashboard/settings/social-histories/social-histories.component';
+import { SickLeaveTypesComponent } from '@pages/dashboard/settings/sick-leave-types/sick-leave-types.component';
+import { StrengthUnitsComponent } from '@pages/dashboard/inventory/strength-units/strength-units.component';
+import { ProductStocksComponent } from '@pages/dashboard/stocks/product-stocks/product-stocks.component';
 
 const routes: Routes = [
   {
@@ -203,6 +206,10 @@ const routes: Routes = [
       {
         path: 'inventory/dose-measures',
         component: DoseMeasuresComponent
+      },
+      {
+        path: 'inventory/strength-units',
+        component: StrengthUnitsComponent
       },
       {
         path: 'inventory/products',
@@ -337,6 +344,11 @@ const routes: Routes = [
         path: 'consultation/view/:id',
         component: ConsultationFormComponent
       },
+      //stocks
+      {
+        path: 'stocks/products',
+        component: ProductStocksComponent
+      },
       //settings
       {
         path: 'settings/doctors',
@@ -370,7 +382,11 @@ const routes: Routes = [
         path: 'settings/social-histories',
         component: SocialHistoriesComponent
       },
-      //settings
+      {
+        path: 'settings/sick-leave-types',
+        component: SickLeaveTypesComponent
+      },
+      //users
       {
         path: 'users',
         component: UsersComponent

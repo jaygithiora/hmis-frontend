@@ -117,6 +117,9 @@ import { SystemsComponent } from './pages/dashboard/settings/systems/systems.com
 import { MedicalHistoriesComponent } from './pages/dashboard/settings/medical-histories/medical-histories.component';
 import { SurgerySettingsComponent } from './pages/dashboard/settings/surgery-settings/surgery-settings.component';
 import { SocialHistoriesComponent } from './pages/dashboard/settings/social-histories/social-histories.component';
+import { SickLeaveTypesComponent } from './pages/dashboard/settings/sick-leave-types/sick-leave-types.component';
+import { StrengthUnitsComponent } from './pages/dashboard/inventory/strength-units/strength-units.component';
+import { ProductStocksComponent } from './pages/dashboard/stocks/product-stocks/product-stocks.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -216,7 +219,10 @@ registerLocaleData(localeEn, 'en-EN');
         SystemsComponent,
         MedicalHistoriesComponent,
         SurgerySettingsComponent,
-        SocialHistoriesComponent
+        SocialHistoriesComponent,
+        SickLeaveTypesComponent,
+        StrengthUnitsComponent,
+        ProductStocksComponent
     ],
     bootstrap: [AppComponent],
     imports: [
