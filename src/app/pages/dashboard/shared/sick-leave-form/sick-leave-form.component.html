@@ -1,0 +1,108 @@
+<div class="card shadow-sm border">
+    <div class="card-body">
+        <div class='alert alert-primary mt-2 border'>
+            <div class="row d-flex align-items-center">
+                <div class="col">
+                    <h6><i class='fas fa-calendar-alt'></i> SICK LEAVE</h6>
+                </div>
+                <div class="col text-right">
+                    <button class="btn btn-light btn-sm" (click)="addServiceRate()"><i class="fas fa-plus"></i> Add
+                        New</button>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <th>#</th>
+                    <th>From Date</th>
+                    <th>To Date</th>
+                    <th>Days</th>
+                    <th>Work Related</th>
+                    <th>Type of Sick Leave</th>
+                    <th>Review Date</th>
+                    <th>Light Duty From</th>
+                    <th>Light Duty To</th>
+                    <th>Days</th>
+                    <th>Remarks</th>
+                    <th></th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="12" *ngIf="formArray.controls.length == 0">
+                            <div class="alert alert-secondary text-center"><i class="fas fa-ban"></i> No
+                                <b>Sick Leave</b> yet. Click the '+ Add New' button
+                                to add here
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- Display existing systems -->
+                    <tr *ngFor="let item of formArray.controls; let i = index" [formGroup]="$any(item)">
+
+                        <td>{{ i + 1 }}</td>
+                        <td><input style="min-width: 80px;" type="date" class="form-control" placeholder="From Date"
+                                formControlName="from_date"
+                                [class.is-invalid]="item.get('from_date')?.invalid &&(item.get('from_date')?.touched || item.get('from_date')?.dirty)" />
+                            <div class="invalid-feedback d-block" *ngIf="item.get('from_date')?.errors?.['required']">
+                                From Date is required
+                            </div>
+                        </td>
+                        <td><input style="min-width: 80px;" type="date" class="form-control" placeholder="To Date"
+                                formControlName="to_date"
+                                [class.is-invalid]="item.get('to_date')?.invalid &&(item.get('to_date')?.touched || item.get('to_date')?.dirty)" />
+                            <div class="invalid-feedback d-block" *ngIf="item.get('to_date')?.errors?.['required']">
+                                To Date is required
+                            </div>
+                        </td>
+                        <td><input style="min-width: 80px;" type="number" class="form-control" placeholder="Days"
+                                formControlName="days"
+                                [class.is-invalid]="item.get('days')?.invalid &&(item.get('days')?.touched || item.get('days')?.dirty)" />
+                            <div class="invalid-feedback d-block" *ngIf="item.get('days')?.errors?.['required']">
+                                Days is required
+                            </div>
+                        </td>
+                        <td><ng-select [items]="work_related" bindLabel="name" bindValue="id"
+                                formControlName="work_related" placeholder="Select work related"
+                                 placeholder="Search Work Related">
+                            </ng-select>
+                            <div class="invalid-feedback d-block"
+                                *ngIf="item.get('work_related')?.errors?.['required']">
+                                Work Related is required
+                            </div>
+                        </td>
+                        <td><ng-select [items]="sick_leave_types" bindLabel="name" bindValue="id"
+                                formControlName="sick_leave_type" placeholder="Select sick leave type"
+                                [typeahead]="searchSickLeaveTypes$" (change)="serviceRateChange($event, i)"
+                                [loading]="loadingTypes" placeholder="Search Sick Leave Type"
+                                [class.is-invalid]="item.get('sick_leave_type')?.invalid &&(item.get('sick_leave_type')?.touched || item.get('sick_leave_type')?.dirty)">
+                            </ng-select>
+                            <div class="invalid-feedback d-block"
+                                *ngIf="item.get('sick_leave_type')?.errors?.['required']">
+                                Sick Leave Type is required
+                            </div>
+                        </td>
+                        <td><input style="min-width: 80px;" type="date" class="form-control" placeholder="Review Date "
+                                formControlName="review_date" /></td>
+                        <td><input style="min-width: 80px;" type="date" class="form-control" placeholder="Light Duty From Date"
+                                formControlName="light_duty_from_date" />
+                        </td>
+                        <td><input style="min-width: 80px;" type="date" class="form-control" placeholder="Light Duty To Date"
+                                formControlName="light_duty_to_date" />
+                        </td>
+                        <td><input style="min-width: 80px;" type="date" class="form-control" placeholder="Light Duty Days"
+                                formControlName="light_duty_days" />
+                        </td>
+                        <td><input style="min-width: 200px;" type="text" class="form-control" placeholder="Remarks"
+                                formControlName="remarks" />
+                        </td>
+                        <td class="text-right">
+                            <button class="btn text-danger" (click)="removeServiceRate(i)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,61 @@
+<div class='alert alert-primary mt-2 border'>
+    <div class="row d-flex align-items-center">
+        <div class="col">
+            <h6><i class='fas fa-brain'></i> Patient Surgical History</h6>
+        </div>
+        <div class="col text-right">
+            <button class="btn btn-light btn-sm" (click)="addSurgicalHistory()"><i class="fas fa-plus"></i> Add
+                New</button>
+        </div>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <th>#</th>
+            <th>Surgery</th>
+            <th>Surgery Date</th>
+            <th>Remarks</th>
+            <th></th>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="5" *ngIf="formArray.controls.length == 0">
+                    <div class="alert alert-secondary text-center"><i class="fas fa-ban"></i> No
+                        <b>Surgical History</b> yet. Click the '+ Add New' button
+                        to add here
+                    </div>
+                </td>
+            </tr>
+            <!-- Display existing surgical histories -->
+            <tr *ngFor="let item of formArray.controls; let i = index" [formGroup]="$any(item)">
+                <td>{{ i + 1 }}</td>
+                <td>
+                    <ng-select [items]="surgeries" bindLabel="name" bindValue="id" [typeahead]="searchSurgeries$"
+                        [(ngModel)]="selectedSurgeryOption" [loading]="loadingSurgeries"
+                        placeholder="Search for Surgeries" formControlName="surgery"></ng-select>
+                    <div class="invalid-feedback d-block" *ngIf="item.get('surgery')?.errors?.['required']">
+                        Surgery is required
+                    </div>
+                </td>
+                <td><input type="date" class="form-control" placeholder="Surgery Date" formControlName="date"
+                        [class.is-invalid]="item.get('date')?.invalid && (item.get('date')?.touched || item.get('date')?.dirty)" />
+                    <div class="invalid-feedback d-block" *ngIf="item.get('date')?.errors?.['required']">
+                        Surgery Date is required
+                    </div>
+                </td>
+                <td><input type="text" class="form-control" placeholder="Remarks" formControlName="remarks"
+                        [class.is-invalid]="item.get('remarks')?.invalid && (item.get('remarks')?.touched || item.get('remarks')?.dirty)" />
+                    <div class="invalid-feedback d-block" *ngIf="item.get('remarks')?.errors?.['required']">
+                        Remarks is required
+                    </div>
+                </td>
+                <td class="text-right">
+                    <button class="btn text-danger" (click)="removeSurgicalHistory(i)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

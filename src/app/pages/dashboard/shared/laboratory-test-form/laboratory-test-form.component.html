@@ -1,0 +1,61 @@
+<div class="card shadow-sm border">
+    <div class="card-body">
+        <div class='alert alert-primary mt-2 border'>
+            <div class="row d-flex align-items-center">
+                <div class="col">
+                    <h6><i class='fas fa-vials'></i> LABORATORY TESTS</h6>
+                </div>
+                <div class="col text-right">
+                    <button class="btn btn-light btn-sm" (click)="addLabRate()"><i class="fas fa-plus"></i> Add
+                        New</button>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <th>#</th>
+                    <th>Laboratory Test</th>
+                    <th>Rate <span class="small">(KES)</span></th>
+                    <th></th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="4" *ngIf="formArray.controls.length == 0">
+                            <div class="alert alert-secondary text-center"><i class="fas fa-ban"></i> No
+                                <b>Laboratory Tests</b> yet. Click the '+ Add New' button
+                                to add here
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- Display existing systems -->
+                    <tr *ngFor="let item of formArray.controls; let i = index" [formGroup]="$any(item)">
+
+                        <td>{{ i + 1 }}</td>
+                        <td><ng-select [items]="lab_rates" bindLabel="laboratory_test.name" bindValue="id"
+                                formControlName="lab_rate" placeholder="Select laboratory test"
+                                [typeahead]="searchLabRates$" (change)="labRateChange($event, i)"
+                                [loading]="loadingLabRates" placeholder="Search Laboratory Test" [class.is-invalid]="item.get('lab_rate')?.invalid &&(item.get('lab_rate')?.touched || item.get('lab_rate')?.dirty)">
+                            </ng-select>
+                            <div class="invalid-feedback d-block"
+                                *ngIf="item.get('lab_rate')?.errors?.['required']">
+                                Laboratory Test is required
+                            </div>
+                        </td>
+                        <td>{{item.value.rate | number:'1.0-0'}}</td>
+                        <td class="text-right">
+                            <button class="btn text-danger" (click)="removeLabRate(i)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Totals:</td>
+                        <td><b>KES {{ labTotals | number:'1.0-0' }}</b></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

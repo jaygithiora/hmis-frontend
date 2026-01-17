@@ -1,0 +1,128 @@
+<div class='alert alert-primary mt-2 border'>
+    <div class="row d-flex align-items-center">
+        <div class="col">
+            <h6><i class='fas fa-capsules'></i> Patient Allergies</h6>
+        </div>
+        <div class="col text-right">
+            <button class="btn btn-light btn-sm" (click)="addAllergy()"><i class="fas fa-plus"></i> Add
+                New</button>
+        </div>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <th>#</th>
+            <th>Allergy Type</th>
+            <th>Allergy</th>
+            <th>Since When</th>
+            <th>Duration</th>
+            <th>Severity</th>
+            <th>Status</th>
+            <th></th>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="8" *ngIf="formArray.controls.length == 0">
+                    <div class="alert alert-secondary text-center"><i class="fas fa-ban"></i> No
+                        <b>Allergies</b> yet. Click the '+ Add New' button
+                        to add here
+                    </div>
+                </td>
+            </tr>
+            <!-- Display existing systems -->
+            <tr *ngFor="let item of formArray.controls; let i = index" [formGroup]="$any(item)">
+                <td>{{ i + 1 }}</td>
+                <td>
+                    <ng-select [items]="allergies" bindLabel="name" bindValue="id" formControlName="allergyType"
+                        placeholder="Type of allergy"></ng-select>
+                    <div class="invalid-feedback d-block" *ngIf="item.get('allergyType')?.errors?.['required']">
+                        Allergy Type is required
+                    </div>
+                </td>
+                <td><input type="text" formControlName="allergy" placeholder="Allergy" class="form-control"
+                        [class.is-invalid]="item.get('allergy')?.invalid && (item.get('allergy')?.touched || item.get('allergy')?.dirty)" />
+
+                    <div class="invalid-feedback d-block" *ngIf="item.get('allergy')?.errors?.['required']">
+                        Allergy is required
+                    </div>
+                </td>
+
+                <td><input type="text" formControlName="sinceWhen" placeholder="Since When" class="form-control" /></td>
+                <td>
+                    <ng-select [items]="durations" bindLabel="name" bindValue="id" formControlName="duration"
+                        placeholder="Duration"></ng-select>
+                    <div class="invalid-feedback d-block" *ngIf="item.get('duration')?.errors?.['required']">
+                        Duration is required
+                    </div>
+                </td>
+                <td>
+                    <ng-select [items]="severity" bindLabel="name" bindValue="id" formControlName="severity"
+                        placeholder="Severity"></ng-select>
+                    <div class="invalid-feedback d-block" *ngIf="item.get('severity')?.errors?.['required']">
+                        Severity is required
+                    </div>
+                </td>
+                <td>
+                    <ng-select [items]="statuses" bindLabel="name" bindValue="id" formControlName="status"
+                        placeholder="Status"></ng-select>
+                    <div class="invalid-feedback d-block" *ngIf="item.get('status')?.errors?.['required']">
+                        Status is required
+                    </div>
+                </td>
+                <td class="text-right">
+                    <button class="btn text-danger" (click)="removeAllergy(i)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+            <!--
+                          <tr>
+                            <td></td>
+                            <td>
+                              <b>Stock:</b>
+                            </td>
+                            <td>
+                              <b>Strength:</b>
+                            </td>
+                            <td>
+                              <b>Dose Measure:</b>
+                            </td>
+                            <td><b>Route:</b></td>
+                            <td><b>Rate:</b></td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>
+                              <b>Stock:</b> <br />{{item.value.stock | number:'1.0-0'}}
+                            </td>
+                            <td><input style="min-width: 80px;" type="number" class="form-control" placeholder="Dose"
+                                formControlName="dose" />
+                              <b>Strength:</b><br />{{item.value.strength}}
+                            </td>
+                            <td><ng-select [items]="frequencies" bindLabel="name" bindValue="id"
+                                formControlName="frequency" placeholder="Select frequency"
+                                [typeahead]="searchFrequencies$" (change)="frequencyChange($event, i)"
+                                [loading]="loadingFrequencies">
+                              </ng-select>
+                              <b>Dose Measure:</b><br />{{item.value.dose_measure}}
+                            </td>
+                            <td><input style="min-width: 80px;" type="number" class="form-control" placeholder="Days"
+                                (ngModelChange)="onDaysChange(i)" formControlName="days" /></td>
+                            <td><b>Route:</b><br />{{item.value.route}}</td>
+                            <td><input style="min-width: 80px;" type="number" class="form-control" placeholder="Qty"
+                                (ngModelChange)="onDaysChange(i)" formControlName="quantity" /></td>
+                            <td>KES {{item.value.rate | number:'1.0-0'}}</td>
+                            <td>KES {{item.value.amount | number:'1.0-0'}}</td>
+                            <td class="text-right">
+                              <button class="btn text-danger" (click)="removePrescription(i)">
+                                <i class="fas fa-trash"></i>
+                              </button>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>-->
+        </tbody>
+    </table>
+</div>

@@ -195,6 +195,11 @@ export const MENU = [
         path: ['/dashboard/inventory/strength-units']
       },
       {
+        name: 'Drug Frequencies',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/inventory/drug-frequencies']
+      },
+      {
         name: 'Products',
         iconClasses: 'fas fa-circle icon-small',
         path: ['/dashboard/inventory/products']

@@ -1,0 +1,139 @@
+<div class="card shadow-sm border">
+    <div class="card-body">
+        <div class='alert alert-primary mt-2 border'>
+            <div class="row d-flex align-items-center">
+                <div class="col">
+                    <h6><i class='fas fa-capsules'></i> PRESCRIPTIONS</h6>
+                </div>
+                <div class="col text-right">
+                    <button class="btn btn-light btn-sm" (click)="addPrescription()"><i class="fas fa-plus"></i> Add
+                        New</button>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <th>#</th>
+                    <th>Medicine Name</th>
+                    <th>Dose</th>
+                    <th>Frequency</th>
+                    <th>Days</th>
+                    <th>Qty</th>
+                    <th>Rate <span class="small">(KES)</span></th>
+                    <th>Totals <span class="small">(KES)</span></th>
+                    <th></th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="9" *ngIf="formArray.controls.length == 0">
+                            <div class="alert alert-secondary text-center"><i class="fas fa-ban"></i> No
+                                <b>Prescriptions</b> yet. Click the '+ Add New' button
+                                to add here
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- Display existing systems -->
+                    <tr *ngFor="let item of formArray.controls; let i = index" [formGroup]="$any(item)">
+
+                        <td>{{ i + 1 }}</td>
+                        <td><ng-select [items]="prescriptions" bindLabel="display" bindValue="id"
+                                formControlName="prescription" placeholder="Select prescription"
+                                [typeahead]="searchPrescriptions$" (change)="prescriptionChange($event, i)"
+                                [loading]="loadingPrescriptions" placeholder="Search Prescription" [class.is-invalid]="item.get('prescription')?.invalid &&(item.get('prescription')?.touched || item.get('prescription')?.dirty)">
+                            </ng-select>
+                            <div class="invalid-feedback d-block"
+                                *ngIf="item.get('prescription')?.errors?.['required']">
+                                Prescription is required
+                            </div>
+                        </td>
+                        <td><input style="min-width: 80px;" type="number" class="form-control" placeholder="Dose"
+                                formControlName="dose" />
+                        </td>
+                        <td><ng-select [items]="frequencies" bindLabel="name" bindValue="id" formControlName="frequency"
+                                placeholder="Select frequency" [typeahead]="searchFrequencies$"
+                                (change)="frequencyChange($event, i)" [loading]="loadingFrequencies" [class.is-invalid]="
+    item.get('frequency')?.invalid &&
+    (item.get('frequency')?.touched || item.get('frequency')?.dirty)
+  ">
+                            </ng-select>
+                            <div class="invalid-feedback d-block" *ngIf="item.get('frequency')?.errors?.['required']">
+                                Frequency is required
+                            </div>
+                        </td>
+                        <td><input style="min-width: 80px;" type="number" class="form-control" placeholder="Days"
+                                formControlName="days" [class.is-invalid]="
+         item.get('days')?.invalid &&
+         (item.get('days')?.touched || item.get('days')?.dirty)
+       " />
+                            <div class="invalid-feedback d-block" *ngIf="item.get('days')?.errors?.['required']">
+                                Days is required
+                            </div>
+                        </td>
+                        <td><input style="min-width: 80px;" type="number" class="form-control" placeholder="Qty"
+                                formControlName="quantity" /></td>
+                        <td>{{item.value.rate | number:'1.0-0'}}</td>
+                        <td>{{item.value.amount | number:'1.0-0'}}</td>
+                        <td class="text-right">
+                            <button class="btn text-danger" (click)="removePrescription(i)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <!--
+                          <tr>
+                            <td></td>
+                            <td>
+                              <b>Stock:</b>
+                            </td>
+                            <td>
+                              <b>Strength:</b>
+                            </td>
+                            <td>
+                              <b>Dose Measure:</b>
+                            </td>
+                            <td><b>Route:</b></td>
+                            <td><b>Rate:</b></td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td>
+                              <b>Stock:</b> <br />{{item.value.stock | number:'1.0-0'}}
+                            </td>
+                            <td><input style="min-width: 80px;" type="number" class="form-control" placeholder="Dose"
+                                formControlName="dose" />
+                              <b>Strength:</b><br />{{item.value.strength}}
+                            </td>
+                            <td><ng-select [items]="frequencies" bindLabel="name" bindValue="id"
+                                formControlName="frequency" placeholder="Select frequency"
+                                [typeahead]="searchFrequencies$" (change)="frequencyChange($event, i)"
+                                [loading]="loadingFrequencies">
+                              </ng-select>
+                              <b>Dose Measure:</b><br />{{item.value.dose_measure}}
+                            </td>
+                            <td><input style="min-width: 80px;" type="number" class="form-control" placeholder="Days"
+                                (ngModelChange)="onDaysChange(i)" formControlName="days" /></td>
+                            <td><b>Route:</b><br />{{item.value.route}}</td>
+                            <td><input style="min-width: 80px;" type="number" class="form-control" placeholder="Qty"
+                                (ngModelChange)="onDaysChange(i)" formControlName="quantity" /></td>
+                            <td>KES {{item.value.rate | number:'1.0-0'}}</td>
+                            <td>KES {{item.value.amount | number:'1.0-0'}}</td>
+                            <td class="text-right">
+                              <button class="btn text-danger" (click)="removePrescription(i)">
+                                <i class="fas fa-trash"></i>
+                              </button>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>-->
+                    <tr>
+                        <td colspan="7">Totals:</td>
+                        <td><b>KES {{ prescriptionTotals }}</b></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

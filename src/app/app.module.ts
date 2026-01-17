@@ -120,6 +120,20 @@ import { SocialHistoriesComponent } from './pages/dashboard/settings/social-hist
 import { SickLeaveTypesComponent } from './pages/dashboard/settings/sick-leave-types/sick-leave-types.component';
 import { StrengthUnitsComponent } from './pages/dashboard/inventory/strength-units/strength-units.component';
 import { ProductStocksComponent } from './pages/dashboard/stocks/product-stocks/product-stocks.component';
+import { DrugFrequenciesComponent } from './pages/dashboard/inventory/drug-frequencies/drug-frequencies.component';
+import { PrescriptionsFormComponent } from './pages/dashboard/shared/prescriptions-form/prescriptions-form.component';
+import { AllergiesFormComponent } from './pages/dashboard/shared/allergies-form/allergies-form.component';
+import { ConsultationNotesFormComponent } from './pages/dashboard/shared/consultation-notes-form/consultation-notes-form.component';
+import { ReviewOfSystemsFormComponent } from './pages/dashboard/shared/review-of-systems-form/review-of-systems-form.component';
+import { MedicalHistoryFormComponent } from './pages/dashboard/shared/medical-history-form/medical-history-form.component';
+import { SurgeryHistoryFormComponent } from './pages/dashboard/shared/surgery-history-form/surgery-history-form.component';
+import { SocialHistoryFormComponent } from './pages/dashboard/shared/social-history-form/social-history-form.component';
+import { FamilyMedicalHistoryFormComponent } from './pages/dashboard/shared/family-medical-history-form/family-medical-history-form.component';
+import { DiagnosisFormComponent } from './pages/dashboard/shared/diagnosis-form/diagnosis-form.component';
+import { LaboratoryTestFormComponent } from './pages/dashboard/shared/laboratory-test-form/laboratory-test-form.component';
+import { RadiologyTestFormComponent } from './pages/dashboard/shared/radiology-test-form/radiology-test-form.component';
+import { ServicesFormComponent } from './pages/dashboard/shared/services-form/services-form.component';
+import { SickLeaveFormComponent } from './pages/dashboard/shared/sick-leave-form/sick-leave-form.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -222,7 +236,21 @@ registerLocaleData(localeEn, 'en-EN');
         SocialHistoriesComponent,
         SickLeaveTypesComponent,
         StrengthUnitsComponent,
-        ProductStocksComponent
+        ProductStocksComponent,
+        DrugFrequenciesComponent,
+        PrescriptionsFormComponent,
+        AllergiesFormComponent,
+        ConsultationNotesFormComponent,
+        ReviewOfSystemsFormComponent,
+        MedicalHistoryFormComponent,
+        SurgeryHistoryFormComponent,
+        SocialHistoryFormComponent,
+        FamilyMedicalHistoryFormComponent,
+        DiagnosisFormComponent,
+        LaboratoryTestFormComponent,
+        RadiologyTestFormComponent,
+        ServicesFormComponent,
+        SickLeaveFormComponent
     ],
     bootstrap: [AppComponent],
     imports: [

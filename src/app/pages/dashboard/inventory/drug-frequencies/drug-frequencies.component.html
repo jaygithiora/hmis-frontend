@@ -1,0 +1,137 @@
+<app-content-header [title]="'Drug Frequencies'"></app-content-header>
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-header">
+            <div class="row">
+              <div class="col">
+                <h6>
+                  <i class="fas fa-capsules"></i>
+                  Drug Frequencies
+                </h6>
+              </div>
+              <div class="col text-right">
+                <button class="btn btn-primary btn-sm" (click)="openModal(content, null)">
+                  <i class="fas fa-plus"></i> Add Frequency
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+                  <table class="table">
+                    <thead>
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Description</th>
+                      <th>Frequency</th>
+                      <th>Duration</th>
+                      <th class="text-right">Action</th>
+                    </thead>
+                    <tbody>
+                      <tr *ngIf="isLoading">
+                        <td colspan="6" class="text-center">
+                          <div class="alert alert-secondary">
+                            <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+                              <span class="sr-only">Loading...</span>
+                            </div>
+                            Loading Strength Units...
+                          </div>
+                        </td>
+                      </tr>
+                      <tr *ngIf="!isLoading && drug_frequencies.length == 0">
+                        <td colspan="4" class="text-center">
+                          <div class="alert alert-secondary">
+                            <i class="fas fa-ban"></i> No
+                            <b>Drug Frequencies</b> found!
+                          </div>
+                        </td>
+                      </tr>
+                      <tr *ngFor="let drug_frequency of drug_frequencies;
+                                        let i = index
+                                    ">
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ drug_frequency.name }}</td>
+                        <td>{{ drug_frequency.description }}</td>
+                        <td>{{ drug_frequency.frequency }}</td>
+                        <td>{{ drug_frequency.duration }}</td>
+                    <!--    
+                  <td>
+                    {{ formatDate(drug_frequency.created_at) }}
+                  </td>
+                        <td>
+                          <span class="badge badge-primary btn-pill"
+                            *ngIf="drug_frequency.status">Active</span>
+                          <span class="badge badge-secondary btn-pill"
+                            *ngIf="!drug_frequency.status">Inactive</span>
+                        </td>-->
+                        <td class="text-right">
+                          <button class="btn btn-primary btn-sm" (click)="
+                                                openModal(content, drug_frequency)
+                                            "><i class="fas fa-edit"></i>
+                            Edit</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="text-right p-2">
+                    Showing <b>{{ fromItems }}</b> to <b>{{ toItems }}</b> of <b>{{ totalItems }}</b> Entries
+                  </div>
+                  <div class="d-flex justify-content-end">
+                    <ngb-pagination [(page)]="currentPage" [pageSize]="perPage" [collectionSize]="totalItems"
+                      (pageChange)="loadPage($event)"></ngb-pagination>
+                  </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Add/Edit Drug Frequency</h4>
+    <button type="button" class="btn-close close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="drugFrequencyForm" (submit)="addStrengthUnit()">
+      <input type="hidden" formControlName="id" />
+      <div class="mb-3">
+        <label>Name</label>
+        <input class="form-control" placeholder="Name" formControlName="name" />
+      </div>
+      <div class="mb-3">
+        <label>Frequency</label>
+        <input class="form-control" placeholder="Frequency" formControlName="frequency" />
+      </div>
+      <div class="mb-3">
+        <label>Duration</label>
+        <select class="form-control" formControlName="duration">
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+            <option value="annually">Annually</option>
+            </select>
+
+      </div>
+      <div class="mb-3">
+        <label>Description</label>
+        <textarea class="form-control" placeholder="Description" formControlName="description"></textarea>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.close('Save click')">
+      Close
+    </button>
+    <button type="button" class="btn btn-primary" [disabled]="isLoading" (click)="addStrengthUnit()">
+      <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+        <span class="sr-only">Loading...</span>
+      </div>
+      Save Changes
+    </button>
+  </div>
+</ng-template>

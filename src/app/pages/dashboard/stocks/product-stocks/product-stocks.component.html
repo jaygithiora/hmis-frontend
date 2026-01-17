@@ -31,7 +31,7 @@
                                     <th>Selling</th>
                                     <th>Strength</th>
                                     <th>Stock</th>
-                                    <th>Date</th>
+                                    <th>Batch</th>
                                     <th class="text-right">Action</th>
                                 </thead>
                                 <tbody>
@@ -70,10 +70,11 @@
                                         <td>KES {{ product.selling | number:'1.0-0' }}</td>
                                         <td>{{ product.strength | number:'1.0-0'}}{{ product?.inventory_strength_unit?.name }}</td>
                                         <td>{{ product.balance }}</td>
-                                        <td>
+                                        <td>{{ product.batch }}</td>
+                                        <!--<td>
                                             {{ formatDate(product.created_at) }}
                                         </td>
-                                        <!--<td>
+                                        <td>
                                             <span class="badge badge-primary btn-pill"
                                                 *ngIf="product.status">Active</span>
                                             <span class="badge badge-secondary btn-pill"

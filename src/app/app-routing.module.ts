@@ -78,6 +78,7 @@ import { SocialHistoriesComponent } from '@pages/dashboard/settings/social-histo
 import { SickLeaveTypesComponent } from '@pages/dashboard/settings/sick-leave-types/sick-leave-types.component';
 import { StrengthUnitsComponent } from '@pages/dashboard/inventory/strength-units/strength-units.component';
 import { ProductStocksComponent } from '@pages/dashboard/stocks/product-stocks/product-stocks.component';
+import { DrugFrequenciesComponent } from '@pages/dashboard/inventory/drug-frequencies/drug-frequencies.component';
 
 const routes: Routes = [
   {
@@ -210,6 +211,10 @@ const routes: Routes = [
       {
         path: 'inventory/strength-units',
         component: StrengthUnitsComponent
+      },
+      {
+        path: 'inventory/drug-frequencies',
+        component: DrugFrequenciesComponent
       },
       {
         path: 'inventory/products',

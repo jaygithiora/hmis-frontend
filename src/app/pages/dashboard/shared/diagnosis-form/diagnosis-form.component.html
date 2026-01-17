@@ -1,0 +1,64 @@
+<div class='alert alert-primary mt-2 border'>
+    <div class="row d-flex align-items-center">
+        <div class="col">
+            <h6><i class='fas fa-disease'></i> Diagnosis</h6>
+        </div>
+        <div class="col text-right">
+            <button class="btn btn-light btn-sm" (click)="addDiagnosis()"><i class="fas fa-plus"></i> Add
+                New</button>
+        </div>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <th>#</th>
+            <th>Diagnosis</th>
+            <th>Diagnosis Type</th>
+            <th>Diagnosis Level</th>
+            <th></th>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="5" *ngIf="formArray.controls.length == 0">
+                    <div class="alert alert-secondary text-center"><i class="fas fa-ban"></i> No
+                        <b>Diagnosis</b> yet. Click the '+ Add New' button
+                        to add here
+                    </div>
+                </td>
+            </tr>
+            <!-- Display existing medical histories -->
+            <tr *ngFor="let item of formArray.controls; let i = index" [formGroup]="$any(item)">
+                <td>{{ i + 1 }}</td>
+                <td>
+                    <ng-select [items]="diagnosis" bindLabel="name" bindValue="id"
+                        [typeahead]="searchDiagnosis$" [(ngModel)]="selectedDiagnosisOption"
+                        [loading]="loadingDiagnosis" placeholder="Search Diagnosis"
+                        formControlName="diagnosis"></ng-select>
+                    <div class="invalid-feedback d-block" *ngIf="item.get('diagnosis')?.errors?.['required']">
+                        Diagnosis is required
+                    </div>
+                </td>
+                    <td>
+                      <ng-select [items]="diagnosis_types" bindLabel="name" bindValue="id"
+                        formControlName="diagnosis_type" placeholder="Diagnosis Type"></ng-select>
+                    <div class="invalid-feedback d-block" *ngIf="item.get('diagnosis_type')?.errors?.['required']">
+                        Diagnosis Type is required
+                    </div>
+                    </td>
+                    <td>
+                      <ng-select [items]="diagnosis_levels" bindLabel="name" bindValue="id"
+                        formControlName="diagnosis_level" placeholder="Diagnosis Level"></ng-select>
+                    <div class="invalid-feedback d-block" *ngIf="item.get('diagnosis_level')?.errors?.['required']">
+                        Diagnosis Level is required
+                    </div>
+                </td>
+                <td class="text-right">
+                    <button class="btn text-danger" (click)="removeDiagnosis(i)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
