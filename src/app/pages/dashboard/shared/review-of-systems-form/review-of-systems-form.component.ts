@@ -1,4 +1,4 @@
-import { Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import { FormArray, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SystemsService } from '@services/dashboard/settings/systems/systems.service';
 import moment from 'moment';
@@ -10,9 +10,10 @@ import { Subject, debounceTime, distinctUntilChanged, tap, switchMap } from 'rxj
   templateUrl: './review-of-systems-form.component.html',
   styleUrl: './review-of-systems-form.component.scss'
 })
-export class ReviewOfSystemsFormComponent implements OnInit {
+export class ReviewOfSystemsFormComponent implements OnInit, OnChanges {
 
   @Input({ required: true }) formArray!: FormArray;
+  @Input() patientReviewOfSystems: any[] = [];
 
   isLoading: boolean = true;
   loading: boolean = false;
@@ -95,6 +96,26 @@ export class ReviewOfSystemsFormComponent implements OnInit {
 });*/
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+
+    if (
+      changes['patientReviewOfSystems'] &&
+      this.patientReviewOfSystems?.length &&
+      this.formArray
+    ) {
+      this.patientReviewOfSystems.forEach(system => {
+        this.systems.push(system.system); // Preload existing systems into options
+        this.selectedSystemOption = system.system_id;
+        const systemGroup = this.fb.group({
+          id: [system.id || '', []],
+          system: [system.system_id|| null, Validators.required],
+          remarks: [system.remarks || '', Validators.required],
+        });
+        this.formArray.push(systemGroup);
+      });
+    }
+    //this.isLoading = false;
+  }
   formatDate(date: string) {
     return moment.utc(date).local().format('D MMMM, YYYY h:mma');
   }

@@ -1,7 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormArray, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { IcdsService } from '@services/dashboard/masters/icds/icds.service';
-import { NextOfKinRelationsService } from '@services/dashboard/settings/next-of-kin-relations/next-of-kin-relations.service';
 import moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, debounceTime, distinctUntilChanged, tap, switchMap } from 'rxjs';
@@ -11,9 +10,10 @@ import { Subject, debounceTime, distinctUntilChanged, tap, switchMap } from 'rxj
   templateUrl: './diagnosis-form.component.html',
   styleUrl: './diagnosis-form.component.scss'
 })
-export class DiagnosisFormComponent implements OnInit {
+export class DiagnosisFormComponent implements OnInit, OnChanges {
 
   @Input({ required: true }) formArray!: FormArray;
+  @Input() patientDiagnoses: any[] = [];
 
   loadingDiagnosis: boolean = false;
 
@@ -99,6 +99,26 @@ export class DiagnosisFormComponent implements OnInit {
 });*/
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['patientDiagnoses'] &&
+      this.patientDiagnoses?.length &&
+      this.formArray
+    ) {
+      this.patientDiagnoses.forEach(diagnosis => {
+        this.diagnosis.push(diagnosis.icd); // Preload existing systems into options
+        this.selectedDiagnosisOption = diagnosis.i_c_d_id;
+        const diagnosisGroup = this.fb.group({
+          id: [diagnosis.id || '', []],
+          diagnosis: [diagnosis.i_c_d_id || null, Validators.required],
+          diagnosis_type: [diagnosis.diagnosis_type || 'Primary', Validators.required],
+          diagnosis_level: [diagnosis.diagnosis_level || 'Provisional', Validators.required],
+        });
+        this.formArray.push(diagnosisGroup);
+      });
+    }
+    //this.isLoading = false;
+  }
   formatDate(date: string) {
     return moment.utc(date).local().format('D MMMM, YYYY h:mma');
   }

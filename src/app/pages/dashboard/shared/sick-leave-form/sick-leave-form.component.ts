@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormArray, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SickLeaveTypesService } from '@services/dashboard/settings/sick-leave-types/sick-leave-types.service';
 import moment from 'moment';
@@ -10,9 +10,10 @@ import { Subject, debounceTime, distinctUntilChanged, tap, switchMap } from 'rxj
   templateUrl: './sick-leave-form.component.html',
   styleUrl: './sick-leave-form.component.scss'
 })
-export class SickLeaveFormComponent implements OnInit {
+export class SickLeaveFormComponent implements OnInit, OnChanges {
 
   @Input({ required: true }) formArray!: FormArray;
+  @Input() patientSickLeaves: any[] = [];
 
   loadingTypes: boolean = false;
 
@@ -120,6 +121,33 @@ export class SickLeaveFormComponent implements OnInit {
     this.totalsChanged.emit(this.serviceTotals);
   });*/
   }
+      ngOnChanges(changes: SimpleChanges): void {
+        if (
+          changes['patientSickLeaves'] &&
+          this.patientSickLeaves?.length &&
+          this.formArray
+        ) {
+          this.patientSickLeaves.forEach(service => {
+            this.sick_leave_types.push(service.sick_leave_type); // Preload existing systems into options
+            this.selectedSickLeaveTypeOption = service.sick_leave_type_id;
+            const sickLeaveGroup = this.fb.group({
+              id: [service.id || '', []],
+              from_date: [service.from_date || null, Validators.required],
+              to_date: [service.to_date || null, Validators.required],
+              days: [service.days || null, Validators.required],
+              work_related: [service.work_related || 1, Validators.required],
+              sick_leave_type: [service.sick_leave_type_id || null, Validators.required],
+              review_date: [service.review_date || '', []],
+              light_duty_from_date: [service.light_duty_from_date || '', []],
+              light_duty_to_date: [service.light_duty_to_date || '', []],
+              light_duty_days: [service.light_duty_days || '', []],
+              remarks: [service.remarks || '', []],
+            }); 
+            this.formArray.push(sickLeaveGroup);
+          });
+        }
+        //this.isLoading = false;
+      }
 
 
   formatDate(date: string) {

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormArray, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SurgerySettingsService } from '@services/dashboard/settings/surgery-settings/surgery-settings.service';
 import moment from 'moment';
@@ -10,9 +10,10 @@ import { Subject, debounceTime, distinctUntilChanged, tap, switchMap } from 'rxj
   templateUrl: './surgery-history-form.component.html',
   styleUrl: './surgery-history-form.component.scss'
 })
-export class SurgeryHistoryFormComponent implements OnInit {
+export class SurgeryHistoryFormComponent implements OnInit, OnChanges {
 
   @Input({ required: true }) formArray!: FormArray;
+  @Input() patientSurgicalHistories: any[] = [];
 
   loadingSurgeries: boolean = false;
 
@@ -94,6 +95,28 @@ export class SurgeryHistoryFormComponent implements OnInit {
   console.log('FORM CHANGE', v);
 });*/
   }
+
+    ngOnChanges(changes: SimpleChanges): void {
+  
+      if (
+        changes['patientSurgicalHistories'] &&
+        this.patientSurgicalHistories?.length &&
+        this.formArray
+      ) {
+        this.patientSurgicalHistories.forEach(surgery => {
+          this.surgeries.push(surgery.surgery_setting); // Preload existing systems into options
+          this.selectedSurgeryOption = surgery.surgery_setting_id;
+          const surgeryGroup = this.fb.group({
+            id: [surgery.id || '', []],
+            surgery: [surgery.surgery_setting_id|| null, Validators.required],
+            date: [surgery.surgery_date|| '', Validators.required],
+            remarks: [surgery.remarks || '', Validators.required],
+          });
+          this.formArray.push(surgeryGroup);
+        });
+      }
+      //this.isLoading = false;
+    }
 
   formatDate(date: string) {
     return moment.utc(date).local().format('D MMMM, YYYY h:mma');

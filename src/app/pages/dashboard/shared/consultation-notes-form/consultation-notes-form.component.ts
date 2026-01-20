@@ -1,6 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { After } from 'v8';
-
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 
 declare var $: any;
 
@@ -17,56 +15,63 @@ declare global {
   templateUrl: './consultation-notes-form.component.html',
   styleUrl: './consultation-notes-form.component.scss'
 })
-export class ConsultationNotesFormComponent implements AfterViewInit, OnDestroy{
+export class ConsultationNotesFormComponent implements AfterViewInit, OnDestroy, OnChanges {
 
-  @ViewChild('editor') editor!: ElementRef<HTMLDivElement>; 
-  
+  @ViewChild('editor') editor!: ElementRef<HTMLDivElement>;
+
   @Input() content = '';
   @Input() height = 200;
 
   @Output() contentChange = new EventEmitter<string>();
 
   private initialized = false;
-
-
-    ngAfterViewInit() {
-      this.initSummernote();
-    }
+  private settingContent = true;
   
-    ngOnDestroy() {
-      if (this.initialized) {
-        $(this.editor.nativeElement).summernote('destroy');
-      }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['content'] && !changes['content'].firstChange && this.settingContent) {
+      this.setContent(this.content);
+      this.settingContent = false;
     }
-  
-    private initSummernote() {
-      $(this.editor.nativeElement).summernote({
-        height: 200,
-        placeholder: 'Consultation Notes...',
-        callbacks: {
-          onChange: (contents: string) => {
-            this.contentChange.emit(contents);
-          },
+  }
+
+  ngAfterViewInit() {
+    this.initSummernote();
+  }
+
+  ngOnDestroy() {
+    if (this.initialized) {
+      $(this.editor.nativeElement).summernote('destroy');
+    }
+  }
+
+  private initSummernote() {
+    $(this.editor.nativeElement).summernote({
+      height: 200,
+      placeholder: 'Consultation Notes...',
+      callbacks: {
+        onChange: (contents: string) => {
+          this.contentChange.emit(contents);
         },
-      });
-  
-      // Set initial content if any
-      $(this.editor.nativeElement).summernote('code', "");
-      this.initialized = true;
+      },
+    });
+
+    // Set initial content if any
+    //$(this.editor.nativeElement).summernote('code', "");
+    this.initialized = true;
+  }
+
+  // Allow programmatically setting content from outside
+  setContent(value: string) {
+    if (this.initialized) {
+      $(this.editor.nativeElement).summernote('code', value);
     }
-  
-    // Allow programmatically setting content from outside
-    setContent(value: string) {
-      if (this.initialized) {
-        $(this.editor.nativeElement).summernote('code', value);
-      }
+  }
+
+  // Allow getting content programmatically
+  getContent(): string {
+    if (this.initialized) {
+      return $(this.editor.nativeElement).summernote('code');
     }
-  
-    // Allow getting content programmatically
-    getContent(): string {
-      if (this.initialized) {
-        return $(this.editor.nativeElement).summernote('code');
-      }
-      return '';
-    }
+    return '';
+  }
 }

@@ -4,7 +4,7 @@
             <h6><i class='fas fa-capsules'></i> Patient Allergies</h6>
         </div>
         <div class="col text-right">
-            <button class="btn btn-light btn-sm" (click)="addAllergy()"><i class="fas fa-plus"></i> Add
+            <button type="button" class="btn btn-light btn-sm" (click)="addAllergy()"><i class="fas fa-plus"></i> Add
                 New</button>
         </div>
     </div>
@@ -48,7 +48,12 @@
                     </div>
                 </td>
 
-                <td><input type="text" formControlName="sinceWhen" placeholder="Since When" class="form-control" /></td>
+                <td><input type="number" min="1" formControlName="sinceWhen" placeholder="Since When" class="form-control" [class.is-invalid]="item.get('sinceWhen')?.invalid && (item.get('sinceWhen')?.touched || item.get('sinceWhen')?.dirty)" />
+
+                    <div class="invalid-feedback d-block" *ngIf="item.get('sinceWhen')?.errors?.['required']">
+                        Since When is required
+                    </div>
+                </td>
                 <td>
                     <ng-select [items]="durations" bindLabel="name" bindValue="id" formControlName="duration"
                         placeholder="Duration"></ng-select>

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormArray, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MedicalHistoriesService } from '@services/dashboard/settings/medical-histories/medical-histories.service';
 import moment from 'moment';
@@ -10,9 +10,10 @@ import { Subject, debounceTime, distinctUntilChanged, tap, switchMap } from 'rxj
   templateUrl: './medical-history-form.component.html',
   styleUrl: './medical-history-form.component.scss'
 })
-export class MedicalHistoryFormComponent implements OnInit {
+export class MedicalHistoryFormComponent implements OnInit, OnChanges{
 
   @Input({ required: true }) formArray!: FormArray;
+  @Input() patientMedicalHistories: any[] = [];
 
   loadingMedicalHistories: boolean = false;
 
@@ -96,6 +97,27 @@ export class MedicalHistoryFormComponent implements OnInit {
 });*/
   }
 
+
+  ngOnChanges(changes: SimpleChanges): void {
+
+    if (
+      changes['patientMedicalHistories'] &&
+      this.patientMedicalHistories?.length &&
+      this.formArray
+    ) {
+      this.patientMedicalHistories.forEach(medical_history => {
+        this.medicalHistories.push(medical_history.medical_history); // Preload existing systems into options
+        this.selectedMedicalHistoryOption = medical_history.medical_history_id;
+        const medicalHistoryGroup = this.fb.group({
+          id: [medical_history.id || '', []],
+          medical_history: [medical_history.medical_history_id|| null, Validators.required],
+          remarks: [medical_history.remarks || '', Validators.required],
+        });
+        this.formArray.push(medicalHistoryGroup);
+      });
+    }
+    //this.isLoading = false;
+  }
   formatDate(date: string) {
     return moment.utc(date).local().format('D MMMM, YYYY h:mma');
   }

@@ -1,5 +1,5 @@
 //import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { DrugFrequenciesService } from '@services/dashboard/inventory/drug_frequencies/drug-frequencies.service';
 import { ProductStocksService } from '@services/dashboard/stocks/product-stocks/product-stocks.service';
@@ -14,10 +14,11 @@ import { Subject, debounceTime, distinctUntilChanged, tap, switchMap } from 'rxj
   //imports: [CommonModule, ReactiveFormsModule, NgSelectModule],
   styleUrl: './prescriptions-form.component.scss'
 })
-export class PrescriptionsFormComponent implements OnInit {
+export class PrescriptionsFormComponent implements OnInit, OnChanges {
 
   @Input({ required: true }) formArray!: FormArray;
   @Output() totalsChanged = new EventEmitter<number>();
+  @Input() patientPrescriptions: any[] = [];
 
   isLoading: boolean = true;
   loading: boolean = false;
@@ -41,7 +42,7 @@ export class PrescriptionsFormComponent implements OnInit {
 
   private updating = false;
 
-  constructor(private fb: FormBuilder, private toastr: ToastrService, private productStockService: ProductStocksService, 
+  constructor(private fb: FormBuilder, private toastr: ToastrService, private productStockService: ProductStocksService,
     private drugFrequenciesService: DrugFrequenciesService,) {
     /*
   
@@ -215,6 +216,42 @@ export class PrescriptionsFormComponent implements OnInit {
 });*/
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['patientPrescriptions'] &&
+      this.patientPrescriptions?.length &&
+      this.formArray
+    ) {
+      this.patientPrescriptions.forEach(prescription => {
+        this.prescriptions.push({
+          ...prescription.product_rate,
+          display: `${prescription.product_rate.product.name} - ${prescription.product_rate.product.code}`
+        }); 
+        this.frequencies.push(prescription.drug_frequency);
+        // Preload existing systems into options
+        this.selectedPrescriptionOption = prescription.product_rate_id;
+        const prescriptionGroup = this.fb.group({
+          id: [prescription.id || '', []],
+          prescription: [prescription.product_rate_id || null, Validators.required],
+          dose: [prescription.dose || '', Validators.required],
+          frequency:[prescription.drug_frequency_id || null, Validators.required],
+          freq: [prescription.drug_frequency.frequency || '', []],
+          quantity: [prescription.quantity || '', Validators.required],
+          days: [prescription.days || '', Validators.required],
+          stock: [prescription.stock || '', []],
+          strength: [prescription.strength || '', []],
+          dose_measure: [prescription.dose_measure || '', []],
+          route: [prescription.route || '', []],
+          rate: [prescription.rate || '', Validators.required],
+          amount: [prescription.amount || '', Validators.required],
+        });
+        this.prescriptionTotals += prescription.amount || 0;
+        this.formArray.push(prescriptionGroup);
+        this.calculatePrescriptionAmount();
+      });
+    }
+    //this.isLoading = false;
+  }
   formatDate(date: string) {
     return moment.utc(date).local().format('D MMMM, YYYY h:mma');
   }

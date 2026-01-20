@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormArray, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { RadiologyItemRatesService } from '@services/dashboard/radiology/radiology-item-rates/radiology-item-rates.service';
 import moment from 'moment';
@@ -10,10 +10,11 @@ import { Subject, debounceTime, distinctUntilChanged, tap, switchMap } from 'rxj
   templateUrl: './radiology-test-form.component.html',
   styleUrl: './radiology-test-form.component.scss'
 })
-export class RadiologyTestFormComponent implements OnInit {
+export class RadiologyTestFormComponent implements OnInit, OnChanges {
 
   @Input({ required: true }) formArray!: FormArray;
   @Output() totalsChanged = new EventEmitter<number>();
+  @Input() patientRadiologyTests: any[] = [];
 
   loadingRadRates: boolean = false;
 
@@ -82,7 +83,7 @@ export class RadiologyTestFormComponent implements OnInit {
 
   radRateChange($event: any, i: number) {
     console.log("rad rate id", $event?.id);
-    if(!$event) {
+    if (!$event) {
       this.formArray.at(i).reset();
       return;
     }
@@ -108,14 +109,36 @@ export class RadiologyTestFormComponent implements OnInit {
     /*this.formPrescriptions.valueChanges.subscribe(v => {
   console.log('FORM CHANGE', v);
 });*/
-  this.formArray.valueChanges.subscribe(values => {
-    this.radTotals = values.reduce(
-      (sum: number, item: any) => sum + (Number(item.amount) || 0),
-      0
-    );
-    this.totalsChanged.emit(this.radTotals);
-  });
+    this.formArray.valueChanges.subscribe(values => {
+      this.radTotals = values.reduce(
+        (sum: number, item: any) => sum + (Number(item.amount) || 0),
+        0
+      );
+      this.totalsChanged.emit(this.radTotals);
+    });
   }
+  
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['patientRadiologyTests'] &&
+      this.patientRadiologyTests?.length &&
+      this.formArray
+    ) {
+      this.patientRadiologyTests.forEach(radiologyTest => {
+        this.rad_rates.push(radiologyTest.radiology_item_rate); // Preload existing systems into options
+        this.selectedRadRateOption = radiologyTest.radiology_item_rate_id;
+        const radRateGroup = this.fb.group({
+          id: [radiologyTest.id || '', []],
+          rad_rate: [radiologyTest.radiology_item_rate_id || null, Validators.required],
+          rate: [radiologyTest.amount || '', Validators.required],
+          amount: [radiologyTest.amount || '', Validators.required],
+        });
+        this.formArray.push(radRateGroup);
+      });
+    }
+    //this.isLoading = false;
+  }
+
 
   formatDate(date: string) {
     return moment.utc(date).local().format('D MMMM, YYYY h:mma');

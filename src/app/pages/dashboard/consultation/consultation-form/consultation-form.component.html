@@ -165,26 +165,41 @@
               <ng-template ngbPanelContent>
 
                 <!--Patient Complaints-->
-                <app-allergies-form [formArray]="formAllergies"></app-allergies-form>
+                <div #allergySection>
+                  <app-allergies-form [formArray]="formAllergies" [patientAllergies]="patientAllergies"></app-allergies-form>
+                </div>
 
                 <!--Consultation-->
-                <app-consultation-notes-form [(content)]="consultationNotes" [height]="300"
-                  (contentChange)="onConsultationNotesChange($event)"></app-consultation-notes-form>
+                <div #consultationSection>
+                  <app-consultation-notes-form [(content)]="consultationNotes" [height]="300"
+                    (contentChange)="onConsultationNotesChange($event)"></app-consultation-notes-form>
+                </div>
 
                 <!--Review of Systems-->
-                <app-review-of-systems-form [formArray]="formSystems"></app-review-of-systems-form>
+                <div #reviewOfSystemsSection>
+                <app-review-of-systems-form [formArray]="formSystems" [patientReviewOfSystems]="patientReviewOfSystems"></app-review-of-systems-form>
+                </div>
 
                 <!--Patient Medical History-->
-                <app-medical-history-form [formArray]="formMedicalHistory"></app-medical-history-form>
+                <div #medicalHistorySection>
+                  <app-medical-history-form [formArray]="formMedicalHistory" [patientMedicalHistories]="patientMedicalHistories"></app-medical-history-form>
+                </div>
 
                 <!--Patient Surgical History-->
-                <app-surgery-history-form [formArray]="formSurgery"></app-surgery-history-form>
+                <div #surgicalHistorySection>
+                <app-surgery-history-form [formArray]="formSurgery" [patientSurgicalHistories]="patientSurgicalHistories"></app-surgery-history-form>
+                </div>
 
                 <!--Social History-->
-                <app-social-history-form [formArray]="formSocialHistory"></app-social-history-form>
+                <div #socialHistorySection>
+                <app-social-history-form [formArray]="formSocialHistory" [patientSocialHistories]="patientSocialHistories"></app-social-history-form>
+                </div>
 
                 <!--Family Medical History-->
-                <app-family-medical-history-form [formArray]="formFamilyMedicalHistory"></app-family-medical-history-form>
+                <div #familyMedicalHistorySection>
+                <app-family-medical-history-form
+                  [formArray]="formFamilyMedicalHistory" [patientFamilyMedicalHistories]="patientFamilyMedicalHistories"></app-family-medical-history-form>
+                </div>
 
               </ng-template>
             </ngb-panel>
@@ -192,25 +207,41 @@
           </ngb-accordion>
 
           <!--Diagnosis-->
-          <div class="card shadow-sm border">
+          <div class="card shadow-sm border" #diagnosisSection>
             <div class="card-body">
-              <app-diagnosis-form [formArray]="formDiagnosis"></app-diagnosis-form>
+              <app-diagnosis-form [formArray]="formDiagnosis" [patientDiagnoses]="patientDiagnoses"></app-diagnosis-form>
             </div>
           </div>
 
           <!--laboratory test-->
-          <app-laboratory-test-form [formArray]="formLabRate" (totalsChanged)="labTotals = $event"></app-laboratory-test-form>
-          
+          <div #laboratoryTestSection>
+          <app-laboratory-test-form [formArray]="formLabRate" [patientLaboratoryTests]="patientLaboratoryTests"
+            (totalsChanged)="labTotals = $event"></app-laboratory-test-form>
+            </div>
+
 
           <!--Radiology Test-->
-          <app-radiology-test-form [formArray]="formRadRate" (totalsChanged)="radTotals = $event"></app-radiology-test-form>
+          <div #radiologyTestSection>
+          <app-radiology-test-form [formArray]="formRadRate" [patientRadiologyTests]="patientRadiologyTests"
+            (totalsChanged)="radTotals = $event"></app-radiology-test-form>
+          </div>
 
           <!--Services/Procedures-->
-          <app-services-form [formArray]="formServiceRate" (totalsChanged)="serviceTotals = $event"></app-services-form>
+          <div #servicesSection>
+          <app-services-form [formArray]="formServiceRate" [patientServices]="patientServices"
+            (totalsChanged)="serviceTotals = $event"></app-services-form>
+          </div>
+
           <!--Pharmacy-->
-          <app-prescriptions-form [formArray]="formPrescriptions" (totalsChanged)="prescriptionTotals = $event"></app-prescriptions-form>
+          <div #prescriptionsSection>
+          <app-prescriptions-form [formArray]="formPrescriptions" [patientPrescriptions]="patientPrescriptions"
+            (totalsChanged)="prescriptionTotals = $event"></app-prescriptions-form>
+            </div>
+
           <!--Sick Leave-->
-          <app-sick-leave-form [formArray]="formSickLeave"></app-sick-leave-form>
+          <div #sickLeaveSection>
+          <app-sick-leave-form [formArray]="formSickLeave" [patientSickLeaves]="patientSickLeaves"></app-sick-leave-form>
+          </div>
 
           <!--Grand Totals-->
           <div class="card shadow-sm border">
@@ -224,7 +255,8 @@
               </div>
               <div class="text-right">
                 <h3><span class="small">TOTALS:</span><br />
-                  <b class="text-danger"><span class="small">KES</span> {{ labTotals+radTotals+prescriptionTotals+serviceTotals | number:'1.0-0' }}</b>
+                  <b class="text-danger"><span class="small">KES</span> {{
+                    labTotals+radTotals+prescriptionTotals+serviceTotals | number:'1.0-0' }}</b>
                 </h3>
               </div>
             </div>

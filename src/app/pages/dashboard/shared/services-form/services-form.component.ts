@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormArray, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ServiceRatesService } from '@services/dashboard/services/service-rates/service-rates.service';
 import moment from 'moment';
@@ -10,10 +10,11 @@ import { Subject, debounceTime, distinctUntilChanged, tap, switchMap } from 'rxj
   templateUrl: './services-form.component.html',
   styleUrl: './services-form.component.scss'
 })
-export class ServicesFormComponent implements OnInit {
+export class ServicesFormComponent implements OnInit, OnChanges {
 
   @Input({ required: true }) formArray!: FormArray;
   @Output() totalsChanged = new EventEmitter<number>();
+  @Input() patientServices: any[] = [];
 
   loadingServiceRates: boolean = false;
 
@@ -63,14 +64,14 @@ export class ServicesFormComponent implements OnInit {
     });
 
     group.get('quantity')!.valueChanges.subscribe(qty => {
-    const rate = Number(group.get('rate')!.value) || 0;
-    group.patchValue(
-      { amount: (rate * (Number(qty) || 0)).toString() },
-      { emitEvent: false }
-    );
+      const rate = Number(group.get('rate')!.value) || 0;
+      group.patchValue(
+        { amount: (rate * (Number(qty) || 0)).toString() },
+        { emitEvent: false }
+      );
 
-    this.calculateTotals();
-  });
+      this.calculateTotals();
+    });
     this.formArray.markAllAsTouched();
     return group;
   }
@@ -92,7 +93,7 @@ export class ServicesFormComponent implements OnInit {
 
   serviceRateChange($event: any, i: number) {
     console.log("service rate id", $event?.id);
-    if(!$event) {
+    if (!$event) {
       this.formArray.at(i).reset();
       return;
     }
@@ -128,16 +129,39 @@ export class ServicesFormComponent implements OnInit {
   });*/
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['patientServices'] &&
+      this.patientServices?.length &&
+      this.formArray
+    ) {
+      this.patientServices.forEach(service => {
+        this.service_rates.push(service.service_rate); // Preload existing systems into options
+        this.selectedServiceRateOption = service.service_rate_id;
+        const serviceRateGroup = this.fb.group({
+          id: [service.id || '', []],
+          service_rate: [service.service_rate_id || null, Validators.required],
+          quantity: [service.quantity || '1', []],
+          rate: [service.rate || '', Validators.required],
+          amount: [service.amount || '', Validators.required],
+        });
+        this.formArray.push(serviceRateGroup);
+        this.calculateTotals();
+      });
+    }
+    //this.isLoading = false;
+  }
+
   calculateTotals() {
-  const values = this.formArray.value;
+    const values = this.formArray.value;
 
-  this.serviceTotals = values.reduce(
-    (sum: number, item: any) => sum + (Number(item.rate*item.quantity) || 0),
-    0
-  );
+    this.serviceTotals = values.reduce(
+      (sum: number, item: any) => sum + (Number(item.rate * item.quantity) || 0),
+      0
+    );
 
-  this.totalsChanged.emit(this.serviceTotals);
-}
+    this.totalsChanged.emit(this.serviceTotals);
+  }
 
 
   formatDate(date: string) {

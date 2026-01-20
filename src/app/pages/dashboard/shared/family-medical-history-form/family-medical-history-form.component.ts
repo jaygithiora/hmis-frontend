@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormArray, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NextOfKinRelationsService } from '@services/dashboard/settings/next-of-kin-relations/next-of-kin-relations.service';
 import moment from 'moment';
@@ -10,9 +10,10 @@ import { Subject, debounceTime, distinctUntilChanged, tap, switchMap } from 'rxj
   templateUrl: './family-medical-history-form.component.html',
   styleUrl: './family-medical-history-form.component.scss'
 })
-export class FamilyMedicalHistoryFormComponent implements OnInit {
+export class FamilyMedicalHistoryFormComponent implements OnInit, OnChanges {
 
   @Input({ required: true }) formArray!: FormArray;
+  @Input() patientFamilyMedicalHistories: any[] = [];
 
   loadingFamilyMedicalHistories: boolean = false;
 
@@ -25,15 +26,15 @@ export class FamilyMedicalHistoryFormComponent implements OnInit {
   familyMedicalHistoryGroup: FormGroup;
 
   constructor(private fb: FormBuilder, private toastr: ToastrService, private nextOfKinService: NextOfKinRelationsService) {
-/*    this.familyMedicalHistoryGroup = this.fb.group({
-      family_medical_history: [null, Validators.required],
-      description: ['', Validators.required]
-    });*/
+    /*    this.familyMedicalHistoryGroup = this.fb.group({
+          family_medical_history: [null, Validators.required],
+          description: ['', Validators.required]
+        });*/
     this.setupSearch();
   }
 
   setupSearch() {
-    
+
     this.searchFamilyMedicalHistories$
       .pipe(
         debounceTime(300),  // Wait for the user to stop typing for 300ms
@@ -91,6 +92,26 @@ export class FamilyMedicalHistoryFormComponent implements OnInit {
     /*this.formPrescriptions.valueChanges.subscribe(v => {
   console.log('FORM CHANGE', v);
 });*/
+  }
+  
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['patientFamilyMedicalHistories'] &&
+      this.patientFamilyMedicalHistories?.length &&
+      this.formArray
+    ) {
+      this.patientFamilyMedicalHistories.forEach(familyMedicalHistory => {
+        this.family_medical_histories.push(familyMedicalHistory.next_of_kin_relation); // Preload existing systems into options
+        this.selectedFamilyMedicalHistoryOption = familyMedicalHistory.next_of_kin_relation_id;
+        const familyMedicalHistoryGroup = this.fb.group({
+          id: [familyMedicalHistory.id || '', []],
+          family_medical_history: [familyMedicalHistory.next_of_kin_relation_id || null, Validators.required],
+          description: [familyMedicalHistory.description || '', Validators.required],
+        });
+        this.formArray.push(familyMedicalHistoryGroup);
+      });
+    }
+    //this.isLoading = false;
   }
 
   formatDate(date: string) {

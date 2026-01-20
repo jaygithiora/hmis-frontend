@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '@services/auth/auth.service';
@@ -10,8 +10,9 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './allergies-form.component.html',
   styleUrl: './allergies-form.component.scss'
 })
-export class AllergiesFormComponent implements OnInit {
-    @Input({ required: true }) formArray!: FormArray;
+export class AllergiesFormComponent implements OnInit, OnChanges {
+  @Input({ required: true }) formArray!: FormArray;
+  @Input() patientAllergies: any[] = [];
 
   isLoading: boolean = true;
   loading: boolean = false;
@@ -23,14 +24,14 @@ export class AllergiesFormComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private toastr: ToastrService, private service: AuthService,
     private router: Router, private activatedRoute: ActivatedRoute) {
-      /*this.newAllergyGroup = this.fb.group({
-      allergyType: [null, Validators.required],
-      allergy: ['', Validators.required],
-      sinceWhen: ['', Validators.required],
-      duration: [null, Validators.required],
-      severity: [null, Validators.required],
-      status: [null, Validators.required],
-    });*/
+    /*this.newAllergyGroup = this.fb.group({
+    allergyType: [null, Validators.required],
+    allergy: ['', Validators.required],
+    sinceWhen: ['', Validators.required],
+    duration: [null, Validators.required],
+    severity: [null, Validators.required],
+    status: [null, Validators.required],
+  });*/
   }
 
 
@@ -65,6 +66,29 @@ export class AllergiesFormComponent implements OnInit {
     /*this.formPrescriptions.valueChanges.subscribe(v => {
   console.log('FORM CHANGE', v);
 });*/
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+
+    if (
+      changes['patientAllergies'] &&
+      this.patientAllergies?.length &&
+      this.formArray
+    ) {
+      this.patientAllergies.forEach(allergy => {
+        const allergyGroup = this.fb.group({
+          id: [allergy.id || '', []],
+          allergyType: [allergy.allergy_type || null, Validators.required],
+          allergy: [allergy.allergy || '', Validators.required],
+          sinceWhen: [allergy.since_when || '', Validators.required],
+          duration: [allergy.duration || null, Validators.required],
+          severity: [allergy.severity || null, Validators.required],
+          status: [allergy.status || null, Validators.required],
+        });
+        this.formArray.push(allergyGroup);
+      });
+    }
+    //this.isLoading = false;
   }
 
   showStatus(id: any): string {

@@ -6,7 +6,7 @@
                     <h6><i class='fas fa-calendar-alt'></i> SICK LEAVE</h6>
                 </div>
                 <div class="col text-right">
-                    <button class="btn btn-light btn-sm" (click)="addServiceRate()"><i class="fas fa-plus"></i> Add
+                    <button type="button" class="btn btn-light btn-sm" (click)="addServiceRate()"><i class="fas fa-plus"></i> Add
                         New</button>
                 </div>
             </div>
@@ -89,7 +89,7 @@
                         <td><input style="min-width: 80px;" type="date" class="form-control" placeholder="Light Duty To Date"
                                 formControlName="light_duty_to_date" />
                         </td>
-                        <td><input style="min-width: 80px;" type="date" class="form-control" placeholder="Light Duty Days"
+                        <td><input style="min-width: 80px;" type="number" class="form-control" placeholder="Light Duty Days"
                                 formControlName="light_duty_days" />
                         </td>
                         <td><input style="min-width: 200px;" type="text" class="form-control" placeholder="Remarks"

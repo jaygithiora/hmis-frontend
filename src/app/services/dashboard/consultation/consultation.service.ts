@@ -16,6 +16,6 @@ constructor(private http: HttpClient, @Inject(API_BASE_URL) private baseUrl: str
     }
 
     updateConsultation(inputData: any) {
-      return this.http.post(`${this.baseUrl}/api/dashboard/inventory/dose-measures/add`, inputData);
+      return this.http.post(`${this.baseUrl}/api/dashboard/consultations/update`, inputData);
     }
 }

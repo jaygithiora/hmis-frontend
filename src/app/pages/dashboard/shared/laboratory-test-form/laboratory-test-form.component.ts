@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormArray, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { LaboratoryTestRatesService } from '@services/dashboard/laboratory/laboratory-test-rates/laboratory-test-rates.service';
 import moment from 'moment';
@@ -10,10 +10,11 @@ import { Subject, debounceTime, distinctUntilChanged, tap, switchMap } from 'rxj
   templateUrl: './laboratory-test-form.component.html',
   styleUrl: './laboratory-test-form.component.scss'
 })
-export class LaboratoryTestFormComponent implements OnInit {
+export class LaboratoryTestFormComponent implements OnInit ,OnChanges{
 
   @Input({ required: true }) formArray!: FormArray;
   @Output() totalsChanged = new EventEmitter<number>();
+  @Input() patientLaboratoryTests: any[] = [];
 
   loadingLabRates: boolean = false;
 
@@ -82,7 +83,7 @@ export class LaboratoryTestFormComponent implements OnInit {
 
   labRateChange($event: any, i: number) {
     console.log("lab rate id", $event?.id);
-    if(!$event) {
+    if (!$event) {
       this.formArray.at(i).reset();
       return;
     }
@@ -108,13 +109,34 @@ export class LaboratoryTestFormComponent implements OnInit {
     /*this.formPrescriptions.valueChanges.subscribe(v => {
   console.log('FORM CHANGE', v);
 });*/
-  this.formArray.valueChanges.subscribe(values => {
-    this.labTotals = values.reduce(
-      (sum: number, item: any) => sum + (Number(item.amount) || 0),
-      0
-    );
-    this.totalsChanged.emit(this.labTotals);
-  });
+    this.formArray.valueChanges.subscribe(values => {
+      this.labTotals = values.reduce(
+        (sum: number, item: any) => sum + (Number(item.amount) || 0),
+        0
+      );
+      this.totalsChanged.emit(this.labTotals);
+    });
+  }
+  
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['patientLaboratoryTests'] &&
+      this.patientLaboratoryTests?.length &&
+      this.formArray
+    ) {
+      this.patientLaboratoryTests.forEach(laboratoryTest => {
+        this.lab_rates.push(laboratoryTest.laboratory_test_rate); // Preload existing systems into options
+        this.selectedLabRateOption = laboratoryTest.laboratory_test_rate_id;
+        const labRateGroup = this.fb.group({
+          id: [laboratoryTest.id || '', []],
+          lab_rate: [laboratoryTest.laboratory_test_rate_id || null, Validators.required],
+          rate: [laboratoryTest.amount || '', Validators.required],
+          amount: [laboratoryTest.amount || '', Validators.required],
+        });
+        this.formArray.push(labRateGroup);
+      });
+    }
+    //this.isLoading = false;
   }
 
   formatDate(date: string) {

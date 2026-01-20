@@ -1,7 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormArray, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SocialHistoriesService } from '@services/dashboard/settings/social-histories/social-histories.service';
-import { SurgerySettingsService } from '@services/dashboard/settings/surgery-settings/surgery-settings.service';
 import moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, debounceTime, distinctUntilChanged, tap, switchMap } from 'rxjs';
@@ -11,9 +10,10 @@ import { Subject, debounceTime, distinctUntilChanged, tap, switchMap } from 'rxj
   templateUrl: './social-history-form.component.html',
   styleUrl: './social-history-form.component.scss'
 })
-export class SocialHistoryFormComponent implements OnInit {
+export class SocialHistoryFormComponent implements OnInit, OnChanges {
 
   @Input({ required: true }) formArray!: FormArray;
+  @Input() patientSocialHistories: any[] = [];
 
   loadingSocialHistories: boolean = false;
 
@@ -87,6 +87,25 @@ export class SocialHistoryFormComponent implements OnInit {
   console.log('FORM CHANGE', v);
 });*/
   }
+      ngOnChanges(changes: SimpleChanges): void {
+    
+        if (
+          changes['patientSocialHistories'] &&
+          this.patientSocialHistories?.length &&
+          this.formArray
+        ) {
+          this.patientSocialHistories.forEach(socialHistory => {
+            this.social_histories.push(socialHistory.social_history); // Preload existing systems into options
+            this.selectedSocialHistoryOption = socialHistory.social_history_id;
+            const socialHistoryGroup = this.fb.group({
+              id: [socialHistory.id || '', []],
+              social_history: [socialHistory.social_history_id|| null, Validators.required],
+            });
+            this.formArray.push(socialHistoryGroup);
+          });
+        }
+        //this.isLoading = false;
+      }
 
   formatDate(date: string) {
     return moment.utc(date).local().format('D MMMM, YYYY h:mma');
