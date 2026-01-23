@@ -10,9 +10,15 @@ export class RolesService {
 
   constructor(private http: HttpClient, @Inject(API_BASE_URL) private baseUrl: string) { }
   getRoles(page: number = 1, search: string = ""): Observable<any> {
-    return this.http.get(`${this.baseUrl}/api/dashboard/users/roles?page=${page}&search=${search}`);
+    return this.http.get(`${this.baseUrl}/api/dashboard/roles?page=${page}&search=${search}`);
   }
   updateRole(inputData: any) {
-    return this.http.post(`${this.baseUrl}/api/dashboard/users/roles/add`, inputData);
+    return this.http.post(`${this.baseUrl}/api/dashboard/roles/add`, inputData);
+  }
+  getRole(id: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/dashboard/roles/view/${id}`);
+  }
+  saveRolePermissions(inputData: any) {
+    return this.http.post(`${this.baseUrl}/api/dashboard/roles/permissions/save`, inputData);
   }
 }

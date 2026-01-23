@@ -23,7 +23,7 @@ import { GenericNamesComponent } from '@pages/dashboard/masters/generic-names/ge
 import { IcdsComponent } from '@pages/dashboard/masters/icds/icds.component';
 import { SubTypesComponent } from '@pages/dashboard/masters/sub-types/sub-types.component';
 import { DoctorsComponent } from '@pages/dashboard/settings/doctors/doctors.component';
-import { UsersComponent } from '@pages/dashboard/users/users.component';
+import { UsersComponent } from '@pages/dashboard/users/users/users.component';
 import { ConsultationTypesComponent } from '@pages/dashboard/masters/consultation-types/consultation-types.component';
 import { MainAccountsComponent } from '@pages/dashboard/masters/main-accounts/main-accounts.component';
 import { SubAccountsComponent } from '@pages/dashboard/masters/sub-accounts/sub-accounts.component';
@@ -79,6 +79,13 @@ import { SickLeaveTypesComponent } from '@pages/dashboard/settings/sick-leave-ty
 import { StrengthUnitsComponent } from '@pages/dashboard/inventory/strength-units/strength-units.component';
 import { ProductStocksComponent } from '@pages/dashboard/stocks/product-stocks/product-stocks.component';
 import { DrugFrequenciesComponent } from '@pages/dashboard/inventory/drug-frequencies/drug-frequencies.component';
+import { SelfRequestComponent } from '@pages/dashboard/self-requests/self-request/self-request.component';
+import { RolesComponent } from '@pages/dashboard/users/roles/roles.component';
+import { RoleComponent } from '@pages/dashboard/users/role/role.component';
+import { OrganizationComponent } from '@pages/dashboard/organizations/organization/organization.component';
+import { OrganizationsComponent } from '@pages/dashboard/organizations/organizations/organizations.component';
+import { BranchesComponent } from '@pages/dashboard/organizations/branches/branches.component';
+import { BranchComponent } from '@pages/dashboard/organizations/branch/branch.component';
 
 const routes: Routes = [
   {
@@ -261,7 +268,7 @@ const routes: Routes = [
         component: ServicesComponent
       },
       {
-        path:'services/service-rates',
+        path: 'services/service-rates',
         component: ServiceRatesComponent
       },
       //patients
@@ -279,36 +286,36 @@ const routes: Routes = [
       },
       //visits
       {
-        path:'visits/op/create',
-        component:CreateOpVisitComponent
+        path: 'visits/op/create',
+        component: CreateOpVisitComponent
       },
       {
-        path:'visits/op/create/:patient_id',
-        component:CreateOpVisitComponent
+        path: 'visits/op/create/:patient_id',
+        component: CreateOpVisitComponent
       },
       {
-        path:'visits/op/edit/:id',
-        component:CreateOpVisitComponent
+        path: 'visits/op/edit/:id',
+        component: CreateOpVisitComponent
       },
       {
-        path:'visits/ip/create',
-        component:CreateIpVisitComponent
+        path: 'visits/ip/create',
+        component: CreateIpVisitComponent
       },
       {
-        path:'visits/ip/create/:patient_id',
-        component:CreateIpVisitComponent
+        path: 'visits/ip/create/:patient_id',
+        component: CreateIpVisitComponent
       },
       {
-        path:'visits/ip/create/edit/:id',
-        component:CreateIpVisitComponent
+        path: 'visits/ip/create/edit/:id',
+        component: CreateIpVisitComponent
       },
       {
-        path:'visits/op/list',
-        component:VisitOpListComponent
+        path: 'visits/op/list',
+        component: VisitOpListComponent
       },
       {
-        path:'visits/ip/list',
-        component:VisitIpListComponent
+        path: 'visits/ip/list',
+        component: VisitIpListComponent
       },
       //bills
       {
@@ -321,15 +328,15 @@ const routes: Routes = [
       },
       //triage
       {
-        path:'triage/categories',
+        path: 'triage/categories',
         component: TriageCategoriesComponent
       },
       {
-        path:'triage/items',
+        path: 'triage/items',
         component: TriageItemsComponent
       },
       {
-        path:'triage/items/view/:id',
+        path: 'triage/items/view/:id',
         component: TriageItemComponent
       },
       {
@@ -348,6 +355,11 @@ const routes: Routes = [
       {
         path: 'consultation/view/:id',
         component: ConsultationFormComponent
+      },
+      //self-requests
+      {
+        path: 'self-request',
+        component: SelfRequestComponent
       },
       //stocks
       {
@@ -391,10 +403,23 @@ const routes: Routes = [
         path: 'settings/sick-leave-types',
         component: SickLeaveTypesComponent
       },
+      //organizations
+      { path: 'organizations/list', component: OrganizationsComponent },
+      { path: 'organizations/view/:id', component: OrganizationComponent },
+      { path: 'organizations/branches', component: BranchesComponent },
+      { path: 'organizations/branches/view/:id', component: BranchComponent },
       //users
       {
-        path: 'users',
+        path: 'users/list',
         component: UsersComponent
+      },
+      {
+        path: 'users/roles',
+        component: RolesComponent
+      },
+      {
+        path: 'users/roles/view/:id',
+        component: RoleComponent
       },
       //profile
       {

@@ -370,6 +370,11 @@ export const MENU = [
     ]
   },
   {
+    name: 'Self Request',
+    iconClasses: 'fas fa-users',
+    path: ['/dashboard/self-request']
+  },
+  {
     name: 'Stock Management',
     iconClasses: 'fas fa-pallet',
     children: [
@@ -432,13 +437,29 @@ export const MENU = [
     ]
   },
   {
+    name: 'Organizations',
+    iconClasses: 'fas fa-building',
+    children: [
+      {
+        name: 'Organizations',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/organizations/list']
+      },
+      {
+        name: 'Branches',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/organizations/branches']
+      },
+    ]
+  },
+  {
     name: 'Users',
     iconClasses: 'fas fa-users',
     children: [
       {
         name: 'Users',
         iconClasses: 'fas fa-circle icon-small',
-        path: ['/dashboard/users']
+        path: ['/dashboard/users/list']
       },
       {
         name: 'Roles',

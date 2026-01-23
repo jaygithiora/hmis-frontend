@@ -32,7 +32,7 @@
                 <td>{{ i + 1 }}</td>
                 <td>
                     <ng-select [items]="diagnosis" bindLabel="name" bindValue="id"
-                        [typeahead]="searchDiagnosis$" [(ngModel)]="selectedDiagnosisOption"
+                        [typeahead]="searchDiagnosis$"
                         [loading]="loadingDiagnosis" placeholder="Search Diagnosis"
                         formControlName="diagnosis"></ng-select>
                     <div class="invalid-feedback d-block" *ngIf="item.get('diagnosis')?.errors?.['required']">

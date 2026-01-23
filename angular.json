@@ -32,18 +32,24 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/intl-tel-input/build/img",
+                "output": "assets/intl-tel-input/img"
+              }
             ],
             "styles": [
               "src/styles.scss",
               "node_modules/ngx-toastr/toastr.css",
               "node_modules/@ng-select/ng-select/themes/default.theme.css",
-              "node_modules/summernote/dist/summernote-bs4.min.css"
+              "node_modules/summernote/dist/summernote-bs4.min.css",
+              "node_modules/intl-tel-input/build/css/intlTelInput.css"
             ],
             "scripts": [
-            "node_modules/jquery/dist/jquery.min.js",
-            "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
-            "node_modules/summernote/dist/summernote-bs4.min.js"
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+              "node_modules/summernote/dist/summernote-bs4.min.js"
             ]
           },
           "configurations": {

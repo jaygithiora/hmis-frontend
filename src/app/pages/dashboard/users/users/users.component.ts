@@ -5,7 +5,9 @@ import { AuthService } from '@services/auth/auth.service';
 import { RolesService } from '@services/dashboard/users/roles.service';
 import { UsersService } from '@services/dashboard/users/users.service';
 import moment from 'moment';
+import { SearchCountryField, CountryISO, PhoneNumberFormat } from 'ngx-intl-tel-input';
 import { ToastrService } from 'ngx-toastr';
+import { IntlTelI18n, CountryMap } from 'ngxsmk-tel-input';
 import { debounceTime, distinctUntilChanged, Subject, switchMap, tap } from 'rxjs';
 
 @Component({
@@ -14,7 +16,27 @@ import { debounceTime, distinctUntilChanged, Subject, switchMap, tap } from 'rxj
   styleUrl: './users.component.scss'
 })
 export class UsersComponent implements OnInit {
-  private modalRef:NgbModalRef;
+
+  /*SearchCountryField = SearchCountryField;
+  CountryISO = CountryISO;
+  PhoneNumberFormat = PhoneNumberFormat;*/
+  // English UI labels (dropdown/search/ARIA)
+  enLabels: IntlTelI18n = {
+    selectedCountryAriaLabel: 'Selected country',
+    countryListAriaLabel: 'Country list',
+    searchPlaceholder: 'Search country',
+    zeroSearchResults: 'No results',
+    noCountrySelected: 'No country selected'
+  };
+
+  // Optional: only override the names you care about
+  enCountries: CountryMap = {
+    KE: 'Kenya',
+    UG: 'Uganda',
+    TZ: 'Tanzania'
+  };
+
+  private modalRef: NgbModalRef;
   public isLoading: boolean = true;
   loading: boolean = false;
   usersForm!: FormGroup;
@@ -38,8 +60,8 @@ export class UsersComponent implements OnInit {
       firstname: ['', [Validators.required]],
       lastname: ['', [Validators.required]],
       email: ['', [Validators.required]],
-      phone:['', [Validators.required]],
-      //role: ['', [Validators.required]],
+      phone: ['', [Validators.required]],
+      role: ['', [Validators.required]],
       status: ['1', [Validators.required]]
     });
 
@@ -91,8 +113,9 @@ export class UsersComponent implements OnInit {
       this.usersForm.get("lastname").setValue(user.lastname);
       this.usersForm.get("email").setValue(user.email);
       this.usersForm.get("phone").setValue(user.phone);
-      //this.main_types.push(user.main_type);
-      //this.selectedOption = user.main_type_id;
+      this.roles.push(...user.roles);
+      console.log(user.roles);
+      this.selectedOption = user.roles[0]?.id;
       //this.usersForm.get("status").setValue(user.status);
     } else {
       this.usersForm.get("id").setValue(0);
@@ -100,7 +123,7 @@ export class UsersComponent implements OnInit {
       this.usersForm.get("lastname").setValue("");
       this.usersForm.get("email").setValue("");
       this.usersForm.get("phone").setValue("");
-      //this.selectedOption = null;
+      this.selectedOption = null;
     }
   }
   addLocation() {
@@ -129,6 +152,9 @@ export class UsersComponent implements OnInit {
         if (error?.error?.errors?.phone) {
           this.toastr.error(error?.error?.errors?.phone);
         }
+        if (error?.error?.errors?.role) {
+          this.toastr.error(error?.error?.errors?.role);
+        }
         if (error?.error?.message) {
           this.toastr.error(error?.error?.message);
           this.service.logout();
@@ -138,6 +164,7 @@ export class UsersComponent implements OnInit {
         console.log(error);
       });
     } else {
+      this.usersForm.markAllAsTouched();
       this.toastr.error("Please fill in all the required fields before proceeding!");
     }
   }

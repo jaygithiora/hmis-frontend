@@ -62,7 +62,7 @@ import { IcdsComponent } from './pages/dashboard/masters/icds/icds.component';
 import { SubTypesComponent } from './pages/dashboard/masters/sub-types/sub-types.component';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { DoctorsComponent } from './pages/dashboard/settings/doctors/doctors.component';
-import { UsersComponent } from './pages/dashboard/users/users.component';
+import { UsersComponent } from './pages/dashboard/users/users/users.component';
 import { ConsultationTypesComponent } from './pages/dashboard/masters/consultation-types/consultation-types.component';
 import { MainAccountsComponent } from './pages/dashboard/masters/main-accounts/main-accounts.component';
 import { SubAccountsComponent } from './pages/dashboard/masters/sub-accounts/sub-accounts.component';
@@ -134,6 +134,15 @@ import { LaboratoryTestFormComponent } from './pages/dashboard/shared/laboratory
 import { RadiologyTestFormComponent } from './pages/dashboard/shared/radiology-test-form/radiology-test-form.component';
 import { ServicesFormComponent } from './pages/dashboard/shared/services-form/services-form.component';
 import { SickLeaveFormComponent } from './pages/dashboard/shared/sick-leave-form/sick-leave-form.component';
+import { SelfRequestComponent } from './pages/dashboard/self-requests/self-request/self-request.component';
+import { RolesComponent } from './pages/dashboard/users/roles/roles.component';
+import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
+import { NgxsmkTelInputComponent} from 'ngxsmk-tel-input';
+import { RoleComponent } from './pages/dashboard/users/role/role.component';
+import { OrganizationsComponent } from './pages/dashboard/organizations/organizations/organizations.component';
+import { OrganizationComponent } from './pages/dashboard/organizations/organization/organization.component';
+import { BranchesComponent } from './pages/dashboard/organizations/branches/branches.component';
+import { BranchComponent } from './pages/dashboard/organizations/branch/branch.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -250,7 +259,14 @@ registerLocaleData(localeEn, 'en-EN');
         LaboratoryTestFormComponent,
         RadiologyTestFormComponent,
         ServicesFormComponent,
-        SickLeaveFormComponent
+        SickLeaveFormComponent,
+        SelfRequestComponent,
+        RolesComponent,
+        RoleComponent,
+        OrganizationsComponent,
+        OrganizationComponent,
+        BranchesComponent,
+        BranchComponent
     ],
     bootstrap: [AppComponent],
     imports: [
@@ -272,7 +288,9 @@ registerLocaleData(localeEn, 'en-EN');
         NgSelectComponent,
         WebcamModule,
         ColorPickerDirective,
-        NgbAccordionModule
+        NgbAccordionModule,
+        NgxIntlTelInputModule,
+        NgxsmkTelInputComponent,
     ],
     providers: [provideHttpClient(withInterceptorsFromDi()),provideHttpClient(withInterceptors([tokenInterceptor])), {provide:API_BASE_URL, useValue: environment.apiBaseUrl}]
 })

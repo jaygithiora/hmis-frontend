@@ -35,7 +35,7 @@
                         <td><ng-select [items]="lab_rates" bindLabel="laboratory_test.name" bindValue="id"
                                 formControlName="lab_rate" placeholder="Select laboratory test"
                                 [typeahead]="searchLabRates$" (change)="labRateChange($event, i)"
-                                [loading]="loadingLabRates" placeholder="Search Laboratory Test" [class.is-invalid]="item.get('lab_rate')?.invalid &&(item.get('lab_rate')?.touched || item.get('lab_rate')?.dirty)">
+                                [loading]="loadingLabRates" [class.is-invalid]="item.get('lab_rate')?.invalid &&(item.get('lab_rate')?.touched || item.get('lab_rate')?.dirty)">
                             </ng-select>
                             <div class="invalid-feedback d-block"
                                 *ngIf="item.get('lab_rate')?.errors?.['required']">

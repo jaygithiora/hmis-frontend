@@ -51,3 +51,76 @@ body {
 .border-2{
     border-width: 3px !important;
 }
+/* Make ngxsmk-tel-input look like bootstrap form-control */
+.bootstrap-tel ngx-smk-intl-tel-input,
+.bootstrap-tel .ngx-smk-tel-input,
+.bootstrap-tel input {
+  width: 100%;
+}
+
+.bootstrap-tel input {
+  height: calc(2.375rem + 2px); /* Bootstrap input height */
+  padding: 0.375rem 0.75rem 0.375rem 3.5rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.375rem;
+  border: 1px solid #ced4da;
+}
+
+.bootstrap-tel input:focus {
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Flag + dial code inline */
+.bootstrap-tel .iti__flag-container {
+  left: 0;
+  height: 100%;
+}
+
+.bootstrap-tel .iti__selected-flag {
+  padding: 0 0.75rem;
+}
+
+/* Dropdown scroll fix */
+.bootstrap-tel .iti__country-list {
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1055;
+}
+
+/* Invalid state */
+.bootstrap-tel.ng-invalid.ng-touched input {
+  border-color: #dc3545;
+}
+
+.bootstrap-tel.ng-invalid.ng-touched input:focus {
+  box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+}
+.ngxsmk-tel-input__control{
+    /*box-shadow: none !important;*/
+    display: block;
+    width: 100%;
+    height: calc(2.25rem + 2px);
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem !important;
+    box-shadow: inset 0 0 0 rgba(0, 0, 0, 0) !important;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.ngxsmk-tel-input__control:focus{
+    /*box-shadow: none !important;*/
+    color: #495057;
+    background-color: #fff;
+    border-color: #80bdff !important;
+    outline:0;
+    box-shadow: inset 0 0 0 rgba(0, 0, 0, 0) !important;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}

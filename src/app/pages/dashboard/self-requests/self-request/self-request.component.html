@@ -1,0 +1,180 @@
+<app-content-header [title]="'Self Request'"></app-content-header>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <form [formGroup]="selfRequestForm" (submit)="addSelfRequest()">
+                    <input type="hidden" formControlName="id" />
+
+                    <ngb-accordion #a="ngbAccordion" [activeIds]="activeIds">
+                        <ngb-panel id="custom-panel-patient">
+                            <ng-template ngbPanelHeader let-opened="opened">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <button ngbPanelToggle class="btn">
+                                        <h5 class="m-0">Patient Details</h5>
+                                    </button>
+                                    <button ngbPanelToggle class="btn btn-link p-0">
+                                        <i class="fas fa-minus" *ngIf="opened"></i><i class="fas fa-plus"
+                                            *ngIf="!opened"></i>
+                                    </button>
+                                </div>
+                            </ng-template>
+                            <ng-template ngbPanelContent>
+                                <div class="row">
+                                    <div class="col-sm-12 mb-2">
+                                        <div class="alert border border-info border-2">
+                                            <label>Search Patient:</label>
+                                            <ng-select [items]="patients" bindLabel="display" bindValue="id"
+                                                formControlName="patient_id" placeholder="Type of allergy"
+                                                [typeahead]="searchPatients$" (change)="patientChange($event)"
+                                                [loading]="loadingPatients"></ng-select>
+                                            <div class="invalid-feedback d-block"
+                                                *ngIf="selfRequestForm.get('patient_id')?.errors?.['required']">
+                                                Patient is required
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row" *ngIf="patient">
+                                    <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
+                                        <label>Patient Code:</label>
+                                        <p>
+                                            {{patient?.code
+                                            }}
+                                        </p>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
+                                        <label>Patient Name:</label>
+                                        <p>
+                                            {{patient?.first_name
+                                            }}
+                                            {{
+                                            patient?.other_names
+                                            }}
+                                        </p>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
+                                        <label>Date Of Birth:</label>
+                                        <p>
+                                            {{patient?.dob
+                                            }}
+                                        </p>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
+                                        <label>Age:</label>
+                                        <p>
+                                            <span *ngIf="age?.years > 0"><b>{{ age?.years }}</b>
+                                                Years</span>
+                                            <span *ngIf="
+                                                    age?.years <= 0 &&
+                                                    age?.months
+                                                "><b>{{ age?.months }}</b>
+                                                Months</span>
+                                            <span *ngIf="
+                                                    age?.years <= 0
+                                                "><b>{{ age?.days }}</b>
+                                                Days</span>
+                                        </p>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
+                                        <label>Main Type:</label>
+                                        <p>
+                                            {{patient
+                                            ?.main_type?.name
+                                            }}
+                                        </p>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
+                                        <label>Sub Type:</label>
+                                        <p>
+                                            {{patient?.sub_type?.name
+                                            }}
+                                        </p>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
+                                        <label>Account</label>:
+                                        <p>
+                                            {{patient?.account?.name
+                                            }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </ngb-panel>
+
+                    </ngb-accordion>
+
+                    <!--Diagnosis-->
+                    <div class="card shadow-sm border" #diagnosisSection>
+                        <div class="card-body">
+                            <app-diagnosis-form [formArray]="formDiagnosis"
+                                [patientDiagnoses]="patientDiagnoses"></app-diagnosis-form>
+                        </div>
+                    </div>
+
+                    <!--laboratory test-->
+                    <div #laboratoryTestSection>
+                        <app-laboratory-test-form [formArray]="formLabRate"
+                            [patientLaboratoryTests]="patientLaboratoryTests"
+                            (totalsChanged)="labTotals = $event"></app-laboratory-test-form>
+                    </div>
+
+
+                    <!--Radiology Test-->
+                    <div #radiologyTestSection>
+                        <app-radiology-test-form [formArray]="formRadRate"
+                            [patientRadiologyTests]="patientRadiologyTests"
+                            (totalsChanged)="radTotals = $event"></app-radiology-test-form>
+                    </div>
+
+                    <!--Services/Procedures-->
+                    <div #servicesSection>
+                        <app-services-form [formArray]="formServiceRate" [patientServices]="patientServices"
+                            (totalsChanged)="serviceTotals = $event"></app-services-form>
+                    </div>
+
+                    <!--Pharmacy-->
+                    <div #prescriptionsSection>
+                        <app-prescriptions-form [formArray]="formPrescriptions"
+                            [patientPrescriptions]="patientPrescriptions"
+                            (totalsChanged)="prescriptionTotals = $event"></app-prescriptions-form>
+                    </div>
+
+                    <!--Grand Totals-->
+                    <div class="card shadow-sm border">
+                        <div class="card-body">
+                            <div class='alert alert-primary mt-2 border'>
+                                <div class="row d-flex align-items-center">
+                                    <div class="col">
+                                        <h6><i class='fas fa-calculator'></i> GRAND TOTALS</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <h3><span class="small">TOTALS:</span><br />
+                                    <b class="text-danger"><span class="small">KES</span> {{
+                                        labTotals+radTotals+prescriptionTotals+serviceTotals | number:'1.0-0' }}</b>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow-sm border">
+                        <div class="card-body">
+                            <div class="mb-3 text-right">
+                                <button type="button" class="btn btn-primary" [disabled]="isLoading"
+                                    (click)="addSelfRequest()">
+                                    <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                    <i class="fab fa-airbnb" *ngIf="!isLoading"></i> Save Self Request
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
