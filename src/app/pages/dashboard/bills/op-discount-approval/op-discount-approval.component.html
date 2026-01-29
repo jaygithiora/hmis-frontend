@@ -1,0 +1,164 @@
+<app-content-header [title]="'OP Discount Approval'"></app-content-header>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-4 col-md-3 col-lg-2 p-3">
+                                <img [src]="imageUrl" class="img-fluid w-100 img-thumbnail" />
+                            </div>
+                            <div class="col-sm-8 col-md-9 col-lg-10">
+                                <div class="row">
+                                    <div class="col-sm-6 col-lg-4 mb-3">
+                                        <label>Patient Code<span class="text-danger">*</span></label>
+                                        <p>{{bill?.outpatient_visit?.patient?.code}}</p>
+                                    </div>
+
+                                    <div class="col-sm-6 col-lg-4 mb-3">
+                                        <label>Gender<span class="text-danger">*</span></label>
+                                        <p>{{bill?.outpatient_visit?.patient?.gender}}</p>
+                                    </div>
+                                    <div class="col-sm-6 col-lg-4 mb-3">
+                                        <label>Date of Birth<span class="text-danger">*</span></label>
+                                        <p>{{bill?.outpatient_visit?.patient?.dob}}</p>
+                                    </div>
+                                    <div class="col-sm-6 col-lg-4 mb-3">
+                                        <label>First Name<span class="text-danger">*</span></label>
+                                        <p>{{bill?.outpatient_visit?.patient?.first_name}}</p>
+
+                                    </div>
+                                    <div class="col-sm-6 col-lg-4 mb-3">
+                                        <label>Other Name<span class="text-danger">*</span></label>
+                                        <p>{{bill?.outpatient_visit?.patient?.other_names}}</p>
+
+                                    </div>
+                                    <div class="col-sm-6 col-lg-4 mb-3">
+                                        <label>ID No.<span class="text-danger">*</span></label>
+                                        <p>{{bill?.outpatient_visit?.patient?.id_number}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <form [formGroup]="billForm" (ngSubmit)="updateBill()">
+                            <!-- Consultation Bill -->
+                            <table class="table" *ngIf="bill?.consultation_bill_id>0">
+                                <thead>
+                                    <tr>
+                                        <th colspan="5" class="border-0"><b>Consultation</b></th>
+                                    </tr>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Department</th>
+                                        <th>Consultation Type</th>
+                                        <th>Amount</th>
+                                        <th>Discount</th>
+                                        <th>Status</th>
+                                        <th>Remarks</th>
+                                        <th>Balance</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1.</td>
+                                        <td>{{bill?.outpatient_visit?.department?.name}}</td>
+                                        <td>{{bill?.outpatient_visit?.consultation_type?.name}}</td>
+                                        <td><b>KES {{bill?.totals | number:'1.0-0'}}</b></td>
+                                        <td><b>KES {{bill?.consultation_bill?.discount | number:'1.0-0'}}</b></td>
+                                        <td>
+                                            <ng-select [items]="discount_statuses" bindLabel="name" bindValue="id"
+                                                formControlName="consultation_discount_status" placeholder="Consultation Discount Status"></ng-select>
+                                            <div class="invalid-feedback d-block"
+                                                *ngIf="billForm.get('consultation_discount_status')?.errors?.['required']">
+                                                Discount Type is required
+                                            </div>
+                                        </td>
+                                        <td><textarea class="form-control" formControlName='consultation_discount_remarks' placeholder="Remarks"></textarea></td>
+                                        <td><b class="text-danger">KES {{(bill?.totals - bill?.paid) |
+                                                number:'1.0-0'}}</b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table class="table" *ngIf="bill?.consultation_item_bills.length>0">
+                                <thead>
+                                    <tr>
+                                        <th colspan="5" class="border-0"><b>Consultation Item Bills</b></th>
+                                    </tr>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Item Name</th>
+                                        <th>Qty</th>
+                                        <th>Rate</th>
+                                        <th>Totals</th>
+                                        <th>Discount</th>
+                                        <th>Status</th>
+                                        <th>Remarks</th>
+                                        <th>Balance</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of consultationItemsForm.controls; let i = index" [formGroup]="$any(item)">
+                                        <td>{{i+1}}.</td>
+                                        <td>{{item?.value?.name}}</td>
+                                        <td>{{item?.value?.quantity}}</td>
+                                        <td>KES <b>{{item?.value?.amount/item?.value?.quantity | number:'1.0-0'}}</b></td>
+                                        <td>KES <b>{{item?.value?.amount | number:'1.0-0'}}</b></td>
+                                        <td>{{item?.value?.discount_units =='KES'?item?.value?.discount_units:''}} <b>{{item?.value?.discount_value | number:'1.0-0'}}</b> {{item?.value?.discount_units =='%'?item?.value?.discount_units:''}}</td>
+                                        <td>
+                                            <ng-select [items]="discount_statuses" bindLabel="name" bindValue="id"
+                                                formControlName="discount_status" placeholder="Discount Type"></ng-select>
+                                            <div class="invalid-feedback d-block"
+                                                *ngIf="item.get('discount_status')?.errors?.['required']">
+                                                Discount Type is required
+                                            </div>
+                                        </td>
+                                        <td><textarea class="form-control" formControlName='remarks' placeholder="Remarks"></textarea></td>
+                                        <td><b class="text-danger">KES {{(item?.value?.amount - item?.value?.discount_amount) |
+                                                number:'1.0-0'}}</b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="alert border border-2">
+                                <table class="table">
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="2" class="border-0"><b>Bill Totals:</b></td>
+                                            <td class="border-0"><b class="d-none">KES:</b></td>
+                                            <td class="text-right border-0"><b class="text-danger">KES {{((bill?.totals -
+                                                    bill?.paid) - discountTotals) | number:'1.0-0'}}</b></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+
+                            <div class="col-sm-12 text-right">
+                                <button class="btn btn-primary"
+                                    [disabled]="isLoading ||bill.paid==bill.totals"
+                                    (click)="updateBill()">
+                                    <span *ngIf="isLoading">
+                                        <div class="spinner-border spinner-border-sm" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                        Saving...
+                                    </span>
+                                    <span *ngIf="!isLoading">
+                                        <i class="fas fa-paper-plane"></i>&nbsp;
+                                        Update Discount(s)
+                                    </span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

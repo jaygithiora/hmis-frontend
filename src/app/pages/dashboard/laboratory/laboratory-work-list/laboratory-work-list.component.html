@@ -1,0 +1,166 @@
+<app-content-header [title]="'Laboratory Work List'"></app-content-header>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col">
+                                <h6>
+                                    <i class="fas fa-vials"></i>
+                                    Laboratory Work List
+                                </h6>
+                            </div>
+                            <!--
+                            <div class="col text-right">
+                                <a
+                                    [routerLink]="
+                                        '/dashboard/visits/op/create'
+                                    "
+                                    class="btn btn-primary btn-sm"
+                                >
+                                    <i class="fas fa-plus"></i> Add OP Visit
+                                </a>
+                            </div>-->
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <th>ID</th>
+                                <th>Patient Code</th>
+                                <th>Visit Code</th>
+                                <th>Patient Name</th>
+                                <th>Department</th>
+                                <th>Age</th>
+                                <th>Gender</th>
+                                <th>Date</th>
+                                <!--<th>Status</th>-->
+                                <th class="text-right">Action</th>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="isLoading">
+                                    <td colspan="11" class="text-center">
+                                        <div class="alert alert-secondary">
+                                            <div
+                                                class="spinner-border spinner-border-sm"
+                                                role="status"
+                                                *ngIf="isLoading"
+                                            >
+                                                <span class="sr-only"
+                                                    >Loading...</span
+                                                >
+                                            </div>
+                                            Loading Bills...
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="!isLoading && work_list.length == 0">
+                                    <td colspan="11" class="text-center">
+                                        <div class="alert alert-secondary">
+                                            <i class="fas fa-ban"></i> No
+                                            <b>Work List</b> Found!
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr
+                                    *ngFor="
+                                        let wl of work_list;
+                                        let i = index
+                                    "
+                                >
+                                    <td>{{ i + 1 }}</td>
+                                    <td>{{ wl.outpatient_visit.patient.code }}</td>
+                                    <td>{{ wl.outpatient_visit.code }}</td>
+                                    <td>
+                                        {{ wl.outpatient_visit.patient.first_name }}
+                                        {{ wl.outpatient_visit.patient.other_names }}
+                                    </td>
+                                    <td>{{ wl?.outpatient_visit?.department?.name}}</td>
+                                    <td>{{ getAgeDetails(wl?.outpatient_visit?.patient?.dob) }}</td>
+                                    <td>{{ wl?.outpatient_visit?.patient?.gender }}</td>
+                                    <td>
+                                        {{ formatDate(wl.created_at) }}
+                                    </td>
+                                    <!--
+                                    <td>
+                                        <span
+                                            class="badge badge-secondary btn-pill"
+                                            *ngIf="!wl.status"
+                                            >Inactice</span>
+                                        <span
+                                            class="badge badge-primary btn-pill"
+                                            *ngIf="wl.status"
+                                            >Active</span>
+                                    </td>-->
+                                    <td class="text-right">
+                                        <div ngbDropdown container="body">
+                                            <button
+                                                type="button"
+                                                class="btn btn-outline-primary btn-sm pr-3 pl-3 border-0"
+                                                ngbDropdownToggle
+                                            >
+                                                <i
+                                                    class="fas fa-ellipsis-v"
+                                                ></i>
+                                            </button>
+                                            <div ngbDropdownMenu>
+                                                <!--<a
+                                                    ngbDropdownItem
+                                                    [routerLink]="
+                                                        '/dashboard/visits/op/create/' +
+                                                        wl.id
+                                                    "
+                                                    ><i
+                                                        class="fas fa-angle-right"
+                                                    ></i>
+                                                    Triage</a
+                                                >
+                                                <div
+                                                    class="dropdown-divider"
+                                                ></div>
+                                                <a
+                                                    ngbDropdownItem
+                                                    [routerLink]="
+                                                        '/dashboard/visits/op/create/' +
+                                                        wl.id
+                                                    "
+                                                    ><i class="fas fa-angle-right"></i>
+                                                    Consult</a
+                                                >
+                                                <div
+                                                    class="dropdown-divider"
+                                                ></div>
+                                                <a
+                                                    ngbDropdownItem
+                                                    [routerLink]="
+                                                        '/dashboard/visits/op/create/' +
+                                                        wl.id
+                                                    "
+                                                    ><i class="fas fa-angle-right"></i>
+                                                    Review</a
+                                                >
+                                                <div
+                                                    class="dropdown-divider"
+                                                ></div>-->
+                                                <a
+                                                    ngbDropdownItem
+                                                    [routerLink]="
+                                                        '/dashboard/laboratory/lab-work-list/view/' +
+                                                        wl.id
+                                                    "
+                                                    >Enter <i class="fas fa-long-arrow-alt-right"></i></a
+                                                >
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -2,13 +2,12 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '@services/auth/auth.service';
-import { LaboratoryTestRatesService } from '@services/dashboard/laboratory/laboratory-test-rates/laboratory-test-rates.service';
+import { LaboratorySampleTypeService } from '@services/dashboard/laboratory/laboratory-sample-type/laboratory-sample-type.service';
 import { LaboratoryTestReferencesService } from '@services/dashboard/laboratory/laboratory-test-references/laboratory-test-references.service';
 import { LaboratoryTestsService } from '@services/dashboard/laboratory/laboratory-tests/laboratory-tests.service';
-import { SubTypesService } from '@services/dashboard/masters/sub-types/sub-types.service';
 import moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
-import { Subject, debounceTime, distinctUntilChanged, tap, switchMap } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, tap, switchMap, sample } from 'rxjs';
 
 @Component({
   selector: 'app-laboratory-test-references',
@@ -19,15 +18,19 @@ export class LaboratoryTestReferencesComponent implements OnInit {
   private modalRef: NgbModalRef;
   public isLoading: boolean = true;
   loading: boolean = false;
+  loadingSampleType: boolean = false;
 
   laboratoryTestReferenceForm!: FormGroup;
 
-laboratory_tests: any[] = [];
+  laboratory_tests: any[] = [];
   sub_types: any[] = [];
+  sample_types: any[] = [];
 
   search$ = new Subject<string>();
+  searchSampleTypes$ = new Subject<string>();
 
   selectedOption: any;
+  selectedSampleTypeOption: any;
 
   laboratory_test_references: any[] = [];// Store fetched items
   totalItems = 0;     // Total number of items
@@ -37,20 +40,24 @@ laboratory_tests: any[] = [];
   perPage = 10;       // Items per page
 
   constructor(private laboratoryTestsService: LaboratoryTestsService, private laboratoryTestReferenceService: LaboratoryTestReferencesService,
-    private modalService: NgbModal, private fb: FormBuilder, private toastr: ToastrService,
+    private laboratorySampleTypeService:LaboratorySampleTypeService,private modalService: NgbModal, private fb: FormBuilder, private toastr: ToastrService,
     private service: AuthService) {
     this.laboratoryTestReferenceForm = this.fb.group({
       id: ['0', [Validators.required]],
-      laboratory_test: ['', [Validators.required]],
+      laboratory_test: [null, [Validators.required]],
+      sample_type: [null, [Validators.required]],
       name: ['', [Validators.required]],
       reference_type: ['', [Validators.required]], //Qualitative,Quantitative
       subheader: [''],
       gender: ['', [Validators.required]],
-      agefrom:[''],
-      ageto:[''],
+      agefrom: [''],
+      ageto: [''],
       ref_range_label: [''],
-      ref_order:[''],
-      ref_code:[''],
+      ref_order: [''],
+      ref_code: [''],
+      ref_unit: [''],
+      critical_high: [''],
+      critical_low: [''],
       status: ['1', [Validators.required]]
     });
 
@@ -68,6 +75,17 @@ laboratory_tests: any[] = [];
       .subscribe(results => {
         this.laboratory_tests = results.laboratory_tests.data;
         this.loading = false;  // Hide the loading spinner when the API call finishes
+      });
+    this.searchSampleTypes$
+      .pipe(
+        debounceTime(300),  // Wait for the user to stop typing for 300ms
+        distinctUntilChanged(),  // Only search if the query has changed
+        tap(() => this.loadingSampleType = true),  // Show the loading spinner
+        switchMap(term => this.laboratorySampleTypeService.getLaboratorySampleTypes(1, term))  // Switch to a new observable for each search term
+      )
+      .subscribe(results => {
+        this.sample_types = results.sample_types.data;
+        this.loadingSampleType = false;  // Hide the loading spinner when the API call finishes
       });
   }
   // Handle item selection
@@ -96,20 +114,27 @@ laboratory_tests: any[] = [];
   }
 
   openModal(content: TemplateRef<any>, labotatory_test_reference: any) {
-    this.modalRef = this.modalService.open(content, { centered: true});
+    this.modalRef = this.modalService.open(content, { centered: true });
     if (labotatory_test_reference != null) {
       this.laboratoryTestReferenceForm.get("id").setValue(labotatory_test_reference.id);
       this.laboratoryTestReferenceForm.get("name").setValue(labotatory_test_reference.name);
-        this.laboratory_tests.push(labotatory_test_reference.laboratory_test);
-        this.selectedOption = labotatory_test_reference.laboratory_test_id;
-        this.laboratoryTestReferenceForm.get("subheader").setValue(labotatory_test_reference.subheader);
-        this.laboratoryTestReferenceForm.get("reference_type").setValue(labotatory_test_reference.reference_type);
-        this.laboratoryTestReferenceForm.get("gender").setValue(labotatory_test_reference.gender);
-        this.laboratoryTestReferenceForm.get("agefrom").setValue(labotatory_test_reference.agefrom);
-        this.laboratoryTestReferenceForm.get("ageto").setValue(labotatory_test_reference.ageto);
-        this.laboratoryTestReferenceForm.get("ref_range_label").setValue(labotatory_test_reference.ref_range_label);
-        this.laboratoryTestReferenceForm.get("ref_order").setValue(labotatory_test_reference.ref_order);
-        this.laboratoryTestReferenceForm.get("ref_code").setValue(labotatory_test_reference.subheader);
+      this.laboratory_tests.push(labotatory_test_reference.laboratory_test);
+      this.selectedOption = labotatory_test_reference.laboratory_test_id;
+      if(labotatory_test_reference.laboratory_sample_type){
+        this.sample_types.push(labotatory_test_reference.laboratory_sample_type);
+        this.selectedSampleTypeOption = labotatory_test_reference.laboratory_sample_type_id;
+      }
+      this.laboratoryTestReferenceForm.get("subheader").setValue(labotatory_test_reference.subheader);
+      this.laboratoryTestReferenceForm.get("reference_type").setValue(labotatory_test_reference.reference_type);
+      this.laboratoryTestReferenceForm.get("gender").setValue(labotatory_test_reference.gender);
+      this.laboratoryTestReferenceForm.get("agefrom").setValue(labotatory_test_reference.age_from);
+      this.laboratoryTestReferenceForm.get("ageto").setValue(labotatory_test_reference.age_to);
+      this.laboratoryTestReferenceForm.get("ref_unit").setValue(labotatory_test_reference.ref_unit);
+      this.laboratoryTestReferenceForm.get("critical_high").setValue(labotatory_test_reference.critical_high);
+      this.laboratoryTestReferenceForm.get("critical_low").setValue(labotatory_test_reference.critical_low);
+      this.laboratoryTestReferenceForm.get("ref_range_label").setValue(labotatory_test_reference.ref_range_label);
+      this.laboratoryTestReferenceForm.get("ref_order").setValue(labotatory_test_reference.ref_order);
+      this.laboratoryTestReferenceForm.get("ref_code").setValue(labotatory_test_reference.subheader);
       this.laboratoryTestReferenceForm.get("status").setValue(labotatory_test_reference.status);
     } else {
       this.laboratoryTestReferenceForm.get("id").setValue(0);
@@ -123,6 +148,9 @@ laboratory_tests: any[] = [];
       this.laboratoryTestReferenceForm.get("ref_range_label").setValue("");
       this.laboratoryTestReferenceForm.get("ref_order").setValue("");
       this.laboratoryTestReferenceForm.get("ref_code").setValue("");
+      this.laboratoryTestReferenceForm.get("ref_unit").setValue("");
+      this.laboratoryTestReferenceForm.get("critical_high").setValue("");
+      this.laboratoryTestReferenceForm.get("critical_low").setValue("");
       this.laboratoryTestReferenceForm.get("status").setValue("1");
     }
   }

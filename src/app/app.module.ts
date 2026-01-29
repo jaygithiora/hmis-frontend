@@ -139,10 +139,20 @@ import { RolesComponent } from './pages/dashboard/users/roles/roles.component';
 import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 import { NgxsmkTelInputComponent} from 'ngxsmk-tel-input';
 import { RoleComponent } from './pages/dashboard/users/role/role.component';
-import { OrganizationsComponent } from './pages/dashboard/organizations/organizations/organizations.component';
-import { OrganizationComponent } from './pages/dashboard/organizations/organization/organization.component';
 import { BranchesComponent } from './pages/dashboard/organizations/branches/branches.component';
-import { BranchComponent } from './pages/dashboard/organizations/branch/branch.component';
+import { OrganizationsComponent } from '@pages/dashboard/organizations/organizations/organizations.component';
+import { OpDiscountApprovalsComponent } from '@pages/dashboard/bills/op-discount-approvals/op-discount-approvals.component';
+import { OpDiscountApprovalComponent } from './pages/dashboard/bills/op-discount-approval/op-discount-approval.component';
+import { BillReprintsComponent } from './pages/dashboard/bills/bill-reprints/bill-reprints.component';
+import { LaboratorySampleCollectionsComponent } from './pages/dashboard/laboratory/laboratory-sample-collections/laboratory-sample-collections.component';
+import { LaboratorySampleCollectionComponent } from './pages/dashboard/laboratory/laboratory-sample-collection/laboratory-sample-collection.component';
+import { LaboratoryWorkListComponent } from './pages/dashboard/laboratory/laboratory-work-list/laboratory-work-list.component';
+import { LaboratoryResultEntryComponent } from './pages/dashboard/laboratory/laboratory-result-entry/laboratory-result-entry.component';
+import { LaboratoryEquipmentsComponent } from './pages/dashboard/laboratory/laboratory-equipments/laboratory-equipments.component';
+import { LaboratorySampleTypesComponent } from './pages/dashboard/laboratory/laboratory-sample-types/laboratory-sample-types.component';
+import { LaboratoryInterpretationsComponent } from './pages/dashboard/laboratory/laboratory-interpretations/laboratory-interpretations.component';
+import { LaboratoryLinkingComponent } from './pages/dashboard/laboratory/laboratory-linking/laboratory-linking.component';
+import { LaboratoryPublishResultsComponent } from './pages/dashboard/laboratory/laboratory-publish-results/laboratory-publish-results.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -264,9 +274,19 @@ registerLocaleData(localeEn, 'en-EN');
         RolesComponent,
         RoleComponent,
         OrganizationsComponent,
-        OrganizationComponent,
         BranchesComponent,
-        BranchComponent
+        OpDiscountApprovalsComponent,
+        OpDiscountApprovalComponent,
+        BillReprintsComponent,
+        LaboratorySampleCollectionsComponent,
+        LaboratorySampleCollectionComponent,
+        LaboratoryWorkListComponent,
+        LaboratoryResultEntryComponent,
+        LaboratoryEquipmentsComponent,
+        LaboratorySampleTypesComponent,
+        LaboratoryInterpretationsComponent,
+        LaboratoryLinkingComponent,
+        LaboratoryPublishResultsComponent,
     ],
     bootstrap: [AppComponent],
     imports: [

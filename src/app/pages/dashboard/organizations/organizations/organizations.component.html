@@ -1,1 +1,224 @@
-<p>organizations works!</p>
+<app-content-header [title]="'Organizations'"></app-content-header>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col">
+                                <h6>
+                                    <i class="fas fa-building"></i>
+                                    Organizations
+                                </h6>
+                            </div>
+                            <div class="col text-right">
+                                <button class="btn btn-primary btn-sm" (click)="openModal(content, null)">
+                                    <i class="fas fa-plus"></i> Add Organization
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <!--<th>ID</th>-->
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Location</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Date</th>
+                                <th class="text-right">Action</th>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="isLoading">
+                                    <td colspan="7" class="text-center">
+                                        <div class="alert alert-secondary">
+                                            <div class="spinner-border spinner-border-sm" role="status"
+                                                *ngIf="isLoading">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                            Loading Organizations...
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="!isLoading && organizations.length == 0">
+                                    <td colspan="7" class="text-center">
+                                        <div class="alert alert-secondary">
+                                            <i class="fas fa-ban"></i> No
+                                            <b>Organizations Found!</b>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr *ngFor="
+                                        let organization of organizations;
+                                        let i = index
+                                    ">
+                                    <!--<td>{{ i + 1 }}</td>-->
+                                    <td><img [src]="organization.logo ? organization.logo : 'assets/img/default-profile.png'"
+                                            alt="Logo" width="40" height="40" />
+                                    </td>
+                                    <!--<td>
+                                        <div class="media align-items-center p-2">
+                                            <img [src]="organization.logo" class="mr-3 rounded-circle" width="48"
+                                                height="48" alt="Avatar" />
+
+                                            <div class="media-body">
+                                                <h6 class="mb-0">John Doe</h6>
+                                                <small class="text-muted">Administrator</small>
+                                            </div>
+                                        </div>
+                                    </td>-->
+                                    <td>{{ organization.name }}</td>
+                                    <td>{{ organization.location }}</td>
+                                    <td>{{ organization.email }}</td>
+                                    <td>{{ organization.phone }}</td>
+                                    <td>
+                                        {{ formatDate(organization.created_at) }}
+                                    </td>
+                                    <!--<td>
+                    <span class="badge badge-primary btn-pill" *ngIf="organization.status">Active</span>
+                    <span class="badge badge-secondary btn-pill" *ngIf="!organization.status">In-Active</span>
+                  </td>-->
+                                    <td class="text-right">
+                                        <button class="btn btn-primary btn-sm" (click)="
+                                                openModal(content, organization)
+                                            ">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{organizationForm.value.id > 0 ? 'Edit Organization' : 'Add
+            Organization'}}</h4>
+        <button type="button" class="btn-close close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="organizationForm" (submit)="addOrganization()">
+            <input type="hidden" formControlName="id" />
+            <div class="mb-3">
+                <label>Name</label>
+                <input class="form-control" placeholder="Name" formControlName="name"
+                    [class.is-invalid]="organizationForm.get('name')?.invalid && (organizationForm.get('name')?.touched || organizationForm.get('name')?.dirty)" />
+                <!-- Validation message -->
+                <div class="text-danger mt-1"
+                    *ngIf="organizationForm.get('name')?.invalid && organizationForm.get('name')?.touched">
+                    Organization Name is required
+                </div>
+            </div>
+            <div class="mb-3">
+                <label>Email Address</label>
+                <input type='email' class="form-control" placeholder="Email Address" formControlName="email"
+                    [class.is-invalid]="organizationForm.get('email')?.invalid && (organizationForm.get('email')?.touched || organizationForm.get('email')?.dirty)" />
+                <!-- Validation message -->
+                <div class="text-danger mt-1"
+                    *ngIf="organizationForm.get('email')?.invalid && organizationForm.get('email')?.touched">
+                    Email is required
+                </div>
+            </div>
+            <div class="mb-3">
+                <label>Location</label>
+                <input type='email' class="form-control" placeholder="Location" formControlName="location"
+                    [class.is-invalid]="organizationForm.get('location')?.invalid && (organizationForm.get('location')?.touched || organizationForm.get('location')?.dirty)"
+                    #searchLocation />
+                <!-- Validation message -->
+                <div class="text-danger mt-1"
+                    *ngIf="organizationForm.get('location')?.invalid && organizationForm.get('location')?.touched">
+                    Location is required
+                </div>
+            </div>
+            <div class="mb-3">
+                <label>Phone Number</label>
+                <!--<ngx-intl-tel-input [cssClass]="'form-control'" [preferredCountries]="[CountryISO.Kenya]"
+          [enableAutoCountrySelect]="false" [enablePlaceholder]="true" [searchCountryFlag]="true"
+          [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]" [selectFirstCountry]="false"
+          [selectedCountryISO]="CountryISO.Kenya" [maxLength]="15" [phoneValidation]="true" name="phone"
+          formControlName="phone"></ngx-intl-tel-input>-->
+                <ngxsmk-tel-input formControlName="phone" [initialCountry]="'auto'"
+                    [preferredCountries]="['KE','UG','TZ']" [i18n]="enLabels" [localizedCountries]="enCountries"
+                    [separateDialCode]="true" [formatWhenValid]="'typing'" [lockWhenValid]="true"
+                    theme="light"></ngxsmk-tel-input>
+
+
+                <!-- Validation message -->
+                <div class="text-danger mt-1"
+                    *ngIf="organizationForm.get('phone')?.invalid && organizationForm.get('phone')?.touched">
+                    Enter a valid phone number
+                </div>
+
+            </div>
+            <div class="mb-3">
+                <label>Address</label>
+                <textarea class="form-control" placeholder="Address" formControlName="address"
+                    [class.is-invalid]="organizationForm.get('address')?.invalid && (organizationForm.get('address')?.touched || organizationForm.get('address')?.dirty)"></textarea>
+                <!-- Validation message -->
+                <div class="text-danger mt-1"
+                    *ngIf="organizationForm.get('address')?.invalid && organizationForm.get('address')?.touched">
+                    Address is required
+                </div>
+            </div>
+            <div class="mb-3">
+                <label>Description</label>
+                <textarea class="form-control" placeholder="Description" formControlName="description"
+                    [class.is-invalid]="organizationForm.get('description')?.invalid && (organizationForm.get('description')?.touched || organizationForm.get('description')?.dirty)"></textarea>
+                <!-- Validation message -->
+                <div class="text-danger mt-1"
+                    *ngIf="organizationForm.get('description')?.invalid && organizationForm.get('description')?.touched">
+                    Description is required
+                </div>
+            </div>
+            <div class="mb-3">
+                <label>Website</label>
+                <input type='text' class="form-control" placeholder="Website" formControlName="website"
+                    [class.is-invalid]="organizationForm.get('website')?.invalid && (organizationForm.get('website')?.touched || organizationForm.get('website')?.dirty)" />
+                <!-- Validation message -->
+                <div class="text-danger mt-1"
+                    *ngIf="organizationForm.get('website')?.invalid && organizationForm.get('website')?.touched">
+                    Website is required
+                </div>
+            </div>
+            <div class="mb-3">
+                <label>Logo</label>
+                <input type="file" class="form-control" accept="image/*" (change)="onFileChange($event)"
+                    [class.is-invalid]="organizationForm.get('logo')?.invalid && (organizationForm.get('logo')?.touched || organizationForm.get('logo')?.dirty)" />
+                <!-- Validation message -->
+                <div class="text-danger mt-1"
+                    *ngIf="organizationForm.get('logo')?.invalid && organizationForm.get('logo')?.touched">
+                    Logo is required
+                </div>
+            </div>
+            <!--
+      <div class="mb-3">
+        <label>Status</label>
+        <select class="form-control custom-select" formControlName="status">
+          <option value="1">Active</option>
+          <option value="0">Inactive</option>
+        </select>
+      </div>-->
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.close('Save click')">
+            Close
+        </button>
+        <button type="button" class="btn btn-primary" [disabled]="isLoading" (click)="addOrganization()">
+            <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+                <span class="sr-only">Loading...</span>
+            </div>
+            Save Changes
+        </button>
+    </div>
+</ng-template>

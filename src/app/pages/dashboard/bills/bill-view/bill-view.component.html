@@ -46,58 +46,135 @@
 
                 <div class="card mb-3">
                     <div class="card-body">
-                        <form 
-                            [formGroup]="billForm"
-                            (ngSubmit)="updateBill()">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Department</th>
-                                    <th>Consultation Type</th>
-                                    <th>Amount</th>
-                                    <th>Balance</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1.</td>
-                                    <td>{{bill?.outpatient_visit?.department?.name}}</td>
-                                    <td>{{bill?.outpatient_visit?.consultation_type?.name}}</td>
-                                    <td><b>KES {{bill?.totals | number:'1.0-0'}}</b></td>
-                                    <td><b class="text-danger">KES {{(bill?.totals - bill?.paid) | number:'1.0-0'}}</b></td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="2"><b>Received:</b></td>
-                                    <td><b>KES:</b></td>
-                                    <td><input type="number" formControlName="amount" placeholder="Received Amount" class="form-control"/></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2"><b>Balance:</b></td>
-                                    <td><b class="d-none">KES:</b></td>
-                                    <td><b class="text-danger">KES {{((bill.totals - bill.paid) - billForm.get("amount").value) | number:'1.2-2'}}</b></td>
-                                    <td></td>
-                                </tr>
-                            </tfoot>
-                        </table>
+                        <form [formGroup]="billForm" (ngSubmit)="updateBill()">
+                            <!-- Consultation Bill -->
+                            <table class="table" *ngIf="bill?.consultation_bill_id>0">
+                                <thead>
+                                    <tr>
+                                        <th colspan="5" class="border-0"><b>Consultation</b></th>
+                                    </tr>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Department</th>
+                                        <th>Consultation Type</th>
+                                        <th>Amount</th>
+                                        <th>Discount</th>
+                                        <th>Discount Value</th>
+                                        <th>Balance</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1.</td>
+                                        <td>{{bill?.outpatient_visit?.department?.name}}</td>
+                                        <td>{{bill?.outpatient_visit?.consultation_type?.name}}</td>
+                                        <td><b>KES {{bill?.totals | number:'1.0-0'}}</b></td>
+                                        <td>
+                                            <ng-select [items]="discount_types" bindLabel="name" bindValue="id"
+                                                formControlName="consultation_discount_type"
+                                                placeholder="Consultation Discount"></ng-select>
+                                            <div class="invalid-feedback d-block"
+                                                *ngIf="billForm.get('consultation_discount')?.errors?.['required']">
+                                                Discount Type is required
+                                            </div>
+                                        </td>
+                                        <td><input type='number' class="form-control"
+                                                formControlName='consultation_discount' placeholder="Discount" /></td>
+                                        <td><b class="text-danger">KES {{(bill?.totals - bill?.paid) |
+                                                number:'1.0-0'}}</b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
 
-                        <div class="col-sm-12 text-right">
-                            <button class="btn btn-primary" [disabled]="isLoading ||((bill.totals - bill.paid) - billForm.get('amount').value)!=0||bill.paid==bill.totals" (click)="updateBill()">
-                                <span *ngIf="isLoading">
-                                    <div class="spinner-border spinner-border-sm" role="status">
-                                        <span class="sr-only">Loading...</span>
-                                    </div>
-                                    Saving...
-                                </span>
-                                <span *ngIf="!isLoading">
-                                    <i class="fas fa-paper-plane"></i>&nbsp;
-                                    Update Bill
-                                </span>
-                            </button>
-                        </div>
+                            <table class="table" *ngIf="bill?.consultation_item_bills.length>0">
+                                <thead>
+                                    <tr>
+                                        <th colspan="5" class="border-0"><b>Consultation Item Bills</b></th>
+                                    </tr>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Item Name</th>
+                                        <th>Qty</th>
+                                        <th>Rate</th>
+                                        <th>Totals</th>
+                                        <th>Discount</th>
+                                        <th>Discount Value</th>
+                                        <th>Balance</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of consultationItemsForm.controls; let i = index"
+                                        [formGroup]="$any(item)">
+                                        <td>{{i+1}}.</td>
+                                        <td>{{item?.value?.name}}</td>
+                                        <td>{{item?.value?.quantity}}</td>
+                                        <td>KES <b>{{item?.value?.amount/item?.value?.quantity | number:'1.0-0'}}</b>
+                                        </td>
+                                        <td>KES <b>{{item?.value?.amount | number:'1.0-0'}}</b></td>
+                                        <td>
+                                            <ng-select [items]="discount_types" bindLabel="name" bindValue="id"
+                                                formControlName="discount_type" placeholder="Discount Type"
+                                                *ngIf="item?.value.discount_status ==''||item?.value.discount_status =='pending'"></ng-select>
+                                            <div class="invalid-feedback d-block"
+                                                *ngIf="billForm.get('discount_type')?.errors?.['required']">
+                                                Discount Type is required
+                                            </div><span style="text-transform: uppercase;"
+                                                [ngClass]="item?.value?.discount_status === 'approved' ? 'small text-success' : 'small text-danger'"
+                                                *ngIf="item?.value.discount_status !=''&&item?.value.discount_status !='pending'">
+                                                {{item?.value?.discount_status}}
+                                            </span>
+                                        </td>
+                                        <td><input type='number' class="form-control" formControlName='discount'
+                                                placeholder="Discount" *ngIf="item?.value.discount_status ==''||item?.value.discount_status =='pending'"/>
+                                            <span style="text-transform: uppercase;"
+                                                [ngClass]="item?.value?.discount_status === 'approved' ? 'small text-success' : 'small text-danger'"
+                                                *ngIf="item?.value.discount_status !=''&&item?.value.discount_status !='pending'">
+                                                {{item?.value?.discount_type=='percentage'?"":"KES"}} {{item?.value?.discount}} {{item?.value?.discount_type=='percentage'?"%":""}}
+                                            </span></td>
+                                        <td><b class="text-danger">KES {{(item?.value?.amount -
+                                                item?.value?.discount_amount) |
+                                                number:'1.0-0'}}</b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="alert border border-2">
+                                <table class="table">
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="2" class="border-0"><b>Received:</b></td>
+                                            <td class="border-0"><b>KES:</b></td>
+                                            <td class="text-right border-0"><input type="number"
+                                                    formControlName="amount" placeholder="Received Amount"
+                                                    class="form-control" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" class="border-2"><b>Balance:</b></td>
+                                            <td class="border-2"><b class="d-none">KES:</b></td>
+                                            <td class="text-right border-2"><b class="text-danger">KES {{((bill?.totals
+                                                    -
+                                                    bill?.paid) - discountTotals) | number:'1.0-0'}}</b></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+
+                            <div class="col-sm-12 text-right">
+                                <button class="btn btn-primary"
+                                    [disabled]="isLoading ||((bill?.totals - bill?.paid-discountTotals) != billForm.get('amount').value)||bill.paid==bill.totals"
+                                    (click)="updateBill()">
+                                    <span *ngIf="isLoading">
+                                        <div class="spinner-border spinner-border-sm" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                        Saving...
+                                    </span>
+                                    <span *ngIf="!isLoading">
+                                        <i class="fas fa-paper-plane"></i>&nbsp;
+                                        Update Bill
+                                    </span>
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>

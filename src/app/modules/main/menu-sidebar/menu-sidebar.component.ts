@@ -251,6 +251,46 @@ export const MENU = [
         iconClasses: 'fas fa-circle icon-small',
         path: ['/dashboard/laboratory/test-references']
       },
+      {
+        name: 'Sample Collections',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/laboratory/sample-collections']
+      },
+      {
+        name: 'Lab Work List',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/laboratory/lab-work-list']
+      },
+      {
+        name: 'Publish Lab Results',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/laboratory/publish-results']
+      },
+      {
+        name: 'Results Master Data',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/laboratory/results-master-data']
+      },
+      {
+        name: 'Lab Equipment',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/laboratory/equipment']
+      },
+      {
+        name: 'Sample Types',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/laboratory/sample-types']
+      },
+      {
+        name: 'Lab Interpretations',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/laboratory/interpretations']
+      },
+      {
+        name: 'Lab Linking',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/laboratory/linking']
+      },
     ]
   },
   {
@@ -326,14 +366,14 @@ export const MENU = [
         path: ['/dashboard/bills/list']
       },
       {
-        name: 'Next Of Kin',
+        name: 'Op Discount Approvals',
         iconClasses: 'fas fa-circle icon-small',
-        path: ['/dashboard/settings/next-of-kin-relations']
+        path: ['/dashboard/bills/op-discount-approvals']
       },
       {
-        name: 'Payment Modes',
+        name: 'Reprints',
         iconClasses: 'fas fa-circle icon-small',
-        path: ['/dashboard/settings/payment-modes']
+        path: ['/dashboard/bills/reprints']
       },
     ]
   },

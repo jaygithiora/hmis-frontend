@@ -2,6 +2,7 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '@services/auth/auth.service';
+import { LaboratorySampleTypeService } from '@services/dashboard/laboratory/laboratory-sample-type/laboratory-sample-type.service';
 import { LaboratoryTestsService } from '@services/dashboard/laboratory/laboratory-tests/laboratory-tests.service';
 import { LaboratoryCategoriesService } from '@services/dashboard/masters/laboratory-categories/laboratory-categories.service';
 import moment from 'moment';
@@ -14,17 +15,21 @@ import { Subject, debounceTime, distinctUntilChanged, tap, switchMap } from 'rxj
   styleUrl: './laboratory-tests.component.scss'
 })
 export class LaboratoryTestsComponent implements OnInit {
-  modalRef:NgbModalRef;
+  modalRef: NgbModalRef;
   public isLoading: boolean = true;
   loading: boolean = false;
+  loadingSampleTypes: boolean = false;
 
   laboratoryTestForm!: FormGroup;
 
   laboratory_categories: any[] = [];// Store fetched items
+  sample_types: any[] = [];// Store fetched items
 
   selectedOption: any;
+  selectedSampleTypeOption: any;
 
   search$ = new Subject<string>();
+  searchSampleType$ = new Subject<string>();
 
   laboratory_tests: any[] = [];// Store fetched items
   totalItems = 0;     // Total number of items
@@ -32,13 +37,13 @@ export class LaboratoryTestsComponent implements OnInit {
   fromItems = 0; //from items
   toItems = 0; //to items
   perPage = 10;       // Items per page
-  constructor(private laboratoryCategoriesService: LaboratoryCategoriesService, private laboratoryTestService:LaboratoryTestsService,
-    private modalService: NgbModal, private fb: FormBuilder, private toastr: ToastrService, private service: AuthService) {
+  constructor(private laboratoryCategoriesService: LaboratoryCategoriesService, private laboratoryTestService: LaboratoryTestsService,
+    private laboratorySampleTypeService: LaboratorySampleTypeService, private modalService: NgbModal, private fb: FormBuilder, private toastr: ToastrService, private service: AuthService) {
     this.laboratoryTestForm = this.fb.group({
       id: ['0', [Validators.required]],
       name: ['', [Validators.required]],
       laboratory_category: ['', [Validators.required]],
-      sample_type: [''],
+      sample_type: [null],
       amount: ['', [Validators.required]],
       status: ['1', [Validators.required]]
     });
@@ -56,6 +61,17 @@ export class LaboratoryTestsComponent implements OnInit {
       .subscribe(results => {
         this.laboratory_categories = results.laboratory_categories.data;
         this.loading = false;  // Hide the loading spinner when the API call finishes
+      });
+    this.searchSampleType$
+      .pipe(
+        debounceTime(300),  // Wait for the user to stop typing for 300ms
+        distinctUntilChanged(),  // Only search if the query has changed
+        tap(() => this.loadingSampleTypes = true),  // Show the loading spinner
+        switchMap(term => this.laboratorySampleTypeService.getLaboratorySampleTypes(1, term))  // Switch to a new observable for each search term
+      )
+      .subscribe(results => {
+        this.sample_types = results.sample_types.data;
+        this.loadingSampleTypes = false;  // Hide the loading spinner when the API call finishes
       });
   }
   // Handle item selection
@@ -83,12 +99,16 @@ export class LaboratoryTestsComponent implements OnInit {
   }
 
   openModal(content: TemplateRef<any>, laboratory_test: any) {
-    this.modalRef = this.modalService.open(content, { centered: true});
+    this.modalRef = this.modalService.open(content, { centered: true });
     if (laboratory_test != null) {
       this.laboratoryTestForm.get("id").setValue(laboratory_test.id);
       this.laboratoryTestForm.get("name").setValue(laboratory_test.name);
       this.laboratory_categories.push(laboratory_test.laboratory_category);
       this.selectedOption = laboratory_test.laboratory_category_id;
+      if (laboratory_test.laboratory_sample_type) {
+        this.sample_types.push(laboratory_test.laboratory_sample_type);
+        this.selectedSampleTypeOption = laboratory_test.laboratory_sample_type_id;
+      }
       this.laboratoryTestForm.get("amount").setValue(laboratory_test.amount);
       this.laboratoryTestForm.get("sample_type").setValue(laboratory_test.sample_type);
       this.laboratoryTestForm.get("status").setValue(laboratory_test.status);
@@ -96,6 +116,7 @@ export class LaboratoryTestsComponent implements OnInit {
       this.laboratoryTestForm.get("id").setValue(0);
       this.laboratoryTestForm.get("name").setValue("");
       this.selectedOption = null;
+      this.selectedSampleTypeOption = null;
       this.laboratoryTestForm.get("amount").setValue("");
       this.laboratoryTestForm.get("sample_type").setValue("");
       this.laboratoryTestForm.get("status").setValue(1);

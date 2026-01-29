@@ -69,7 +69,7 @@
                                     <td>{{ i + 1 }}</td>
                                     <td>{{ laboratory_test.code }}</td>
                                     <td>{{ laboratory_test.name }}</td>
-                                    <td>{{ laboratory_test.sample_type }}</td>
+                                    <td>{{ laboratory_test.laboratory_sample_type?.name }}</td>
                                     <td>{{ laboratory_test.amount }}</td>
                                     <td>{{ laboratory_test.laboratory_category.name }}</td>
                                     <td>
@@ -132,11 +132,17 @@
             </div>
             <div class="mb-3">
                 <label>Sample Type</label>
-                <input
-                    class="form-control"
-                    placeholder="Sample Type"
+                <ng-select
+                    [items]="sample_types"
+                    bindLabel="name"
+                    bindValue="id"
+                    [typeahead]="searchSampleType$"
+                    [loading]="loadingSampleTypes"
+                    [(ngModel)]="selectedSampleTypeOption"
+                    placeholder="Search for Sample Type"
+                    (change)="onItemSelect($event)"
                     formControlName="sample_type"
-                />
+                ></ng-select>
             </div>
             <div class="mb-3">
                 <label>Amount</label>

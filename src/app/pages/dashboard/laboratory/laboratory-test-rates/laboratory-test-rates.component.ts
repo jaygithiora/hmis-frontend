@@ -2,8 +2,6 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '@services/auth/auth.service';
-import { ProductRatesService } from '@services/dashboard/inventory/product-rates/product-rates.service';
-import { ProductsService } from '@services/dashboard/inventory/products/products.service';
 import { LaboratoryTestRatesService } from '@services/dashboard/laboratory/laboratory-test-rates/laboratory-test-rates.service';
 import { LaboratoryTestsService } from '@services/dashboard/laboratory/laboratory-tests/laboratory-tests.service';
 import { SubTypesService } from '@services/dashboard/masters/sub-types/sub-types.service';

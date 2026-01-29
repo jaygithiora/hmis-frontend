@@ -82,10 +82,20 @@ import { DrugFrequenciesComponent } from '@pages/dashboard/inventory/drug-freque
 import { SelfRequestComponent } from '@pages/dashboard/self-requests/self-request/self-request.component';
 import { RolesComponent } from '@pages/dashboard/users/roles/roles.component';
 import { RoleComponent } from '@pages/dashboard/users/role/role.component';
-import { OrganizationComponent } from '@pages/dashboard/organizations/organization/organization.component';
 import { OrganizationsComponent } from '@pages/dashboard/organizations/organizations/organizations.component';
 import { BranchesComponent } from '@pages/dashboard/organizations/branches/branches.component';
-import { BranchComponent } from '@pages/dashboard/organizations/branch/branch.component';
+import { OpDiscountApprovalsComponent } from '@pages/dashboard/bills/op-discount-approvals/op-discount-approvals.component';
+import { OpDiscountApprovalComponent } from '@pages/dashboard/bills/op-discount-approval/op-discount-approval.component';
+import { BillReprintsComponent } from '@pages/dashboard/bills/bill-reprints/bill-reprints.component';
+import { LaboratorySampleCollectionsComponent } from '@pages/dashboard/laboratory/laboratory-sample-collections/laboratory-sample-collections.component';
+import { LaboratorySampleCollectionComponent } from '@pages/dashboard/laboratory/laboratory-sample-collection/laboratory-sample-collection.component';
+import { LaboratoryWorkListComponent } from '@pages/dashboard/laboratory/laboratory-work-list/laboratory-work-list.component';
+import { LaboratoryResultEntryComponent } from '@pages/dashboard/laboratory/laboratory-result-entry/laboratory-result-entry.component';
+import { LaboratoryEquipmentsComponent } from '@pages/dashboard/laboratory/laboratory-equipments/laboratory-equipments.component';
+import { LaboratorySampleTypesComponent } from '@pages/dashboard/laboratory/laboratory-sample-types/laboratory-sample-types.component';
+import { LaboratoryInterpretationsComponent } from '@pages/dashboard/laboratory/laboratory-interpretations/laboratory-interpretations.component';
+import { LaboratoryLinkingComponent } from '@pages/dashboard/laboratory/laboratory-linking/laboratory-linking.component';
+import { LaboratoryPublishResultsComponent } from '@pages/dashboard/laboratory/laboratory-publish-results/laboratory-publish-results.component';
 
 const routes: Routes = [
   {
@@ -257,6 +267,42 @@ const routes: Routes = [
         path: 'laboratory/test-references',
         component: LaboratoryTestReferencesComponent
       },
+      {
+        path: 'laboratory/sample-collections',
+        component: LaboratorySampleCollectionsComponent
+      },
+      {
+        path: 'laboratory/sample-collections/view/:id',
+        component: LaboratorySampleCollectionComponent
+      },
+      {
+        path: 'laboratory/lab-work-list',
+        component: LaboratoryWorkListComponent
+      },
+      {
+        path: 'laboratory/lab-work-list/view/:id',
+        component: LaboratoryResultEntryComponent
+      },
+      {
+        path: 'laboratory/publish-results',
+        component: LaboratoryPublishResultsComponent
+      },
+      {
+        path: 'laboratory/equipment',
+        component: LaboratoryEquipmentsComponent
+      },
+      {
+        path: 'laboratory/sample-types',
+        component: LaboratorySampleTypesComponent
+      },
+      {
+        path: 'laboratory/interpretations',
+        component: LaboratoryInterpretationsComponent
+      },
+      {
+        path: 'laboratory/linking',
+        component: LaboratoryLinkingComponent
+      },
       //services
 
       {
@@ -325,6 +371,18 @@ const routes: Routes = [
       {
         path: 'bills/list/view/:id',
         component: BillViewComponent
+      },
+      {
+        path: 'bills/op-discount-approvals',
+        component: OpDiscountApprovalsComponent
+      },
+      {
+        path: 'bills/op-discount-approvals/view/:id',
+        component: OpDiscountApprovalComponent
+      },
+      {
+        path: 'bills/reprints',
+        component: BillReprintsComponent
       },
       //triage
       {
@@ -405,9 +463,7 @@ const routes: Routes = [
       },
       //organizations
       { path: 'organizations/list', component: OrganizationsComponent },
-      { path: 'organizations/view/:id', component: OrganizationComponent },
       { path: 'organizations/branches', component: BranchesComponent },
-      { path: 'organizations/branches/view/:id', component: BranchComponent },
       //users
       {
         path: 'users/list',

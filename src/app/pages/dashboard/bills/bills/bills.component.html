@@ -79,9 +79,9 @@
                                         {{ bill.outpatient_visit.patient.first_name }}
                                         {{ bill.outpatient_visit.patient.other_names }}
                                     </td>
-                                    <td class='text-muted'>{{ bill.totals |number:'1.2-2' }}</td>
+                                    <td class='text-muted'>{{ bill.totals-bill.discount |number:'1.2-2' }}</td>
                                     <td class="text-success">{{ bill.paid |number:'1.2-2' }}</td>
-                                    <td class="text-danger">{{ bill.totals-bill.paid |number:'1.2-2' }}</td>
+                                    <td class="text-danger">{{ bill.totals-bill.paid-bill?.discount |number:'1.2-2' }}</td>
                                     <td>
                                         {{ formatDate(bill.created_at) }}
                                     </td>

@@ -14,7 +14,7 @@
               </div>
               <div class="col text-right">
                 <button class="btn btn-primary btn-sm" (click)="openModal(content, null)">
-                  <i class="fas fa-plus"></i> Add Laboratory Test Reference
+                  <i class="fas fa-plus"></i> Add Reference
                 </button>
               </div>
             </div>
@@ -27,11 +27,12 @@
                   <th>Lab Code</th>
                   <th>Lab Test Name</th>
                   <th>Name</th>
+                  <th>Sample Type</th>
                   <th>Gender</th>
                   <th>Reference Type</th>
                   <th>Age</th>
                   <th>Ref. Range Label</th>
-                  <th>Status</th>
+                  <!--<th>Status</th>-->
                   <th class="text-right">Action</th>
                 </thead>
                 <tbody>
@@ -65,17 +66,18 @@
                     <td>
                       {{ laboratory_test_rate.name }}
                     </td>
+                    <td>{{ laboratory_test_rate.laboratory_sample_type?.name }}</td>
                     <td>{{ laboratory_test_rate.gender }}</td>
                     <td>{{ laboratory_test_rate.reference_type }}</td>
                     <td>{{ laboratory_test_rate.age_from }}-{{laboratory_test_rate.age_to }}</td>
                     <td>{{ laboratory_test_rate.ref_range_label }}</td>
                     <!--<td>
                       {{ formatDate(laboratory_test_rate.created_at) }}
-                    </td>-->
+                    </td>
                     <td>
                       <span class="badge badge-primary btn-pill" *ngIf="laboratory_test_rate.status">Active</span>
                       <span class="badge badge-secondary btn-pill" *ngIf="!laboratory_test_rate.status">In-Active</span>
-                    </td>
+                    </td>-->
                     <td class="text-right">
                       <button class="btn btn-primary btn-sm" (click)="
                                                     openModal(content, laboratory_test_rate)
@@ -96,7 +98,8 @@
 
 <ng-template #content let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Add/Edit Laboratory Rate Reference</h4>
+    <h4 class="modal-title" id="modal-basic-title">{{laboratoryTestReferenceForm.get("id").value > 0?"Edit":"Add"}}
+      Reference</h4>
     <button type="button" class="btn-close close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <i class="fas fa-times"></i>
     </button>
@@ -110,7 +113,7 @@
       </div>
 
       <div class="row">
-        <div class="col">
+        <div class="col-12">
           <div class="mb-3">
             <label>Laboratory Test</label>
             <ng-select [items]="laboratory_tests" bindLabel="name" bindValue="id" [typeahead]="search$"
@@ -118,12 +121,42 @@
               (change)="onItemSelect($event)" formControlName="laboratory_test"></ng-select>
           </div>
         </div>
+      </div>
 
-        <div class="mb-3">
-          <label>SubHeader</label>
-          <input type="text" class="form-control" placeholder="SubHeader" formControlName="subheader" />
+      <div class="row">
+        <div class="col">
+          <div class="mb-3">
+            <label>Sample Type</label>
+            <ng-select [items]="sample_types" bindLabel="name" bindValue="id" [typeahead]="searchSampleTypes$"
+              [loading]="loadingSampleType" [(ngModel)]="selectedSampleTypeOption" placeholder="Search Sample Types"
+              (change)="onItemSelect($event)" formControlName="sample_type"></ng-select>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="mb-3">
+            <label>Reference Unit</label>
+            <input type="text" class="form-control" placeholder="Reference Unit" formControlName="ref_unit" />
+          </div>
         </div>
       </div>
+
+      <div class="row">
+        <div class="col">
+          <div class="mb-3">
+            <label>Critical Low</label>
+            <input type="number" class="form-control" placeholder="SubHeader" formControlName="critical_low" />
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="mb-3">
+            <label>Critical High</label>
+            <input type="number" class="form-control" placeholder="Critical High" formControlName="critical_high" />
+          </div>
+        </div>
+      </div>
+
       <div class="row">
         <div class="col">
           <div class="mb-3">
