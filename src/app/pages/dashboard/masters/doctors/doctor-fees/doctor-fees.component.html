@@ -1,0 +1,152 @@
+<app-content-header [title]="'Doctor Fees'"></app-content-header>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col">
+                                <h6>
+                                    <i class="fas fa-user-md"></i>
+                                    Doctor Fees
+                                </h6>
+                            </div>
+                            <div class="col text-right">
+                                <button class="btn btn-primary btn-sm" (click)="openModal(content, null)">
+                                    <i class="fas fa-plus"></i> Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <th>ID</th>
+                                <th>Doctor</th>
+                                <th>Specialization</th>
+                                <th>Fee Type</th>
+                                <th>Scheme</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th class="text-right">Action</th>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="isLoading">
+                                    <td colspan="7" class="text-center">
+                                        <div class="alert alert-secondary">
+                                            <div class="spinner-border spinner-border-sm" role="status"
+                                                *ngIf="isLoading">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                            Loading Doctor Fees...
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="!isLoading && doctor_fees.length == 0">
+                                    <td colspan="7" class="text-center">
+                                        <div class="alert alert-secondary">
+                                            <i class="fas fa-ban"></i> No
+                                            <b>Doctor Fees Found!</b>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr *ngFor="
+                                        let doctor_fee of doctor_fees;
+                                        let i = index
+                                    ">
+                                    <td>{{ doctor_fee.doctor_specialization?.doctor?.code }}</td>
+                                    <td>{{doctor_fee?.doctor_specialization?.doctor?.salutation?.name}} {{ doctor_fee?.doctor_specialization?.doctor?.firstname }}
+                                        {{doctor_fee?.doctor_specialization?.doctor?.other_names}}</td>
+                                    <td>{{ doctor_fee?.doctor_specialization?.specialization?.name }}</td>
+                                    <td>{{ doctor_fee?.fee_type?.name }}</td>
+                                    <td>{{ doctor_fee?.scheme?.name }}</td>
+                                    <td>KES {{ doctor_fee?.amount|number:'1.0-0' }}</td>
+                                    <td>
+                                        {{ formatDate(doctor_fee.created_at) }}
+                                    </td>
+                                    <td class="text-right">
+                                        <button class="btn btn-primary btn-sm" (click)="
+                                                openModal(content, doctor_fee)
+                                            ">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{doctorFeeForm?.get("id")?.value>0?"Edit":"Add"}} Doctor
+            Specialization</h4>
+        <button type="button" class="btn-close close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="doctorFeeForm" (submit)="addDoctorFee()">
+            <input type="hidden" formControlName="id" />
+            <div class="mb-3">
+                <label>Fee Type</label>
+                <ng-select [items]="fee_types" bindLabel="name" bindValue="id" [typeahead]="searchFeeTypes$"
+                    [loading]="loadingFeeTypes" [(ngModel)]="selectedFeeType" placeholder="Search for Fee Type"
+                    (change)="onItemSelect($event)" formControlName="fee_type"></ng-select>
+                <div class="text-danger"
+                    *ngIf="doctorFeeForm.get('fee_type').invalid&&doctorFeeForm.get('fee_type').touched">
+                    Fee Type is required
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label>Scheme</label>
+                <ng-select [items]="schemes" bindLabel="name" bindValue="id" [typeahead]="searchSchemes$"
+                    [loading]="loadingSchemes" [(ngModel)]="selectedScheme" placeholder="Search for Scheme"
+                    (change)="onItemSelect($event)" formControlName="scheme"></ng-select>
+                <div class="text-danger"
+                    *ngIf="doctorFeeForm.get('scheme').invalid&&doctorFeeForm.get('scheme').touched">
+                    Scheme is required
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label>Specialization</label>
+                <ng-select [items]="doctor_specializations" bindLabel="name" bindValue="id"
+                    [typeahead]="searchSpecialization$" [loading]="loadingDoctorSpecializations"
+                    [(ngModel)]="selectedDoctorSpecialization" placeholder="Search for Doctor Specialization"
+                    (change)="onItemSelect($event)" formControlName="specialization"></ng-select>
+                <div class="text-danger"
+                    *ngIf="doctorFeeForm.get('specialization').invalid&&doctorFeeForm.get('specialization').touched">
+                    Doctor Specialization is required
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label>Amount</label>
+                <input type="number" placeholder="Amount" formControlName="amount" class="form-control"
+                    [class.is-invalid]="doctorFeeForm.get('amount').invalid&&doctorFeeForm.get('amount').touched" />
+                <div class="text-danger"
+                    *ngIf="doctorFeeForm.get('amount').invalid&&doctorFeeForm.get('amount').touched">
+                    Amount is required
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.close('Save click')">
+            Close
+        </button>
+        <button type="button" class="btn btn-primary" [disabled]="isLoading" (click)="addDoctorFee()">
+            <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+                <span class="sr-only">Loading...</span>
+            </div>
+            Save Changes
+        </button>
+    </div>
+</ng-template>

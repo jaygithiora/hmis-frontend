@@ -1,0 +1,155 @@
+<app-content-header [title]="'Doctor Categories'"></app-content-header>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col">
+                                <h6>
+                                    <i class="far fa-heart"></i>
+                                    Doctor Categories
+                                </h6>
+                            </div>
+                            <div class="col text-right">
+                                <button
+                                    class="btn btn-primary btn-sm"
+                                    (click)="openModal(content, null)"
+                                >
+                                    <i class="fas fa-plus"></i> Add Category
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Date</th>
+                                <th class="text-right">Action</th>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="isLoading">
+                                    <td colspan="5" class="text-center">
+                                        <div class="alert alert-secondary">
+                                            <div
+                                                class="spinner-border spinner-border-sm"
+                                                role="status"
+                                                *ngIf="isLoading"
+                                            >
+                                                <span class="sr-only"
+                                                    >Loading...</span
+                                                >
+                                            </div>
+                                            Loading Doctor Categories...
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="!isLoading && doctor_categories.length == 0">
+                                    <td colspan="5" class="text-center">
+                                        <div class="alert alert-secondary">
+                                            <i class="fas fa-ban"></i> No
+                                            <b>Doctor Categories</b> Found!
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr
+                                    *ngFor="
+                                        let doctor_category of doctor_categories;
+                                        let i = index
+                                    "
+                                >
+                                    <td>{{ i + 1 }}</td>
+                                    <td>{{ doctor_category.name }}</td>
+                                    <td>{{ doctor_category.description|limitWords:5 }}</td>
+                                    <td>
+                                        {{ formatDate(doctor_category.created_at) }}
+                                    </td>
+                                    <!--
+                                    <td>
+                                        <span
+                                            class="badge badge-primary btn-pill"
+                                            *ngIf="doctor_category.status"
+                                            >Active</span
+                                        >
+                                        <span
+                                            class="badge badge-secondary btn-pill"
+                                            *ngIf="!doctor_category.status"
+                                            >In-Active</span
+                                        >
+                                    </td>-->
+                                    <td class="text-right">
+                                        <button
+                                            class="btn btn-primary btn-sm"
+                                            (click)="
+                                                openModal(content, doctor_category)
+                                            "
+                                        >
+                                            <i class="fas fa-edit"></i> Edit
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{this.doctorCategoryForm.get("id")?.value>0?"Edit":"Add"}} Doctor Category</h4>
+        <button
+            type="button"
+            class="btn-close close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="doctorCategoryForm" (submit)="addDoctorCategory()">
+            <input type="hidden" formControlName="id" />
+            <div class="mb-3">
+                <label>Name</label>
+                <input
+                    class="form-control"
+                    placeholder="Name"
+                    formControlName="name"
+                    [class.is-invalid]="doctorCategoryForm.get('name').invalid&&doctorCategoryForm.get('name').touched"
+                />
+                <div class="text-danger" *ngIf="doctorCategoryForm.get('name').invalid&&doctorCategoryForm.get('name').touched">
+                    Insurance Name is required
+                </div>
+            </div>
+            <div class="mb-3">
+                <textarea class="form-control" formControlName="description" placeholder="Description"></textarea>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="modal.close('Save click')"
+        >
+            Close
+        </button>
+        <button type="button" class="btn btn-primary" [disabled]="isLoading" (click)="addDoctorCategory()">
+            <div
+                class="spinner-border spinner-border-sm"
+                role="status"
+                *ngIf="isLoading"
+            >
+                <span class="sr-only">Loading...</span>
+            </div>
+            Save Changes
+        </button>
+    </div>
+</ng-template>

@@ -7,13 +7,13 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class SocialHistoriesService {
-constructor(private http: HttpClient, @Inject(API_BASE_URL) private baseUrl: string) { }
+  constructor(private http: HttpClient, @Inject(API_BASE_URL) private baseUrl: string) { }
 
-    getSocialHistories(page: number = 1, search: string = ""): Observable<any> {
-      return this.http.get(`${this.baseUrl}/api/dashboard/settings/social-histories?page=${page}&search=${search}`);
-    }
+  getSocialHistories(page: number = 1, search: string = ""): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/dashboard/settings/social-histories?page=${page}&search=${search}`);
+  }
 
-    updateSocialHistory(inputData: any) {
-      return this.http.post(`${this.baseUrl}/api/dashboard/settings/social-histories/add`, inputData);
-    }
+  updateSocialHistory(inputData: any) {
+    return this.http.post(`${this.baseUrl}/api/dashboard/settings/social-histories/add`, inputData);
+  }
 }

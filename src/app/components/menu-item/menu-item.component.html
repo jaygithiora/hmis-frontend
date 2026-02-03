@@ -1,7 +1,7 @@
-<a
+<!--<a
     (click)="handleMainMenuAction()"
     class="nav-link"
-    [ngClass]="{active: isMainActive || isOneOfChildrenActive}"
+    [ngClass]="{active: isMainActive || isOneOfChildrenActive}" *ngIf="hasPermission(menuItem?.permission)"
 >
     <i class="nav-icon {{ menuItem.iconClasses }}"></i>
     <p>{{ menuItem.name }}
@@ -13,7 +13,7 @@
     </p>
 </a>
 <ul class="nav nav-treeview" *ngFor="let item of menuItem.children" [@openClose]="isMenuExtended">
-    <li class="nav-item">
+    <li class="nav-item" *ngIf="hasPermission(item?.permission)">
         <a
             [routerLink]="item.path"
             [routerLinkActive]="'active'"
@@ -23,4 +23,31 @@
             <p>{{ item.name }}</p>
         </a>
     </li>
+</ul>-->
+<a
+  (click)="handleMainMenuAction()"
+  class="nav-link"
+  [ngClass]="{active: isMainActive || isOneOfChildrenActive}"
+  *ngIf="hasPermission(menuItem?.permission)"
+>
+  <i class="nav-icon {{ menuItem.iconClasses }}"></i>
+  <p>
+    {{ menuItem.name }}
+    <i
+      *ngIf="isExpandable"
+      class="right fas fa-angle-right"
+      [@rotate]="isMenuExtended"
+    ></i>
+  </p>
+</a>
+
+<ul class="nav nav-treeview" *ngIf="isExpandable" [@openClose]="isMenuExtended">
+  <li
+    class="nav-item"
+    *ngFor="let item of menuItem.children"
+  >
+    <!-- RECURSIVE CALL 👇 -->
+    <app-menu-item [menuItem]="item"></app-menu-item>
+  </li>
 </ul>
+

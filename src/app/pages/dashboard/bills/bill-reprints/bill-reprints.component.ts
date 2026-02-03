@@ -44,6 +44,25 @@ export class BillReprintsComponent implements OnInit {
       console.log(error);
     });
   }
+  //download pdf// Download PDF
+  downloadPdf(billId: number) {
+    this.billsService.downloadPdf(billId).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `bill-${billId}.pdf`;
+        link.click();
+        window.URL.revokeObjectURL(url);
+        
+        this.toastr.success('PDF downloaded successfully!', 'Success');
+      },
+      error: (error) => {
+        this.toastr.error('Failed to download PDF', 'Error');
+        console.error('Error downloading PDF:', error);
+      }
+    });
+  }
 
   // Open PDF in new tab
   openPdfInNewTab(billId: number) {

@@ -175,13 +175,13 @@ export class OrganizationsComponent implements OnInit {
 
     // ✅ Validate type
     if (!file.type.startsWith('image/')) {
-      alert('Only images allowed');
+      this.toastr.error('Only images allowed');
       return;
     }
 
     // ✅ Validate size (2MB)
     if (file.size > 2 * 1024 * 1024) {
-      alert('Image must be less than 2MB');
+      this.toastr.error('Image must be less than 2MB');
       return;
     }
 

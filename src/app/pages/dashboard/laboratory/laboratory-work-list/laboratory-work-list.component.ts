@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { LaboratorySampleCollectionsService } from '@services/dashboard/laboratory/laboratory-sample-collections/laboratory-sample-collections.service';
 import { LaboratoryWorkListService } from '@services/dashboard/laboratory/laboratory-work-list/laboratory-work-list.service';
 import moment from 'moment';
 

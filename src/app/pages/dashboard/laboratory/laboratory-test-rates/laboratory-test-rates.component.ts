@@ -22,7 +22,7 @@ export class LaboratoryTestRatesComponent implements OnInit {
 
   laboratoryTestRateForm!: FormGroup;
 
-laboratory_tests: any[] = [];
+  laboratory_tests: any[] = [];
   sub_types: any[] = [];
 
   searchLaboratoryTests$ = new Subject<string>();
@@ -102,14 +102,14 @@ laboratory_tests: any[] = [];
   }
 
   openModal(content: TemplateRef<any>, labotatory_test_rate: any) {
-    this.modalRef = this.modalService.open(content, { centered: true});
+    this.modalRef = this.modalService.open(content, { centered: true });
     if (labotatory_test_rate != null) {
       this.laboratoryTestRateForm.get("id").setValue(labotatory_test_rate.id);
       this.laboratoryTestRateForm.get("amount").setValue(labotatory_test_rate.amount);
-        this.laboratory_tests.push(labotatory_test_rate.laboratory_test);
-        this.selectedLaboratoryTestOption = labotatory_test_rate.laboratory_test_id;
-        this.sub_types.push(labotatory_test_rate.sub_type);
-        this.selectedSubTypeOption = labotatory_test_rate.sub_type_id;
+      this.laboratory_tests.push(labotatory_test_rate.laboratory_test);
+      this.selectedLaboratoryTestOption = labotatory_test_rate.laboratory_test_id;
+      this.sub_types.push(labotatory_test_rate.sub_type);
+      this.selectedSubTypeOption = labotatory_test_rate.sub_type_id;
       this.laboratoryTestRateForm.get("status").setValue(labotatory_test_rate.status);
     } else {
       this.laboratoryTestRateForm.get("id").setValue(0);

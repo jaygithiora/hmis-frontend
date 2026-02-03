@@ -127,3 +127,16 @@ body {
 .pac-container {
   z-index: 1055 !important; /* Bootstrap modal fix */
 }
+
+.main-auth-div{
+  min-height: 100vh;
+  background-image: url("./assets/img/bg.jpg");
+  background-size: cover;
+}
+.auth-div{
+  background-color: rgba(33, 150, 243, 0.75);
+}
+.right-auth-div{
+  background-color: #ebedef;
+  min-height: 100vh;
+}

@@ -7,7 +7,7 @@ import { DepartmentsService } from '@services/dashboard/masters/departments/depa
 import { LocationsService } from '@services/dashboard/masters/locations.service';
 import { MainTypesService } from '@services/dashboard/masters/manin-types/main-types.service';
 import { SubTypesService } from '@services/dashboard/masters/sub-types/sub-types.service';
-import { DoctorsService } from '@services/dashboard/settings/doctors/doctors.service';
+import { DoctorsService } from '@services/dashboard/masters/doctors/doctors/doctors.service';
 import moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { debounceTime, distinctUntilChanged, Subject, switchMap, tap } from 'rxjs';

@@ -19,23 +19,20 @@
                 fallbackSrc="assets/img/default-profile.png"
                 class="user-image-big"
                 alt="User Image"
-                width="90"
-                height="90"
+                width="50"
+                height="50"
                 rounded="true"
             />
 
             <p>
-                {{ user?.email }}
+                {{ user?.firstname }} {{ user?.lastname }}<br/>{{user?.roles[0]?.name}}
                 <small>
-                    <span>Member since </span>
-
-                    <span *ngIf="user?.metadata?.creationTime">
-                        {{ formatDate(user?.metadata?.creationTime) }}
-                    </span>
+                    <span *ngIf="user?.organization">({{user?.organization?.name}}) </span>
                 </small>
             </p>
         </li>
         <!-- Menu Body -->
+        <!--
         <li class="user-body">
             <div class="row">
                 <div class="col-4 text-center">
@@ -48,11 +45,10 @@
                     <a [routerLink]="['/']">Friends</a>
                 </div>
             </div>
-            <!-- /.row -->
-        </li>
+        </li>-->
         <!-- Menu Footer-->
         <li class="user-footer">
-            <a [routerLink]="['/profile']" class="btn btn-default btn-flat">
+            <a [routerLink]="['/dashboard/profile']" class="btn btn-default btn-flat">
                 Profile
             </a>
             <a (click)="logout()" class="btn btn-default btn-flat float-right">

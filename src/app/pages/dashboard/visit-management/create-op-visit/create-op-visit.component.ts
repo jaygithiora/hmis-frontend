@@ -12,7 +12,7 @@ import { SalutationService } from '@services/dashboard/masters/salutation/saluta
 import { SubTypesService } from '@services/dashboard/masters/sub-types/sub-types.service';
 import { OutpatientVisitsService } from '@services/dashboard/outpatient-visits/outpatient-visits.service';
 import { PatientRegistrationService } from '@services/dashboard/patients/patient-registration/patient-registration.service';
-import { DoctorsService } from '@services/dashboard/settings/doctors/doctors.service';
+import { DoctorsService } from '@services/dashboard/masters/doctors/doctors/doctors.service';
 import { ToastrService } from 'ngx-toastr';
 import { WebcamImage } from 'ngx-webcam';
 import { Subject, debounceTime, distinctUntilChanged, tap, switchMap } from 'rxjs';

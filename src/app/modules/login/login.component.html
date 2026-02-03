@@ -1,72 +1,64 @@
-<div class="card card-outline card-success">
-    <div class="card-header text-center">
-        <a [routerLink]="['/']" class="h1"><b class="text-success">Aphia</b>One</a>
+<div class="container-fluid main-auth-div">
+    <div class="row d-flex align-items-center auth-div">
+        <div class="d-none d-md-block col-md-6 col-lg-7 col-xl-8 text-white text-center h-100">
+            <h1 class="h1">Companion<span class="text-warning">Health</span></h1>
+            <span class="h3" style="font-weight: 200;">Intuitive. Reliable. Fast</span>
+            <p class="mt-3" style="font-weight: 200;">Welcome to <b>companion health</b>. The Fastest growing
+                <br /><b>Health Information Management System (HMIS)</b> in the World
+            </p>
+        </div>
+        <div class="col-md-6 col-lg-5 col-xl-4 right-auth-div h-100 p-5 d-flex align-items-center">
+            <div>
+                <a [routerLink]="['/']" class="h3"><b class="text-primary">Companion </b>Health</a>
+                <p>Welcome Back. Login to your account</p>
+
+                <form [formGroup]="loginForm" (ngSubmit)="loginByAuth()" class="mt-4 mb-4">
+                    <div class="input-group mb-3">
+                        <input formControlName="email" type="email" class="form-control" placeholder="Email" />
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input formControlName="password" type="password" class="form-control" placeholder="Password" />
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="icheck-primary">
+                                <input type="checkbox" id="remember" />
+                                <label for="remember"> &nbsp;Remember Me </label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <p class="mb-1 text-right">
+                                <a [routerLink]="['/forgot-password']">I forgot my password</a>
+                            </p>
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-12">
+                            <pf-button class="w-100" [variant]="'primary'" [loading]="isAuthLoading"
+                                [disabled]="isAuthLoading" (click)="loginByAuth()">
+                                Sign In
+                            </pf-button>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                </form>
+
+                <hr>
+                <p class="mt-2">
+                    <a [routerLink]="['/register']" class="btn btn-outline-primary w-100">
+                        Create a New Account<i class="fas fa-long-arrow-alt-right"></i>
+                    </a>
+                </p>
+            </div>
+        </div>
     </div>
-    <div class="card-body">
-
-        <form [formGroup]="loginForm" (ngSubmit)="loginByAuth()">
-            <div class="input-group mb-3">
-                <input
-                    formControlName="email"
-                    type="email"
-                    class="form-control"
-                    placeholder="Email"
-                />
-                <div class="input-group-append">
-                    <div class="input-group-text">
-                        <span class="fas fa-envelope"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="input-group mb-3">
-                <input
-                    formControlName="password"
-                    type="password"
-                    class="form-control"
-                    placeholder="Password"
-                />
-                <div class="input-group-append">
-                    <div class="input-group-text">
-                        <span class="fas fa-lock"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <div class="icheck-primary">
-                        <input type="checkbox" id="remember" />
-                        <label for="remember"> &nbsp;Remember Me </label>
-                    </div>
-                </div>
-                <div class="col">
-                    <p class="mb-1 text-right">
-                        <a [routerLink]="['/forgot-password']">I forgot my password</a>
-                    </p>
-                </div>
-                <!-- /.col -->
-                <div class="col-12">
-                    <pf-button
-                    class="w-100"
-                        [variant]="'primary'"
-                        [loading]="isAuthLoading"
-                        [disabled]="isAuthLoading"
-                        (click)="loginByAuth()"
-                    >
-                        Sign In
-                    </pf-button>
-                </div>
-                <!-- /.col -->
-            </div>
-        </form>
-
-        
-
-        <hr>
-        <p class="mt-2">
-            <a [routerLink]="['/register']" class="btn btn-outline-primary w-100">
-                Register a new membership
-            </a>
-        </p>
-    </div>
-    <!-- /.login-card-body -->
 </div>

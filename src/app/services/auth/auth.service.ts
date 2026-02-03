@@ -23,6 +23,12 @@ export class AuthService {
   getUser() {
     return JSON.parse(localStorage.getItem('user') || '{}');
   }
+  getOrganization() {
+    return JSON.parse(localStorage.getItem('organization') || '{}');
+  }
+  getPermissions() {
+    return JSON.parse(localStorage.getItem('permissions') || '{}');
+  }
   logout() {
     return this.http.post(`${this.baseUrl}/dashboard/logout`, '').subscribe((result: any) => {
       //console.log(result);

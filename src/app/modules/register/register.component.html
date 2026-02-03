@@ -1,119 +1,299 @@
-<div class="card card-outline card-success">
-    <div class="card-header text-center">
-        <a [routerLink]="['/']" class="h1"><b class="text-success">Aphia</b>One</a>
-    </div>
-    <div class="card-body">
+<div class="container-fluid main-auth-div">
+    <div class="row d-flex align-items-center auth-div">
+        <div class="d-none d-md-block col-md-6 col-lg-7 col-xl-8 text-white text-center h-100">
+            <h1 class="h1">Companion<span class="text-warning">Health</span></h1>
+            <span class="h3" style="font-weight: 200;">Intuitive. Reliable. Fast</span>
+            <p class="mt-3" style="font-weight: 200;">Welcome to <b>companion health</b>. The Fastest growing
+                <br /><b>Health Information Management System (HMIS)</b> in the World
+            </p>
+        </div>
+        <div class="col-md-6 col-lg-5 col-xl-4 right-auth-div h-100 p-5">
+            <a [routerLink]="['/']" class="h3"><b class="text-primary">Companion </b>Health</a>
 
-        <form [formGroup]="registerForm" (ngSubmit)="registerByAuth()">
-          <div class="input-group mb-3">
-              <input
-                  formControlName="firstname"
-                  type="text"
-                  class="form-control"
-                  placeholder="First Name"
-              />
-              <div class="input-group-append">
-                  <div class="input-group-text">
-                      <span class="fas fa-user"></span>
-                  </div>
-              </div>
-          </div>
-          <div class="input-group mb-3">
-              <input
-                  formControlName="lastname"
-                  type="text"
-                  class="form-control"
-                  placeholder="Last Name"
-              />
-              <div class="input-group-append">
-                  <div class="input-group-text">
-                      <span class="far fa-user"></span>
-                  </div>
-              </div>
-          </div>
-          <div class="input-group mb-3">
-              <input
-                  formControlName="email"
-                  type="email"
-                  class="form-control"
-                  placeholder="Email"
-              />
-              <div class="input-group-append">
-                  <div class="input-group-text">
-                      <span class="fas fa-envelope"></span>
-                  </div>
-              </div>
-          </div>
-          <div class="input-group mb-3">
-              <input
-                  formControlName="phone"
-                  type="text"
-                  class="form-control"
-                  placeholder="Phone Number"
-              />
-              <div class="input-group-append">
-                  <div class="input-group-text">
-                      <span class="fas fa-phone"></span>
-                  </div>
-              </div>
-          </div>
-            <div class="input-group mb-3">
-                <input
-                    formControlName="password"
-                    type="password"
-                    class="form-control"
-                    placeholder="Password"
-                />
-                <div class="input-group-append">
-                    <div class="input-group-text">
-                        <span class="fas fa-lock"></span>
+            <!-- Progress Bar -->
+            <div class="mb-4">
+                <div class="progress mt-3 mb-3" style="height: 25px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                        [style.width.%]="progressPercentage" [attr.aria-valuenow]="progressPercentage" aria-valuemin="0"
+                        aria-valuemax="100">
+                        Step {{ currentStep }} of {{ totalSteps }} ({{ progressPercentage | number:'1.0-0'}}%)
                     </div>
                 </div>
             </div>
-            <div class="input-group mb-3">
-                <input
-                    formControlName="password_confirmation"
-                    type="password"
-                    class="form-control"
-                    placeholder="Retype password"
-                />
-                <div class="input-group-append">
-                    <div class="input-group-text">
-                        <span class="fas fa-lock"></span>
+
+            <form [formGroup]="registerForm" *ngIf="currentStep === 1">
+                <h6><i class="fas fa-user"></i> Account Information</h6>
+
+                <div class="form-group mb-3 mt-3">
+                    <span>First Name<span class="text-danger">*</span></span>
+                    <input formControlName="firstname" type="text" class="form-control" placeholder="First Name"
+                        [class.is-invalid]="registerForm.get('firstname')?.invalid && registerForm.get('firstname')?.touched" />
+                    <!-- Validation message -->
+                    <div class="text-danger mt-1"
+                        *ngIf="registerForm.get('firstname')?.invalid && registerForm.get('firstname')?.touched">
+                        First Name is required
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="icheck-primary">
-                        <input
-                            type="checkbox"
-                            id="agreeTerms"
-                            formControlName="terms_and_conditions"
-                            value="agree"
-                        />
-                        <label for="agreeTerms">
-                            I agree to the <a href="#">terms</a>
-                        </label>
+                <div class="form-group mb-3">
+                    <span class="mb-1">Last Name</span>
+                    <input formControlName="lastname" type="text" class="form-control" placeholder="Last Name"
+                        [class.is-invalid]="registerForm.get('lastname')?.invalid && registerForm.get('lastname')?.touched" />
+                    <!-- Validation message -->
+                    <div class="text-danger mt-1"
+                        *ngIf="registerForm.get('lastname')?.invalid && registerForm.get('lastname')?.touched">
+                        Last Name is required
                     </div>
                 </div>
-                <!-- /.col -->
-                <div class="col-12">
-                    <pf-button
-                        [loading]="isAuthLoading"
-                        [disabled]="isAuthLoading"
-                        (click)="registerByAuth()"
-                    >
-                        Register
-                    </pf-button>
+                <div class="form-group mb-3">
+                    <span class="mb-1">Email Address</span>
+                    <input formControlName="email" type="email" class="form-control" placeholder="Email"
+                        [class.is-invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" />
+                    <!-- Validation message -->
+                    <div class="text-danger mt-1"
+                        *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+                        Email address is required
+                    </div>
                 </div>
-                <!-- /.col -->
+                <div class="form-group mb-3">
+                    <span class="mb-1">Phone Number</span>
+                    <ngxsmk-tel-input formControlName="phone" [initialCountry]="'auto'"
+                        [preferredCountries]="['KE','UG','TZ']" [i18n]="enLabels" [localizedCountries]="enCountries"
+                        [separateDialCode]="true" [formatWhenValid]="'typing'" [lockWhenValid]="true" theme="light"
+                        [class.is-invalid]="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched"></ngxsmk-tel-input>
+
+
+                    <!-- Validation message -->
+                    <div class="text-danger mt-1"
+                        *ngIf="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched">
+                        Enter a valid phone number
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <span class="mb-1">Password</span>
+                    <input formControlName="password" type="password" class="form-control" placeholder="Password"
+                        [class.is-invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" />
+                    <!-- Validation message -->
+                    <div class="text-danger mt-1"
+                        *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+                        Password is required
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <span class="mb-1">Confirm Password</span>
+                    <input formControlName="password_confirmation" type="password" class="form-control"
+                        placeholder="Retype password" [class.is-invalid]="(registerForm.get('password_confirmation')?.invalid && registerForm.get('password_confirmation')?.touched)||(registerForm.hasError('passwordMismatch') && 
+                                       registerForm.get('password_confirmation')?.touched)" />
+                    <div class="text-danger mt-1"
+                        *ngIf="registerForm.get('password_confirmation')?.hasError('required') && registerForm.get('password_confirmation')?.touched">
+                        Confirm Password is required
+                    </div>
+                    <div class="text-danger mt-1" *ngIf="registerForm.hasError('passwordMismatch')">
+                        Passwords do not match
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="icheck-primary">
+                            <input type="checkbox" id="agreeTerms" formControlName="terms_and_conditions"
+                                value="agree" />
+                            <label for="agreeTerms">
+                                I agree to the <a href="#">terms</a>
+                            </label>
+                        </div>
+                        <div class="text-danger mb-1" *ngIf="registerForm.get('terms_and_conditions')?.invalid">
+                            Accept Terms and Conditions
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-12">
+                        <pf-button [loading]="isAuthLoading" [disabled]="isAuthLoading||registerForm.invalid"
+                            (click)="goToStep(2)">
+                            Continue <i class="fas fa-angle-right"></i>
+                        </pf-button>
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <p class="p-2 text-center">
+                    <a [routerLink]="['/login']" class="text-center">
+                        I already have an account</a>
+                </p>
+            </form>
+
+            <form [formGroup]="organizationForm" *ngIf="currentStep === 2">
+                <h6><i class="fas fa-building"></i> Organization Information</h6>
+
+                <div class="form-group mb-3 mt-3">
+                    <span>Organization Name</span>
+                    <input formControlName="name" type="text" class="form-control" placeholder="Organization Name"
+                        [class.is-invalid]="organizationForm.get('name')?.invalid && organizationForm.get('name')?.touched" />
+                    <!-- Validation message -->
+                    <div class="text-danger mt-1"
+                        *ngIf="organizationForm.get('name')?.invalid && organizationForm.get('name')?.touched">
+                        Organization Name is required
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <span class="mb-1">Email Address</span>
+                    <input formControlName="organization_email" type="email" class="form-control" placeholder="Email Address"
+                        [class.is-invalid]="organizationForm.get('organization_email')?.invalid && organizationForm.get('organization_email')?.touched" />
+                    <!-- Validation message -->
+                    <div class="text-danger mt-1"
+                        *ngIf="organizationForm.get('organization_email')?.invalid && organizationForm.get('organization_email')?.touched">
+                        Organization Email Address is required
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <span class="mb-1">Location</span>
+                    <input formControlName="location" type="text" class="form-control" placeholder="Location"
+                        #searchLocation
+                        [class.is-invalid]="organizationForm.get('email')?.invalid && organizationForm.get('email')?.touched" />
+                    <!-- Validation message -->
+                    <div class="text-danger mt-1"
+                        *ngIf="organizationForm.get('email')?.invalid && organizationForm.get('email')?.touched">
+                        Location is required
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <span class="mb-1">Phone Number</span>
+                    <ngxsmk-tel-input formControlName="organization_phone" [initialCountry]="'auto'"
+                        [preferredCountries]="['KE','UG','TZ']" [i18n]="enLabels" [localizedCountries]="enCountries"
+                        [separateDialCode]="true" [formatWhenValid]="'typing'" [lockWhenValid]="true" theme="light"
+                        [class.is-invalid]="organizationForm.get('organization_phone')?.invalid && organizationForm.get('organization_phone')?.touched"></ngxsmk-tel-input>
+
+
+                    <!-- Validation message -->
+                    <div class="text-danger mt-1"
+                        *ngIf="organizationForm.get('organization_phone')?.invalid && organizationForm.get('organization_phone')?.touched">
+                        Enter a valid phone number
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <span class="mb-1">Address</span>
+                    <textarea formControlName="address" class="form-control" placeholder="Address"
+                        [class.is-invalid]="organizationForm.get('address')?.invalid && organizationForm.get('address')?.touched"></textarea>
+                    <!-- Validation message -->
+                    <div class="text-danger mt-1"
+                        *ngIf="organizationForm.get('address')?.invalid && organizationForm.get('address')?.touched">
+                        Address is required
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <span class="mb-1">About Organization (optional)</span>
+                    <textarea formControlName="description" class="form-control" placeholder="About Organization"
+                        [class.is-invalid]="organizationForm.get('description')?.invalid && organizationForm.get('description')?.touched"></textarea>
+
+                    <div class="text-danger mt-1"
+                        *ngIf="organizationForm.get('description')?.hasError('required') && organizationForm.get('description')?.touched">
+                        About Organization is required
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <label>Website</label>
+                    <input type='text' class="form-control" placeholder="Website" formControlName="website"
+                        [class.is-invalid]="organizationForm.get('website')?.invalid && (organizationForm.get('website')?.touched || organizationForm.get('website')?.dirty)" />
+                    <!-- Validation message -->
+                    <div class="text-danger mt-1"
+                        *ngIf="organizationForm.get('website')?.invalid && organizationForm.get('website')?.touched">
+                        Website is required
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <label>Logo</label>
+                    <input type="file" class="form-control" accept="image/*" (change)="onFileChange($event)"
+                        [class.is-invalid]="organizationForm.get('logo')?.invalid && (organizationForm.get('logo')?.touched || organizationForm.get('logo')?.dirty)" />
+                    <!-- Validation message -->
+                    <div class="text-danger mt-1"
+                        *ngIf="organizationForm.get('logo')?.invalid && organizationForm.get('logo')?.touched">
+                        Logo is required
+                    </div>
+                </div>
+                <div class="row">
+                    <!-- /.col -->
+                    <div class="col">
+                        <pf-button [loading]="isAuthLoading" [disabled]="isAuthLoading" (click)="goToStep(1)">
+                            <i class="fas fa-angle-left"></i> Previous
+                        </pf-button>
+                    </div>
+                    <!-- /.col -->
+                    <!-- /.col -->
+                    <div class="col">
+                        <pf-button [loading]="isAuthLoading" [disabled]="isAuthLoading||organizationForm.invalid"
+                            (click)="goToStep(3)">
+                            Next <i class="fas fa-angle-right"></i>
+                        </pf-button>
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </form>
+
+            <div *ngIf="currentStep === 3">
+                <h6><i class="fas fa-check-circle"></i> Review & Confirmation</h6>
+                <div class="row">
+                    <div class="col col-sm-6 form-group mb-3 mt-3">
+                        <b>Name</b><br />
+                        {{registerForm.get('firstname')?.value}} {{registerForm.get('lastname')?.value}}
+                    </div>
+                    <div class="col col-sm-6 form-group mb-3 mt-3">
+                        <b>Email Address</b><br />
+                        {{registerForm.get('email')?.value}}
+                    </div>
+                    <div class="col col-sm-6 form-group mb-3 mt-3">
+                        <b>Phone</b><br />
+                        {{registerForm.get('phone')?.value}}
+                    </div>
+                    <div class="col col-sm-6 form-group mb-3 mt-3">
+                        <b>Organization Name</b><br />
+                        {{organizationForm.get('name')?.value}}
+                    </div>
+                    <div class="col col-sm-6 form-group mb-3 mt-3">
+                        <b>Organization Email</b><br />
+                        {{organizationForm.get('organization_email')?.value}}
+                    </div>
+                    <div class="col col-sm-6 form-group mb-3 mt-3">
+                        <b>Organization Phone</b><br />
+                        {{organizationForm.get('organization_phone')?.value}}
+                    </div>
+                    <div class="col col-sm-6 form-group mb-3 mt-3">
+                        <b>Organization Location</b><br />
+                        {{organizationForm.get('location')?.value}}
+                    </div>
+                    <div class="col col-sm-6 form-group mb-3 mt-3">
+                        <b>Website</b><br />
+                        {{organizationForm.get('website')?.value}}
+                    </div>
+                    <div class="col-12 form-group mb-3 mt-3" *ngIf="previewUrl">
+                        <b>Organization Logo</b><br/>
+                        <img [src]="previewUrl" class="img-thumbnail" width="120" height="120" alt="Logo preview" />
+                    </div>
+                    <div class="col-12 form-group mb-3 mt-3">
+                        <b>Organization Address</b><br />
+                        {{organizationForm.get('address')?.value}}
+                    </div>
+                    <div class="col-12 form-group mb-3 mt-3">
+                        <b>About Organization</b><br />
+                        {{organizationForm.get('description')?.value}}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- /.col -->
+                    <div class="col">
+                        <pf-button [loading]="isAuthLoading" [disabled]="isAuthLoading" (click)="goToStep(2)">
+                            <i class="fas fa-angle-left"></i> Previous
+                        </pf-button>
+                    </div>
+                    <!-- /.col -->
+                    <!-- /.col -->
+                    <div class="col">
+                        <pf-button [loading]="isAuthLoading" [disabled]="isAuthLoading||organizationForm.invalid"
+                            (click)="register()">
+                            <i class="fab fa-airbnb"></i> Submit
+                        </pf-button>
+                    </div>
+                    <!-- /.col -->
+                </div>
             </div>
-        </form>
-        <p class="p-2 text-center">
-        <a [routerLink]="['/login']" class="text-center">
-            I already have a membership</a
-        >
-        </p>
+
+        </div>
     </div>
 </div>

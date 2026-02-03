@@ -1,7 +1,8 @@
-import {Component, HostBinding, Input, OnInit} from '@angular/core';
-import {NavigationEnd, Router} from '@angular/router';
-import {filter} from 'rxjs/operators';
-import {openCloseAnimation, rotateAnimation} from './menu-item.animations';
+import { Component, HostBinding, Input, OnInit } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
+import { openCloseAnimation, rotateAnimation } from './menu-item.animations';
+import { AuthService } from '@services/auth/auth.service';
 
 @Component({
     selector: 'app-menu-item',
@@ -16,10 +17,11 @@ export class MenuItemComponent implements OnInit {
     @HostBinding('class.menu-open') isMenuExtended: boolean = false;
     public isMainActive: boolean = false;
     public isOneOfChildrenActive: boolean = false;
-
-    constructor(private router: Router) {}
+    public permissions;
+    constructor(private router: Router, private authService: AuthService) { }
 
     ngOnInit(): void {
+        this.permissions = this.authService.getPermissions();
         if (
             this.menuItem &&
             this.menuItem.children &&
@@ -53,7 +55,7 @@ export class MenuItemComponent implements OnInit {
         if (this.isExpandable) {
             this.menuItem.children.forEach((item: any) => {
                 //if (item.path[0] === url) {
-                if(url.includes(item.path[0])){
+                if (url.includes(item.path[0])) {
                     this.isOneOfChildrenActive = true;
                     this.isMenuExtended = true;
                 }
@@ -65,4 +67,10 @@ export class MenuItemComponent implements OnInit {
             this.isMenuExtended = false;
         }
     }
+
+    public hasPermission(permission?: string): boolean {
+        if (!permission) return true;
+        return this.permissions?.includes(permission);
+    }
+
 }

@@ -17,6 +17,7 @@ export class HeaderComponent implements OnInit {
     @HostBinding('class') classes: string = BASE_CLASSES;
     public ui: Observable<UiState>;
     public searchForm: UntypedFormGroup;
+    public user;
 
     constructor(
         private authService: AuthService,
@@ -24,6 +25,7 @@ export class HeaderComponent implements OnInit {
     ) {}
 
     ngOnInit() {
+        this.user = this.authService.getUser();
         this.ui = this.store.select('ui');
         this.ui.subscribe((state: UiState) => {
             this.classes = `${BASE_CLASSES} ${state.navbarVariant}`;

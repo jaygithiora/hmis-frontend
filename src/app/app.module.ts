@@ -11,7 +11,6 @@ import {FooterComponent} from '@modules/main/footer/footer.component';
 import {MenuSidebarComponent} from '@modules/main/menu-sidebar/menu-sidebar.component';
 import {BlankComponent} from '@pages/blank/blank.component';
 import {ReactiveFormsModule} from '@angular/forms';
-import {ProfileComponent} from '@pages/profile/profile.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RegisterComponent} from '@modules/register/register.component';
 import {DashboardComponent} from '@pages/dashboard/dashboard.component';
@@ -61,7 +60,7 @@ import { GenericNamesComponent } from './pages/dashboard/masters/generic-names/g
 import { IcdsComponent } from './pages/dashboard/masters/icds/icds.component';
 import { SubTypesComponent } from './pages/dashboard/masters/sub-types/sub-types.component';
 import { NgSelectComponent } from '@ng-select/ng-select';
-import { DoctorsComponent } from './pages/dashboard/settings/doctors/doctors.component';
+import { DoctorsComponent } from './pages/dashboard/masters/doctors/doctors/doctors.component';
 import { UsersComponent } from './pages/dashboard/users/users/users.component';
 import { ConsultationTypesComponent } from './pages/dashboard/masters/consultation-types/consultation-types.component';
 import { MainAccountsComponent } from './pages/dashboard/masters/main-accounts/main-accounts.component';
@@ -101,7 +100,7 @@ import { CreateOpVisitComponent } from './pages/dashboard/visit-management/creat
 import { CreateIpVisitComponent } from './pages/dashboard/visit-management/create-ip-visit/create-ip-visit.component';
 import { VisitOpListComponent } from './pages/dashboard/visit-management/visit-op-list/visit-op-list.component';
 import { VisitIpListComponent } from './pages/dashboard/visit-management/visit-ip-list/visit-ip-list.component';
-import { PaymentModesComponent } from './pages/dashboard/settings/payment-modes/payment-modes.component';
+import { PaymentModesComponent } from './pages/dashboard/masters/payments/payment-modes/payment-modes.component';
 import { TriageCategoriesComponent } from './pages/dashboard/triage/triage-categories/triage-categories.component';
 import { TriageItemsComponent } from './pages/dashboard/triage/triage-items/triage-items.component';
 import { BillsComponent } from './pages/dashboard/bills/bills/bills.component';
@@ -153,6 +152,19 @@ import { LaboratorySampleTypesComponent } from './pages/dashboard/laboratory/lab
 import { LaboratoryInterpretationsComponent } from './pages/dashboard/laboratory/laboratory-interpretations/laboratory-interpretations.component';
 import { LaboratoryLinkingComponent } from './pages/dashboard/laboratory/laboratory-linking/laboratory-linking.component';
 import { LaboratoryPublishResultsComponent } from './pages/dashboard/laboratory/laboratory-publish-results/laboratory-publish-results.component';
+import { LaboratoryResultsMasterDataComponent } from './pages/dashboard/laboratory/laboratory-results-master-data/laboratory-results-master-data.component';
+import { ProfileComponent } from '@pages/dashboard/profile/profile.component';
+import { InsurancesComponent } from '@pages/dashboard/masters/insurances/insurances/insurances.component';
+import { PaymentTypesComponent } from './pages/dashboard/masters/payments/payment-types/payment-types.component';
+import { LimitWordsPipe } from './pipes/limit-words.pipe';
+import { SchemesComponent } from './pages/dashboard/masters/insurances/schemes/schemes.component';
+import { DoctorCategoriesComponent } from './pages/dashboard/masters/doctors/doctor-categories/doctor-categories.component';
+import { SpecializationsComponent } from './pages/dashboard/settings/specializations/specializations.component';
+import { DoctorSpecializationsComponent } from './pages/dashboard/masters/doctors/doctor-specializations/doctor-specializations.component';
+import { DoctorDepartmentsComponent } from './pages/dashboard/masters/doctors/doctor-departments/doctor-departments.component';
+import { FeeTypesComponent } from './pages/dashboard/settings/fee-types/fee-types.component';
+import { DoctorFeesComponent } from './pages/dashboard/masters/doctors/doctor-fees/doctor-fees.component';
+import { DoctorShareComponent } from './pages/dashboard/masters/doctors/doctor-share/doctor-share.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -287,6 +299,18 @@ registerLocaleData(localeEn, 'en-EN');
         LaboratoryInterpretationsComponent,
         LaboratoryLinkingComponent,
         LaboratoryPublishResultsComponent,
+        LaboratoryResultsMasterDataComponent,
+        InsurancesComponent,
+        PaymentTypesComponent,
+        LimitWordsPipe,
+        SchemesComponent,
+        DoctorCategoriesComponent,
+        SpecializationsComponent,
+        DoctorSpecializationsComponent,
+        DoctorDepartmentsComponent,
+        FeeTypesComponent,
+        DoctorFeesComponent,
+        DoctorShareComponent,
     ],
     bootstrap: [AppComponent],
     imports: [

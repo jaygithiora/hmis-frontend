@@ -1,0 +1,133 @@
+<app-content-header [title]="'Doctor Share'"></app-content-header>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col">
+                                <h6>
+                                    <i class="fas fa-user-md"></i>
+                                    Doctor Share
+                                </h6>
+                            </div>
+                            <div class="col text-right">
+                                <button class="btn btn-primary btn-sm" (click)="openModal(content, null)">
+                                    <i class="fas fa-plus"></i> Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <th>ID</th>
+                                <th>Doctor</th>
+                                <th>Share</th>
+                                <th>Date</th>
+                                <th class="text-right">Action</th>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="isLoading">
+                                    <td colspan="6" class="text-center">
+                                        <div class="alert alert-secondary">
+                                            <div class="spinner-border spinner-border-sm" role="status"
+                                                *ngIf="isLoading">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                            Loading Doctor Share...
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="!isLoading && doctor_shares.length == 0">
+                                    <td colspan="7" class="text-center">
+                                        <div class="alert alert-secondary">
+                                            <i class="fas fa-ban"></i> No
+                                            <b>Doctor Share Found!</b>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr *ngFor="
+                                        let doctor_share of doctor_shares;
+                                        let i = index
+                                    ">
+                                    <td>{{ doctor_share.doctor?.code }}</td>
+                                    <td>{{doctor_share?.doctor?.salutation?.name}} {{ doctor_share?.doctor?.firstname }}
+                                        {{doctor_share?.doctor?.other_names}}</td>
+                                    <td>{{doctor_share?.share_type=='amount'?'KES':''}}{{ doctor_share?.amount }} {{doctor_share?.share_type=='percentage'?'%':''}}</td>
+                                    <td>
+                                        {{ formatDate(doctor_share.created_at) }}
+                                    </td>
+                                    <td class="text-right">
+                                        <button class="btn btn-primary btn-sm" (click)="
+                                                openModal(content, doctor_share)
+                                            ">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{doctorShareForm?.get("id")?.value>0?"Edit":"Add"}} Doctor
+            Specialization</h4>
+        <button type="button" class="btn-close close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="doctorShareForm" (submit)="addDoctorShare()">
+            <input type="hidden" formControlName="id" />
+            <div class="mb-3">
+                <label>Doctor</label>
+                <ng-select [items]="doctors" bindLabel="name" bindValue="id" [typeahead]="searchDoctors$"
+                    [loading]="loadingDoctors" [(ngModel)]="selectedDoctor" placeholder="Search for Doctor"
+                    (change)="onItemSelect($event)" formControlName="doctor"></ng-select>
+                <div class="text-danger"
+                    *ngIf="doctorShareForm.get('doctor').invalid&&doctorShareForm.get('doctor').touched">
+                    Doctor is required
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label>Amount</label>
+                <input type="number" placeholder="Amount" formControlName="amount" class="form-control"
+                    [class.is-invalid]="doctorShareForm.get('amount').invalid&&doctorShareForm.get('amount').touched" />
+                <div class="text-danger"
+                    *ngIf="doctorShareForm.get('amount').invalid&&doctorShareForm.get('amount').touched">
+                    Amount is required
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label>Share Type</label>
+                <ng-select [items]="share_types" bindLabel="name" bindValue="id" placeholder="Search for Share Type"
+                    formControlName="share_type"></ng-select>
+                <div class="text-danger"
+                    *ngIf="doctorShareForm.get('share_type').invalid&&doctorShareForm.get('share_type').touched">
+                    Share Type is required
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.close('Save click')">
+            Close
+        </button>
+        <button type="button" class="btn btn-primary" [disabled]="isLoading" (click)="addDoctorShare()">
+            <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+                <span class="sr-only">Loading...</span>
+            </div>
+            Save Changes
+        </button>
+    </div>
+</ng-template>

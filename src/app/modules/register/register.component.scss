@@ -2,3 +2,21 @@ pf-button {
     --pf-display: block;
     --pf-width: 100%;
 }
+
+/*.form-control{
+  background-color: transparent !important;
+}
+input.form-control{
+  border: 1px solid #2c2c2d;
+  height: 48px;
+}*/
+input.form-control:focus{
+  border-color:#33338b;
+}
+.ngxsmk-tel-input__control {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #000 !important;
+  border-color: #33338b !important;
+  box-shadow: none !important;
+}

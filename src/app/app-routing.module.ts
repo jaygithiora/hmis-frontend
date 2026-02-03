@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { MainComponent } from '@modules/main/main.component';
 import { BlankComponent } from '@pages/blank/blank.component';
 import { LoginComponent } from '@modules/login/login.component';
-import { ProfileComponent } from '@pages/profile/profile.component';
 import { RegisterComponent } from '@modules/register/register.component';
 import { DashboardComponent } from '@pages/dashboard/dashboard.component';
 import { NonAuthGuard } from '@guards/non-auth.guard';
@@ -22,7 +21,7 @@ import { BloodGroupsComponent } from '@pages/dashboard/masters/blood-groups/bloo
 import { GenericNamesComponent } from '@pages/dashboard/masters/generic-names/generic-names.component';
 import { IcdsComponent } from '@pages/dashboard/masters/icds/icds.component';
 import { SubTypesComponent } from '@pages/dashboard/masters/sub-types/sub-types.component';
-import { DoctorsComponent } from '@pages/dashboard/settings/doctors/doctors.component';
+import { DoctorsComponent } from '@pages/dashboard/masters/doctors/doctors/doctors.component';
 import { UsersComponent } from '@pages/dashboard/users/users/users.component';
 import { ConsultationTypesComponent } from '@pages/dashboard/masters/consultation-types/consultation-types.component';
 import { MainAccountsComponent } from '@pages/dashboard/masters/main-accounts/main-accounts.component';
@@ -60,7 +59,7 @@ import { CreateOpVisitComponent } from '@pages/dashboard/visit-management/create
 import { CreateIpVisitComponent } from '@pages/dashboard/visit-management/create-ip-visit/create-ip-visit.component';
 import { VisitOpListComponent } from '@pages/dashboard/visit-management/visit-op-list/visit-op-list.component';
 import { VisitIpListComponent } from '@pages/dashboard/visit-management/visit-ip-list/visit-ip-list.component';
-import { PaymentModesComponent } from '@pages/dashboard/settings/payment-modes/payment-modes.component';
+import { PaymentModesComponent } from '@pages/dashboard/masters/payments/payment-modes/payment-modes.component';
 import { TriageCategoriesComponent } from '@pages/dashboard/triage/triage-categories/triage-categories.component';
 import { TriageItemsComponent } from '@pages/dashboard/triage/triage-items/triage-items.component';
 import { BillsComponent } from '@pages/dashboard/bills/bills/bills.component';
@@ -96,6 +95,18 @@ import { LaboratorySampleTypesComponent } from '@pages/dashboard/laboratory/labo
 import { LaboratoryInterpretationsComponent } from '@pages/dashboard/laboratory/laboratory-interpretations/laboratory-interpretations.component';
 import { LaboratoryLinkingComponent } from '@pages/dashboard/laboratory/laboratory-linking/laboratory-linking.component';
 import { LaboratoryPublishResultsComponent } from '@pages/dashboard/laboratory/laboratory-publish-results/laboratory-publish-results.component';
+import { LaboratoryResultsMasterDataComponent } from '@pages/dashboard/laboratory/laboratory-results-master-data/laboratory-results-master-data.component';
+import { ProfileComponent } from '@pages/dashboard/profile/profile.component';
+import { InsurancesComponent } from '@pages/dashboard/masters/insurances/insurances/insurances.component';
+import { PaymentTypesComponent } from '@pages/dashboard/masters/payments/payment-types/payment-types.component';
+import { SchemesComponent } from '@pages/dashboard/masters/insurances/schemes/schemes.component';
+import { DoctorCategoriesComponent } from '@pages/dashboard/masters/doctors/doctor-categories/doctor-categories.component';
+import { SpecializationsComponent } from '@pages/dashboard/settings/specializations/specializations.component';
+import { DoctorSpecializationsComponent } from '@pages/dashboard/masters/doctors/doctor-specializations/doctor-specializations.component';
+import { DoctorDepartmentsComponent } from '@pages/dashboard/masters/doctors/doctor-departments/doctor-departments.component';
+import { FeeTypesComponent } from '@pages/dashboard/settings/fee-types/fee-types.component';
+import { DoctorFeesComponent } from '@pages/dashboard/masters/doctors/doctor-fees/doctor-fees.component';
+import { DoctorShareComponent } from '@pages/dashboard/masters/doctors/doctor-share/doctor-share.component';
 
 const routes: Routes = [
   {
@@ -115,22 +126,35 @@ const routes: Routes = [
     canActivateChild: [authGuard],
     children: [
       //masters
-      {
+      /*{
         path: 'masters/hospital-data',
         component: HospitalDataComponent
       },
       {
         path: 'masters/locations',
         component: LocationsComponent
+      },*/
+      {
+        path: 'masters/insurances/list',
+        component:InsurancesComponent
       },
       {
-        path: 'masters/main-types',
-        component: MainTypesComponent
+        path: 'masters/insurances/schemes',
+        component:SchemesComponent
       },
+      {
+        path: 'masters/payments/payment-types',
+        component: PaymentTypesComponent
+      },
+      {
+        path: 'masters/payments/payment-modes',
+        component: PaymentModesComponent
+      },
+      /*
       {
         path: 'masters/sub-types',
         component: SubTypesComponent
-      },
+      },*/
       {
         path: 'masters/salutations',
         component: SalutationsComponent
@@ -138,10 +162,34 @@ const routes: Routes = [
       {
         path: 'masters/departments',
         component: DepartmentsComponent
-      },
+      },/*
       {
         path: 'masters/consultation-types',
         component: ConsultationTypesComponent
+      },*/
+      {
+        path: 'masters/doctors/categories',
+        component: DoctorCategoriesComponent
+      },
+      {
+        path: 'masters/doctors/list',
+        component: DoctorsComponent
+      },
+      {
+        path: 'masters/doctors/specializations',
+        component: DoctorSpecializationsComponent
+      },
+      {
+        path: 'masters/doctors/departments',
+        component: DoctorDepartmentsComponent
+      },
+      {
+        path: 'masters/doctors/fees',
+        component: DoctorFeesComponent
+      },
+      {
+        path: 'masters/doctors/share',
+        component: DoctorShareComponent
       },
       {
         path: 'masters/consultation-rooms',
@@ -288,6 +336,10 @@ const routes: Routes = [
         component: LaboratoryPublishResultsComponent
       },
       {
+        path: 'laboratory/results-master-data',
+        component: LaboratoryResultsMasterDataComponent
+      },
+      {
         path: 'laboratory/equipment',
         component: LaboratoryEquipmentsComponent
       },
@@ -426,16 +478,8 @@ const routes: Routes = [
       },
       //settings
       {
-        path: 'settings/doctors',
-        component: DoctorsComponent
-      },
-      {
         path: 'settings/next-of-kin-relations',
         component: NextOfKinRelationsComponent
-      },
-      {
-        path: 'settings/payment-modes',
-        component: PaymentModesComponent
       },
       {
         path: 'settings/statuses',
@@ -460,6 +504,14 @@ const routes: Routes = [
       {
         path: 'settings/sick-leave-types',
         component: SickLeaveTypesComponent
+      },
+      {
+        path: 'settings/specializations',
+        component: SpecializationsComponent
+      },
+      {
+        path: 'settings/fee-types',
+        component: FeeTypesComponent
       },
       //organizations
       { path: 'organizations/list', component: OrganizationsComponent },

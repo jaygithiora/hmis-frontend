@@ -4,7 +4,7 @@ import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '@services/auth/auth.service';
 import { ConsultationRoomsService } from '@services/dashboard/masters/consultation-rooms/consultation-rooms.service';
 import { LocationsService } from '@services/dashboard/masters/locations.service';
-import { DoctorsService } from '@services/dashboard/settings/doctors/doctors.service';
+import { DoctorsService } from '@services/dashboard/masters/doctors/doctors/doctors.service';
 import moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, debounceTime, distinctUntilChanged, tap, switchMap } from 'rxjs';

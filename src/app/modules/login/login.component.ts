@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
     styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit, OnDestroy {
-    @HostBinding('class') class = 'login-box';
+    @HostBinding('class') class = 'w-100';//'login-box';
     public loginForm: UntypedFormGroup;
     public isAuthLoading = false;
 
@@ -45,6 +45,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 if(result.access_token && result.user){
                     localStorage.setItem("token", result.access_token);
                     localStorage.setItem('user', JSON.stringify(result.user));
+                    localStorage.setItem('permissions', JSON.stringify(result.permissions));
                 }else{
                     this.toastr.error("Access token could not be found! Try again!")
                 }
