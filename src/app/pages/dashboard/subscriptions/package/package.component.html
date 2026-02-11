@@ -1,0 +1,82 @@
+<app-content-header [title]="'Subscription Package'"></app-content-header>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col">
+                                <h6>
+                                    <i class="fas fa-box"></i>
+                                    Subscription Package
+                                </h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+
+                        <form [formGroup]="packageForm" (submit)="addSubscriptionPackage()" class="row">
+                            <input type="hidden" formControlName="id" />
+                            <div class="col-sm-12 mb-3">
+                                <label>Name</label>
+                                <input type="text" class="form-control" placeholder="Subscription Package Name"
+                                    formControlName="name"
+                                    [class.is-invalid]="packageForm.get('name').invalid&&packageForm.get('name').touched" />
+                                <div class="text-danger"
+                                    *ngIf="packageForm.get('name').invalid&&packageForm.get('name').touched">
+                                    Name is required
+                                </div>
+                            </div>
+                            <div class="col-sm-12 mb-3">
+
+                                <div #editor></div>
+                            </div>
+                            <div class="col-sm-12 mb-3">
+                                <label>Duration</label>
+                                <ng-select [items]="duration_types" bindLabel="name" bindValue="id"
+                                    placeholder="Search for Duration Type" formControlName="duration_type">
+                                </ng-select>
+                                <div class="text-danger"
+                                    *ngIf="packageForm.get('duration_type').invalid&&packageForm.get('duration_type').touched">
+                                    Duration Type is required
+                                </div>
+                            </div>
+                            <div class="col-sm-12 mb-3">
+                                <label>Grace Period (Days)</label>
+                                <input type="number" class="form-control" placeholder="Grace Period"
+                                    formControlName="grace_period"
+                                    [class.is-invalid]="packageForm.get('grace_period').invalid&&packageForm.get('grace_period').touched" />
+                                <div class="text-danger"
+                                    *ngIf="packageForm.get('grace_period').invalid&&packageForm.get('grace_period').touched">
+                                    Grace Period is required
+                                </div>
+                            </div>
+                            <div class="col-sm-12 mb-3">
+                                <label>Amount (KES)</label>
+                                <input type="number" class="form-control" placeholder="Amount" formControlName="amount"
+                                    [class.is-invalid]="packageForm.get('amount').invalid&&packageForm.get('amount').touched" />
+                                <div class="text-danger"
+                                    *ngIf="packageForm.get('amount').invalid&&packageForm.get('amount').touched">
+                                    Amount is required
+                                </div>
+                            </div>
+                            <div class="col-sm-12 text-right">
+
+                                <button type="button" class="btn btn-primary" [disabled]="isLoading"
+                                    (click)="addSubscriptionPackage()">
+                                    <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                    <i class="fab fa-airbnb" *ngIf="!isLoading">
+                                    </i>
+                                    Save Package
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

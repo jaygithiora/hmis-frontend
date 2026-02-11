@@ -8,14 +8,15 @@
             <form [formGroup]="patientRegistrationForm" (ngSubmit)="updatePatient()">
 
               <h6 class="alert alert-primary">
-                1. Payment Details 
+                1. Payment Details
 
               </h6>
               <input type="hidden" formControlName="id" value="0" />
               <div class="row">
                 <div class="col-sm-4 p-3">
                   <img [src]="imageUrl" class="img-fluid w-100 img-thumbnail" *ngIf="patientImage==null" />
-                  <img [src]="patientImage.imageAsDataUrl" class="img-fluid w-100 img-thumbnail" *ngIf="patientImage!=null" />
+                  <img [src]="patientImage.imageAsDataUrl" class="img-fluid w-100 img-thumbnail"
+                    *ngIf="patientImage!=null" />
                   <p class="m-3">
                     <app-take-photo (imageCaptured)="imageCaptured($event)"></app-take-photo>
                   </p>
@@ -23,155 +24,258 @@
                 <div class="col-sm-8">
                   <div class="row">
                     <div class="col-sm-6 col-lg-4 mb-3">
-                      <label>Location<span class='text-danger'>*</span></label>
-                      <ng-select [items]="locations" bindLabel="name" bindValue="id" [typeahead]="search$"
-                        [loading]="loading" [(ngModel)]="selectedOption" placeholder="Search for Location"
-                        (change)="onItemSelect($event)" formControlName="location"></ng-select>
+                      <label>Organization</label>
+                      <ng-select [items]="organizations" bindLabel="name" bindValue="id" [typeahead]="search$"
+                        [loading]="loading" [(ngModel)]="selectedOption" placeholder="Search for Organization"
+                        (change)="onItemSelect($event)" formControlName="organization"></ng-select>
+                      <div class="invalid-feedback d-block"
+                        *ngIf="patientRegistrationForm.get('organization')?.errors?.['required']&&patientRegistrationForm.get('organization')?.touched">
+                        Organization is required
+                      </div>
                     </div>
                     <div class="col-sm-6 col-lg-4 mb-3">
-                      <label>Type<span class='text-danger'>*</span></label>
-                      <ng-select [items]="main_types" bindLabel="name" bindValue="id" [typeahead]="searchMainTypes$"
-                        [loading]="loadingMainType" [(ngModel)]="selectedMainTypeOption"
-                        placeholder="Search for Main Type" (change)="onItemSelect($event)"
-                        formControlName="main_type"></ng-select>
+                      <label>Branch</label>
+                      <ng-select [items]="branches" bindLabel="name" bindValue="id" [typeahead]="searchBranches$"
+                        [loading]="loadingBranches" [(ngModel)]="selectedBranchOption" placeholder="Search for Branch"
+                        (change)="onItemSelect($event)" formControlName="branch"></ng-select>
+                      <div class="invalid-feedback d-block"
+                        *ngIf="patientRegistrationForm.get('branch')?.errors?.['required']&&patientRegistrationForm.get('branch')?.touched">
+                        Branch is required
+                      </div>
                     </div>
-                    <div class="col-sm-6 col-lg-4 mb-3">
-                      <label>Insurance/Sub Type<span class='text-danger'>*</span></label>
-                      <ng-select [items]="sub_types" bindLabel="name" bindValue="id" [typeahead]="searchSubTypes$"
-                        [loading]="loadingSubType" [(ngModel)]="selectedSubTypeOption" placeholder="Search for Sub Type"
-                        (change)="onItemSelect($event)" formControlName="sub_type"></ng-select>
-                    </div>
-                    <div class="col-sm-6 col-lg-4 mb-3">
-                      <label>Account/Company<span class='text-danger'>*</span></label>
-                      <ng-select [items]="accounts" bindLabel="name" bindValue="id" [typeahead]="searchAccounts$"
-                        [loading]="loadingAccount" [(ngModel)]="selectedAccountOption" placeholder="Search for Account"
-                        (change)="onItemSelect($event)" formControlName="account"></ng-select>
-                    </div>
-                    <div class="col-sm-6 col-lg-4 mb-3">
-                      <label>Plan<span class='text-danger'>*</span></label>
-                      <ng-select [items]="plans" bindLabel="name" bindValue="id" [typeahead]="searchPlan$"
-                        [loading]="loadingPlan" [(ngModel)]="selectedPlanOption" placeholder="Search for Plan"
-                        (change)="onItemSelect($event)" formControlName="plan"></ng-select>
-                    </div>
-                    <!--                    <div class="col-sm-6 col-lg-4 mb-3">
-                      <label>Validity</label>
-                      <input type="text" class="form-control bg-white" placeholder="Validity" formControlName="validity"
-                        readonly />
-                    </div>
-                    <div class="col-sm-6 col-lg-4 mb-3">
-                      <label>Copay</label>
-                      <input type="number" class="form-control bg-white" placeholder="Copay" formControlName="copay"
-                        readonly />
-                    </div>
-                    <div class="col-sm-6 col-lg-4 mb-3">
-                      <label>Bill Type</label>
-                      <input type="text" class="form-control bg-white" placeholder="Bill Type"
-                        formControlName="bill_type" readonly />
-                    </div>
-                    <div class="col-sm-6 col-lg-4 mb-3">
-                      <label>Limit</label>
-                      <input type="number" class="form-control bg-white" placeholder="Limit" formControlName="limit"
-                        readonly />
-                    </div>
-                    -->
 
                     <div class="col-sm-6 col-lg-4 mb-3">
-                      <label>Salutation<span class='text-danger'>*</span></label>
+                      <label>Salutation</label>
                       <ng-select [items]="salutations" bindLabel="name" bindValue="id" [typeahead]="searchSalutation$"
                         [loading]="loadingSalutation" [(ngModel)]="selectedSalutationOption"
                         placeholder="Search for Salutation" (change)="onItemSelect($event)"
                         formControlName="salutation"></ng-select>
+                      <div class="invalid-feedback d-block"
+                        *ngIf="patientRegistrationForm.get('salutation')?.errors?.['required']&&patientRegistrationForm.get('salutation')?.touched">
+                        Salutation is required
+                      </div>
                     </div>
                     <div class="col-sm-6 col-lg-4 mb-3">
-                      <label>Gender<span class='text-danger'>*</span></label>
-                      <select class="form-control custom-select" formControlName="gender">
-                        <option disabled>Select Gender</option>
-                        <option value="MALE">MALE</option>
-                        <option value="FEMALE">FEMALE</option>
-                      </select>
+                      <label>Gender</label>
+                      <ng-select [items]="genders" bindLabel="name" bindValue="id" placeholder="Select Gender"
+                        formControlName="gender">
+                      </ng-select>
+                      <div class="invalid-feedback d-block"
+                        *ngIf="patientRegistrationForm.get('gender')?.errors?.['required']&&patientRegistrationForm.get('gender')?.touched">
+                        Organization is required
+                      </div>
                     </div>
                     <div class="col-sm-6 col-lg-4 mb-3">
-                      <label>Date of Birth<span class='text-danger'>*</span></label>
-                      <input type="date" class="form-control" formControlName="dob" placeholder="Date of Birth"/>
+                      <label>Date of Birth</label>
+                      <input type="date" class="form-control" formControlName="dob" placeholder="Date of Birth"
+                        [class.is-invalid]="patientRegistrationForm.get('dob')?.errors?.['required']&&patientRegistrationForm.get('dob')?.touched" />
+                      <div class="invalid-feedback d-block"
+                        *ngIf="patientRegistrationForm.get('dob')?.errors?.['required']&&patientRegistrationForm.get('dob')?.touched">
+                        Date of Birth is required
+                      </div>
                     </div>
                     <div class="col-sm-6 col-lg-4 mb-3">
-                      <label>First Name<span class='text-danger'>*</span></label>
-                      <input type="text" class="form-control" placeholder="First Name" formControlName="first_name">
+                      <label>First Name</label>
+                      <input type="text" class="form-control" placeholder="First Name" formControlName="first_name"
+                        [class.is-invalid]="patientRegistrationForm.get('first_name')?.errors?.['required']&&patientRegistrationForm.get('first_name')?.touched">
+                      <div class="invalid-feedback d-block"
+                        *ngIf="patientRegistrationForm.get('first_name')?.errors?.['required']&&patientRegistrationForm.get('first_name')?.touched">
+                        First Name is required
+                      </div>
                     </div>
                     <div class="col-sm-6 col-lg-4 mb-3">
-                      <label>Other Name<span class='text-danger'>*</span></label>
-                      <input type="text" class="form-control" placeholder="Other Names" formControlName="other_names">
+                      <label>Other Name</label>
+                      <input type="text" class="form-control" placeholder="Other Names" formControlName="other_names"
+                        [class.is-invalid]="patientRegistrationForm.get('other_names')?.errors?.['required']&&patientRegistrationForm.get('other_names')?.touched">
+                      <div class="invalid-feedback d-block"
+                        *ngIf="patientRegistrationForm.get('other_names')?.errors?.['required']&&patientRegistrationForm.get('other_names')?.touched">
+                        Other names is required
+                      </div>
                     </div>
                     <div class="col-sm-6 col-lg-4 mb-3">
-                      <label>ID No.<span class='text-danger'>*</span></label>
-                      <input type="text" class="form-control" placeholder="ID Number" formControlName="id_number">
+                      <label>ID No.</label>
+                      <input type="text" class="form-control" placeholder="ID Number" formControlName="id_number"
+                        [class.is-invalid]="patientRegistrationForm.get('id_number')?.errors?.['required']&&patientRegistrationForm.get('id_number')?.touched">
+                      <div class="invalid-feedback d-block"
+                        *ngIf="patientRegistrationForm.get('id_number')?.errors?.['required']&&patientRegistrationForm.get('id_number')?.touched">
+                        ID Number is required
+                      </div>
                     </div>
                     <div class="col-sm-6 col-lg-4 mb-3">
-                      <label>Member/Staff No.<span class='text-danger'>*</span></label>
+                      <label>Member/Staff No.</label>
                       <input type="text" class="form-control" placeholder="Member Number"
                         formControlName="member_number">
+                      <div class="invalid-feedback d-block"
+                        *ngIf="patientRegistrationForm.get('member_number')?.errors?.['required']&&patientRegistrationForm.get('member_number')?.touched">
+                        Member Number is required
+                      </div>
                     </div>
                     <div class="col-sm-6 col-lg-4 mb-3">
-                      <label>Member Type<span class='text-danger'>*</span></label>
-                      <select class="form-control custom-select" formControlName="member_type">
-                        <option disabled>Select Member Type</option>
-                        <option value="PRIMARY">PRIMARY</option>
-                        <option value="DEPEDENT">DEPENDANT</option>
-                      </select>
+                      <label>Member Type</label>
+                      <ng-select [items]="member_types" bindLabel="name" bindValue="id" placeholder="Select Member Type"
+                        formControlName="member_type">
+                      </ng-select>
+                      <div class="invalid-feedback d-block"
+                        *ngIf="patientRegistrationForm.get('member_type')?.errors?.['required']&&patientRegistrationForm.get('member_type')?.touched">
+                        Member Type is required
+                      </div>
                     </div>
                   </div>
                 </div>
                 <div class="col-sm-12">
                   <h6 class="alert alert-primary">
-                    2. Personal Details
+                    2. Patient Schemes
+                  </h6>
+                  <table class="table">
+                    <thead>
+                      <th>ID</th>
+                      <th>Insurance</th>
+                      <th>Scheme</th>
+                      <th class="text-right"><span class="btn btn-primary btn-sm" (click)="addScheme()"><i
+                            class="fas fa-plus"></i> Add New</span></th>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td colspan="4" *ngIf="patient_schemes.controls.length == 0">
+                          <div class="alert alert-secondary text-center"><i class="fas fa-ban"></i> No
+                            <b>Schemes</b> yet. Click the '+ Add New' button
+                            to add here
+                          </div>
+                        </td>
+                      </tr>
+                      <!-- Display existing systems -->
+                      <tr *ngFor="let item of patient_schemes.controls; let i = index" [formGroup]="$any(item)">
+                        <td>{{ i + 1 }}</td>
+                        <td>
+                          <ng-select [items]="insurances" bindLabel="name" bindValue="id" formControlName="insurance"
+                            [typeahead]="searchInsurances$" [loading]="loadingInsurances"
+                            placeholder="Search for Insurances" (change)="onInsuranceSelect($event, i)"></ng-select>
+                          <div class="invalid-feedback d-block"
+                            *ngIf="item.get('insurance')?.errors?.['required']&&item.get('insurance')?.touched">
+                            Insurance is required
+                          </div>
+                        </td>
+                        <td><ng-select [items]="schemes" bindLabel="name" bindValue="id" formControlName="scheme"
+                            [loading]="loadingSchemes" placeholder="Search for Scheme"
+                            (search)="onSchemeSearch($event.term, i)"></ng-select>
+                          <!--<ng-select [items]="schemes" bindLabel="name" bindValue="id" formControlName="scheme"
+                            [typeahead]="searchSchemes$" [loading]="loadingSchemes"
+                            placeholder="Search for Scheme"></ng-select>-->
+                          <div class="invalid-feedback d-block"
+                            *ngIf="item.get('scheme')?.errors?.['required']&&item.get('scheme')?.touched">
+                            Scheme is required
+                          </div>
+                        </td>
+                        <td class="text-right">
+                          <button class="btn text-danger" (click)="removeScheme(i)">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table><!-- Error message -->
+    <div 
+      *ngIf="patient_schemes.hasError('minLengthArray') && patient_schemes.touched" 
+      class="alert alert-danger">
+      At least one scheme is required
+    </div>
+                </div>
+                <div class="col-sm-12">
+                  <h6 class="alert alert-primary">
+                    3. Personal Details
                   </h6>
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-                  <label>Guardian Name<span class='text-danger'>*</span></label>
+                  <label>Guardian Name</label>
                   <input type="text" class="form-control" formControlName="guardian_name" placeholder="Guardian Name" />
+                  <div class="invalid-feedback d-block"
+                    *ngIf="patientRegistrationForm.get('guardian_name')?.errors?.['required']&&patientRegistrationForm.get('guardian_name')?.touched">
+                    Guardian Name is required
+                  </div>
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
                   <label>Blood Group</label>
-                      <ng-select [items]="blood_groups" bindLabel="name" bindValue="id" [typeahead]="searchBloodGroup$"
-                        [loading]="loadingBloodGroup" [(ngModel)]="selectedBloodGroupOption"
-                        placeholder="Search for Blood Group" (change)="onItemSelect($event)"
-                        formControlName="blood_group"></ng-select>
+                  <ng-select [items]="blood_groups" bindLabel="name" bindValue="id" [typeahead]="searchBloodGroup$"
+                    [loading]="loadingBloodGroup" [(ngModel)]="selectedBloodGroupOption"
+                    placeholder="Search for Blood Group" (change)="onItemSelect($event)"
+                    formControlName="blood_group"></ng-select>
+                  <div class="invalid-feedback d-block"
+                    *ngIf="patientRegistrationForm.get('blood_group')?.errors?.['required']&&patientRegistrationForm.get('blood_group')?.touched">
+                    Blood Group is required
+                  </div>
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-                  <label>Location<span class='text-danger'>*</span></label>
-                  <input type="text" class="form-control" #locationInput formControlName="patient_location" placeholder="Location" />
+                  <label>Location</label>
+                  <input type="text" class="form-control" #locationInput formControlName="patient_location"
+                    placeholder="Location"
+                    [class.is-invalid]="patientRegistrationForm.get('patient_location')?.errors?.['required']&&patientRegistrationForm.get('patient_location')?.touched" />
+                  <div class="invalid-feedback d-block"
+                    *ngIf="patientRegistrationForm.get('patient_location')?.errors?.['required']&&patientRegistrationForm.get('patient_location')?.touched">
+                    Location is required
+                  </div>
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-                  <label>Citizenship<span class='text-danger'>*</span></label>
-                  <select formControlName="citizenship" class="form-control custom-select">
+                  <label>Citizenship</label>
+                  <select formControlName="citizenship" class="form-control custom-select"
+                    [class.is-invalid]="patientRegistrationForm.get('citizenship')?.errors?.['required']&&patientRegistrationForm.get('citizenship')?.touched">
                     <option value="National">National</option>
                     <option value="International">International</option>
                   </select>
+                  <div class="invalid-feedback d-block"
+                    *ngIf="patientRegistrationForm.get('citizenship')?.errors?.['required']&&patientRegistrationForm.get('citizenship')?.touched">
+                    Citizenship is required
+                  </div>
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-                  <label>Mobile Number<span class='text-danger'>*</span></label>
-                  <input type="text" class="form-control" formControlName="phone" placeholder="Phone Number" />
+                  <label>Mobile Number</label>
+                  <input type="text" class="form-control" formControlName="phone" placeholder="Phone Number"
+                    [class.is-invalid]="patientRegistrationForm.get('phone')?.errors?.['required']&&patientRegistrationForm.get('phone')?.touched" />
+                  <div class="invalid-feedback d-block"
+                    *ngIf="patientRegistrationForm.get('phone')?.errors?.['required']&&patientRegistrationForm.get('phone')?.touched">
+                    Phone is required
+                  </div>
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
                   <label>Email Address</label>
-                  <input type="email" class="form-control" formControlName="email" placeholder="Email Address" />
+                  <input type="email" class="form-control" formControlName="email" placeholder="Email Address"
+                    [class.is-invalid]="patientRegistrationForm.get('email')?.errors?.['required']&&patientRegistrationForm.get('email')?.touched" />
+                  <div class="invalid-feedback d-block"
+                    *ngIf="patientRegistrationForm.get('email')?.errors?.['required']&&patientRegistrationForm.get('email')?.touched">
+                    Email Address is required
+                  </div>
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-                  <label>Next of Kin Name<span class='text-danger'>*</span></label>
-                  <input type="text" class="form-control" formControlName="next_of_kin_name" placeholder="Next Of Kin Name" />
+                  <label>Next of Kin Name</label>
+                  <input type="text" class="form-control" formControlName="next_of_kin_name"
+                    placeholder="Next Of Kin Name"
+                    [class.is-invalid]="patientRegistrationForm.get('next_of_kin_name')?.errors?.['required']&&patientRegistrationForm.get('next_of_kin_name')?.touched" />
+                  <div class="invalid-feedback d-block"
+                    *ngIf="patientRegistrationForm.get('next_of_kin_name')?.errors?.['required']&&patientRegistrationForm.get('next_of_kin_name')?.touched">
+                    Next of Kin Name is required
+                  </div>
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-                  <label>Next of Kin Phone Number<span class='text-danger'>*</span></label>
-                  <input type="text" class="form-control" formControlName="next_of_kin_phone" placeholder="Next Of Kin Phone" />
+                  <label>Next of Kin Phone Number</label>
+                  <input type="text" class="form-control" formControlName="next_of_kin_phone"
+                    placeholder="Next Of Kin Phone" [class.is-invalid]="patientRegistrationForm.get('next_of_kin_phone')?.errors?.['required']&&patientRegistrationForm.get('next_of_kin_phone')?.touched"/>
+                     <div class="invalid-feedback d-block"
+                    *ngIf="patientRegistrationForm.get('next_of_kin_phone')?.errors?.['required']&&patientRegistrationForm.get('next_of_kin_phone')?.touched">
+                    Next of Kin Phone is required
+                  </div>
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-                  <label>Next of Kin Relation<span class='text-danger'>*</span></label>
-                      <ng-select [items]="next_of_kin_relations" bindLabel="name" bindValue="id" [typeahead]="searchNextOfKinRelation$"
-                        [loading]="loadingNextOfKinRelation" [(ngModel)]="selectedNextOfKinRelationOption" placeholder="Search for Next Of Kin Relation"
-                        (change)="onItemSelect($event)" formControlName="next_of_kin_relation"></ng-select>
+                  <label>Next of Kin Relation</label>
+                  <ng-select [items]="next_of_kin_relations" bindLabel="name" bindValue="id"
+                    [typeahead]="searchNextOfKinRelation$" [loading]="loadingNextOfKinRelation"
+                    [(ngModel)]="selectedNextOfKinRelationOption" placeholder="Search for Next Of Kin Relation"
+                    (change)="onItemSelect($event)" formControlName="next_of_kin_relation"></ng-select>
+                    <div class="invalid-feedback d-block"
+                    *ngIf="patientRegistrationForm.get('next_of_kin_relation')?.errors?.['required']&&patientRegistrationForm.get('next_of_kin_relation')?.touched">
+                    Next of Kin Relation is required
+                  </div>
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-                  <label>Status<span class='text-danger'>*</span></label><select class="form-control custom-select" formControlName="status">
+                  <label>Status</label><select class="form-control custom-select" formControlName="status">
                     <option value="1">Active</option>
                     <option value="0">Inactive</option>
                   </select>
@@ -181,14 +285,14 @@
               <div class="col-sm-12 text-right"><span *ngIf="isLoading">Show</span>
                 <button class="btn btn-primary" [disabled]="isLoading" (click)="updatePatient()">
                   <span *ngIf="isLoading">
-                  <div class="spinner-border spinner-border-sm" role="status" >
-                    <span class="sr-only">Loading...</span>
-                  </div>
-                  Saving...
+                    <div class="spinner-border spinner-border-sm" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                    Saving...
                   </span>
                   <span *ngIf="!isLoading">
                     <i class="fas fa-paper-plane"></i>
-                  Save Registration
+                    Save Registration
                   </span>
                 </button>
               </div>

@@ -5,423 +5,142 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
-                        <form
-                            [formGroup]="visitForm"
-                            (ngSubmit)="updatePatient()"
-                        >
-                            <input
-                                type="hidden"
-                                formControlName="id"
-                                value="0"
-                            />
+                        <form [formGroup]="visitForm" (ngSubmit)="updatePatient()">
+                            <input type="hidden" formControlName="id" value="0" />
                             <div class="row">
                                 <div class="col-sm-12 mb-3">
                                     <div class="alert border border-2">
-                                        <label
-                                            >Search Patient<span
-                                                class="text-danger"
-                                                >*</span
-                                            ></label
-                                        >
-                                        <ng-select
-                                            [items]="patients"
-                                            bindLabel="name"
-                                            bindValue="id"
-                                            [typeahead]="searchPatient$"
-                                            [loading]="loadingPatients"
-                                            [(ngModel)]="selectedPatientOption"
-                                            placeholder="Search for Patient"
-                                            (change)="onPatientSelect($event)"
-                                            formControlName="patient"
-                                        ></ng-select>
+                                        <label>Search Patient<span class="text-danger">*</span></label>
+                                        <ng-select [items]="patients" bindLabel="name" bindValue="id"
+                                            [typeahead]="searchPatient$" [loading]="loadingPatients"
+                                            [(ngModel)]="selectedPatientOption" placeholder="Search for Patient"
+                                            (change)="onPatientSelect($event)" formControlName="patient"></ng-select>
                                     </div>
                                 </div>
+                                <div class="col-sm-12 alert alert-primary">
+                                    PATIENT BIO DATA
+                                </div>
                                 <div class="col-sm-4 p-3">
-                                    <img
-                                        [src]="imageUrl"
-                                        class="img-fluid w-100 img-thumbnail"
-                                        *ngIf="patientImage == null"
-                                    />
-                                    <img
-                                        [src]="patientImage.imageAsDataUrl"
-                                        class="img-fluid w-100 img-thumbnail"
-                                        *ngIf="patientImage != null"
-                                    />
+                                    <img [src]="imageUrl" class="img-fluid w-100 img-thumbnail"
+                                        *ngIf="patientImage == null" />
+                                    <img [src]="patientImage.imageAsDataUrl" class="img-fluid w-100 img-thumbnail"
+                                        *ngIf="patientImage != null" />
                                     <p class="m-3">
-                                        <app-take-photo
-                                            (imageCaptured)="
+                                        <app-take-photo (imageCaptured)="
                                                 imageCaptured($event)
-                                            "
-                                        ></app-take-photo>
+                                            "></app-take-photo>
                                     </p>
                                 </div>
-                                <div class="col-sm-8">
+                                <div class="col-sm-8" *ngIf="patient">
                                     <div class="row">
                                         <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label
-                                                >Patient Code<span
-                                                    class="text-danger"
-                                                    >*</span
-                                                ></label
-                                            ><input type='text' class="form-control" placeholder="Patient Code" formControlName="patient_code" readonly/>
+                                            <label>Patient Code</label><br />
+                                            {{patient?.code}}
                                         </div>
                                         <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label
-                                                >Location<span
-                                                    class="text-danger"
-                                                    >*</span
-                                                ></label
-                                            >
-                                            <ng-select
-                                                [items]="locations"
-                                                bindLabel="name"
-                                                bindValue="id"
-                                                [typeahead]="search$"
-                                                [loading]="loading"
-                                                [(ngModel)]="selectedOption"
-                                                placeholder="Search for Location"
-                                                (change)="onItemSelect($event)"
-                                                formControlName="location"
-                                            ></ng-select>
+                                            <label>Organization</label><br />
+                                            {{patient?.organization?.name}}
                                         </div>
                                         <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label
-                                                >Type<span class="text-danger"
-                                                    >*</span
-                                                ></label
-                                            >
-                                            <ng-select
-                                                [items]="main_types"
-                                                bindLabel="name"
-                                                bindValue="id"
-                                                [typeahead]="searchMainTypes$"
-                                                [loading]="loadingMainType"
-                                                [(ngModel)]="
-                                                    selectedMainTypeOption
-                                                "
-                                                placeholder="Search for Main Type"
-                                                (change)="onItemSelect($event)"
-                                                formControlName="main_type"
-                                            ></ng-select>
+                                            <label>Branch</label><br />
+                                            {{patient?.branch?.name}}
                                         </div>
-                                        <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label
-                                                >Insurance/Sub Type<span
-                                                    class="text-danger"
-                                                    >*</span
-                                                ></label
-                                            >
-                                            <ng-select
-                                                [items]="sub_types"
-                                                bindLabel="name"
-                                                bindValue="id"
-                                                [typeahead]="searchSubTypes$"
-                                                [loading]="loadingSubType"
-                                                [(ngModel)]="
-                                                    selectedSubTypeOption
-                                                "
-                                                placeholder="Search for Sub Type"
-                                                (change)="onItemSelect($event)"
-                                                formControlName="sub_type"
-                                            ></ng-select>
-                                        </div>
-                                        <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label
-                                                >Account/Company<span
-                                                    class="text-danger"
-                                                    >*</span
-                                                ></label
-                                            >
-                                            <ng-select
-                                                [items]="accounts"
-                                                bindLabel="name"
-                                                bindValue="id"
-                                                [typeahead]="searchAccounts$"
-                                                [loading]="loadingAccount"
-                                                [(ngModel)]="
-                                                    selectedAccountOption
-                                                "
-                                                placeholder="Search for Account"
-                                                (change)="onItemSelect($event)"
-                                                formControlName="account"
-                                            ></ng-select>
-                                        </div>
-                                        <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label
-                                                >Plan<span class="text-danger"
-                                                    >*</span
-                                                ></label
-                                            >
-                                            <ng-select
-                                                [items]="plans"
-                                                bindLabel="name"
-                                                bindValue="id"
-                                                [typeahead]="searchPlan$"
-                                                [loading]="loadingPlan"
-                                                [(ngModel)]="selectedPlanOption"
-                                                placeholder="Search for Plan"
-                                                (change)="onItemSelect($event)"
-                                                formControlName="plan"
-                                            ></ng-select>
-                                        </div>
-                                        <!--                    <div class="col-sm-6 col-lg-4 mb-3">
-                      <label>Validity</label>
-                      <input type="text" class="form-control bg-white" placeholder="Validity" formControlName="validity"
-                        readonly />
-                    </div>
-                    <div class="col-sm-6 col-lg-4 mb-3">
-                      <label>Copay</label>
-                      <input type="number" class="form-control bg-white" placeholder="Copay" formControlName="copay"
-                        readonly />
-                    </div>
-                    <div class="col-sm-6 col-lg-4 mb-3">
-                      <label>Bill Type</label>
-                      <input type="text" class="form-control bg-white" placeholder="Bill Type"
-                        formControlName="bill_type" readonly />
-                    </div>
-                    <div class="col-sm-6 col-lg-4 mb-3">
-                      <label>Limit</label>
-                      <input type="number" class="form-control bg-white" placeholder="Limit" formControlName="limit"
-                        readonly />
-                    </div>
-                    -->
 
                                         <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label
-                                                >Salutation<span
-                                                    class="text-danger"
-                                                    >*</span
-                                                ></label
-                                            >
-                                            <ng-select
-                                                [items]="salutations"
-                                                bindLabel="name"
-                                                bindValue="id"
-                                                [typeahead]="searchSalutation$"
-                                                [loading]="loadingSalutation"
-                                                [(ngModel)]="
-                                                    selectedSalutationOption
-                                                "
-                                                placeholder="Search for Salutation"
-                                                (change)="onItemSelect($event)"
-                                                formControlName="salutation"
-                                            ></ng-select>
+                                            <label>Name</label><br />
+                                            {{patient?.salutation?.name}} {{patient?.first_name}}
+                                            {{patient?.other_names}}
                                         </div>
                                         <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label
-                                                >Gender<span class="text-danger"
-                                                    >*</span
-                                                ></label
-                                            >
-                                            <select
-                                                class="form-control custom-select"
-                                                formControlName="gender"
-                                            >
-                                                <option disabled>
-                                                    Select Gender
-                                                </option>
-                                                <option value="MALE">
-                                                    MALE
-                                                </option>
-                                                <option value="FEMALE">
-                                                    FEMALE
-                                                </option>
-                                            </select>
+                                            <label>Gender</label><br />
+                                            {{patient?.gender}}
                                         </div>
                                         <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label
-                                                >Date of Birth<span
-                                                    class="text-danger"
-                                                    >*</span
-                                                ></label
-                                            >
-                                            <input
-                                                type="date"
-                                                class="form-control"
-                                                formControlName="dob"
-                                                placeholder="Date of Birth"
-                                            />
+                                            <label>Date of Birth</label><br />
+                                            {{patient?.dob|date}}
                                         </div>
                                         <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label
-                                                >First Name<span
-                                                    class="text-danger"
-                                                    >*</span
-                                                ></label
-                                            >
-                                            <input
-                                                type="text"
-                                                class="form-control"
-                                                placeholder="First Name"
-                                                formControlName="first_name"
-                                            />
+                                            <label>ID No.</label><br />
+                                            {{patient?.id_number}}
                                         </div>
                                         <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label
-                                                >Other Name<span
-                                                    class="text-danger"
-                                                    >*</span
-                                                ></label
-                                            >
-                                            <input
-                                                type="text"
-                                                class="form-control"
-                                                placeholder="Other Names"
-                                                formControlName="other_names"
-                                            />
+                                            <label>Member/Staff No.</label><br />
+                                            {{patient?.member_number}}
                                         </div>
                                         <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label
-                                                >ID No.<span class="text-danger"
-                                                    >*</span
-                                                ></label
-                                            >
-                                            <input
-                                                type="text"
-                                                class="form-control"
-                                                placeholder="ID Number"
-                                                formControlName="id_number"
-                                            />
+                                            <label>Member Type</label><br />
+                                            {{patient?.member_type}}
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12" *ngIf="patient">
+                                    <div class="row">
+
+                                        <div class="col-sm-12 alert alert-primary">
+                                            VISIT INFO
+                                        </div>
+
+                                        <div class="col-sm-6 col-lg-4 mb-3">
+                                            <label>Scheme</label>
+                                            <ng-select [items]="schemes" bindLabel="name" bindValue="id"
+                                                [typeahead]="searchSchemes$" [loading]="loadingSchemes" [(ngModel)]="
+                                                    selectedSchemeOption
+                                                " placeholder="Search for Scheme" (change)="onItemSelect($event)"
+                                                formControlName="scheme"></ng-select>
                                         </div>
                                         <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label
-                                                >Member/Staff No.<span
-                                                    class="text-danger"
-                                                    >*</span
-                                                ></label
-                                            >
-                                            <input
-                                                type="text"
-                                                class="form-control"
-                                                placeholder="Member Number"
-                                                formControlName="member_number"
-                                            />
-                                        </div>
-                                        <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label
-                                                >Member Type<span
-                                                    class="text-danger"
-                                                    >*</span
-                                                ></label
-                                            >
-                                            <select
-                                                class="form-control custom-select"
-                                                formControlName="member_type"
-                                            >
-                                                <option disabled>
-                                                    Select Member Type
-                                                </option>
-                                                <option value="PRIMARY">
-                                                    PRIMARY
-                                                </option>
-                                                <option value="DEPEDENT">
-                                                    DEPENDANT
-                                                </option>
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label
-                                                >Department<span
-                                                    class="text-danger"
-                                                    >*</span
-                                                ></label
-                                            >
-                                            <ng-select
-                                                [items]="departments"
-                                                bindLabel="name"
-                                                bindValue="id"
-                                                [typeahead]="searchDepartment$"
-                                                [loading]="loadingDepartments"
+                                            <label>Department</label>
+                                            <ng-select [items]="departments" bindLabel="name" bindValue="id"
+                                                [typeahead]="searchDepartment$" [loading]="loadingDepartments"
                                                 [(ngModel)]="
                                                     selectedDepartmentOption
-                                                "
-                                                placeholder="Search for Department"
-                                                (change)="onItemSelect($event)"
-                                                formControlName="department"
-                                            ></ng-select>
+                                                " placeholder="Search for Department" (change)="onItemSelect($event)"
+                                                formControlName="department"></ng-select>
                                         </div>
                                         <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label
-                                                >Consulting Doctor<span
-                                                    class="text-danger"
-                                                    >*</span
-                                                ></label
-                                            >
-                                            <ng-select
-                                                [items]="doctors"
-                                                bindLabel="name"
-                                                bindValue="id"
-                                                [typeahead]="searchDoctor$"
-                                                [loading]="loadingDoctors"
-                                                [(ngModel)]="selectedDoctorOption"
-                                                placeholder="Search for Doctor"
-                                                (change)="onItemSelect($event)"
-                                                formControlName="doctor"
-                                            ></ng-select>
+                                            <label>Consulting Doctor</label>
+                                            <ng-select [items]="doctors" bindLabel="name" bindValue="id"
+                                                [typeahead]="searchDoctor$" [loading]="loadingDoctors"
+                                                [(ngModel)]="selectedDoctorOption" placeholder="Search for Doctor"
+                                                (change)="onItemSelect($event)" formControlName="doctor"></ng-select>
                                         </div>
                                         <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label
-                                                >Fee Type<span
-                                                    class="text-danger"
-                                                    >*</span
-                                                ></label
-                                            >
-                                            <ng-select
-                                                [items]="consultation_types"
-                                                bindLabel="name"
-                                                bindValue="id"
+                                            <label>Fee Type</label>
+                                            <ng-select [items]="consultation_types" bindLabel="name" bindValue="id"
                                                 [typeahead]="searchConsultationTypes$"
                                                 [loading]="loadingConsultationTypes"
                                                 [(ngModel)]="selectedConsultationTypeOption"
                                                 placeholder="Search for Consultation Type"
                                                 (change)="onConsultationTypeSelect($event)"
-                                                formControlName="consultation_type"
-                                            ></ng-select>
+                                                formControlName="consultation_type"></ng-select>
                                         </div>
                                         <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label
-                                                >Consultation Fees<span
-                                                    class="text-danger"
-                                                    >*</span
-                                                ></label
-                                            >
-                                            <input type="number" class="form-control" placeholder="Consultation Fee" formControlName="consultation_fees"/>
+                                            <label>Consultation Fees</label>
+                                            <input type="number" class="form-control" placeholder="Consultation Fee"
+                                                formControlName="consultation_fees" />
                                         </div>
-                                        
-                                <div class="col-sm-6 col-lg-4 mb-3">
-                                    <label
-                                        >Status<span class="text-danger"
-                                            >*</span
-                                        ></label
-                                    ><select
-                                        class="form-control custom-select"
-                                        formControlName="status"
-                                    >
-                                        <option value="active">Active</option>
-                                        <option value="pending">Pending</option>
-                                        <option value="cancelled">Cancelled</option>
-                                        <option value="review">Review</option>
-                                        <option value="completed">Completed</option>
-                                    </select>
-                                </div>
+
+                                        <div class="col-sm-6 col-lg-4 mb-3">
+                                            <label>Status<span class="text-danger">*</span></label><select
+                                                class="form-control custom-select" formControlName="status">
+                                                <option value="active">Active</option>
+                                                <option value="pending">Pending</option>
+                                                <option value="cancelled">Cancelled</option>
+                                                <option value="review">Review</option>
+                                                <option value="completed">Completed</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="col-sm-12 text-right">
-                                <button
-                                    class="btn btn-primary"
-                                    [disabled]="isLoading"
-                                    (click)="updatePatient()"
-                                >
+                                <button class="btn btn-primary" [disabled]="isLoading" (click)="updatePatient()">
                                     <span *ngIf="isLoading">
-                                        <div
-                                            class="spinner-border spinner-border-sm"
-                                            role="status"
-                                        >
-                                            <span class="sr-only"
-                                                >Loading...</span
-                                            >
+                                        <div class="spinner-border spinner-border-sm" role="status">
+                                            <span class="sr-only">Loading...</span>
                                         </div>
                                         Saving...
                                     </span>

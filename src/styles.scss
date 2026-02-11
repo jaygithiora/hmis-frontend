@@ -14,6 +14,19 @@ body {
     width: 100vw;
     height: 100vh;
 }
+.big{
+  font-size: 1.5em;
+  font-weight: 300;
+}
+.main{
+  background-image: url('./assets/img/confident-doctor.jpg');
+  background-size: cover;
+}
+.dark{
+  background: rgba($color: #000000, $alpha: 0.3);
+  color: #fff;
+  min-height: 80vh;
+}
 .icon-small{
     font-size: 0.5em !important;
 }

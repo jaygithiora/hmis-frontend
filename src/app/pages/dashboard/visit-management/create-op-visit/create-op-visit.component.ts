@@ -5,7 +5,6 @@ import { AuthService } from '@services/auth/auth.service';
 import { AccountsService } from '@services/dashboard/masters/accounts/accounts.service';
 import { ConsultationTypesService } from '@services/dashboard/masters/consultation-types/consultation-types.service';
 import { DepartmentsService } from '@services/dashboard/masters/departments/departments.service';
-import { LocationsService } from '@services/dashboard/masters/locations.service';
 import { MainTypesService } from '@services/dashboard/masters/manin-types/main-types.service';
 import { PlansService } from '@services/dashboard/masters/plans/plans.service';
 import { SalutationService } from '@services/dashboard/masters/salutation/salutation.service';
@@ -16,6 +15,7 @@ import { DoctorsService } from '@services/dashboard/masters/doctors/doctors/doct
 import { ToastrService } from 'ngx-toastr';
 import { WebcamImage } from 'ngx-webcam';
 import { Subject, debounceTime, distinctUntilChanged, tap, switchMap } from 'rxjs';
+import { OrganizationsService } from '@services/dashboard/organizations/organizations.service';
 
 @Component({
   selector: 'app-create-op-visit',
@@ -28,9 +28,9 @@ export class CreateOpVisitComponent implements OnInit {
 
   public isLoading: boolean = false;
   loading: boolean = false;
-  loadingMainType: boolean = false;
-  loadingSubType: boolean = false;
-  loadingAccount: boolean = false;
+  loadingOrganizations: boolean = false;
+  loadingBranches: boolean = false;
+  loadingSchemes: boolean = false;
   loadingPlan: boolean = false;
   loadingSalutation: boolean = false;
   loadingPatients: boolean = false;
@@ -38,9 +38,9 @@ export class CreateOpVisitComponent implements OnInit {
   loadingDoctors: boolean = false;
   loadingConsultationTypes: boolean = false;
 
-  locations: any[] = [];
-  main_types: any[] = [];
-  sub_types: any[] = [];
+  organizations: any[] = [];
+  branches: any[] = [];
+  schemes: any[] = [];
   accounts: any[] = [];
   plans: any[] = [];
   salutations: any[] = [];
@@ -50,8 +50,8 @@ export class CreateOpVisitComponent implements OnInit {
   consultation_types: any[] = [];
 
   search$ = new Subject<string>();
-  searchMainTypes$ = new Subject<string>();
-  searchSubTypes$ = new Subject<string>();
+  searchBranches$ = new Subject<string>();
+  searchSchemes$ = new Subject<string>();
   searchAccounts$ = new Subject<string>();
   searchPlan$ = new Subject<string>();
   searchSalutation$ = new Subject<string>();
@@ -61,8 +61,8 @@ export class CreateOpVisitComponent implements OnInit {
   searchConsultationTypes$ = new Subject<string>();
 
   selectedOption: any;
-  selectedMainTypeOption: any;
-  selectedSubTypeOption: any;
+  selectedBranchOption: any;
+  selectedSchemeOption: any;
   selectedAccountOption: any;
   selectedPlanOption: any;
   selectedSalutationOption: any;
@@ -80,7 +80,7 @@ export class CreateOpVisitComponent implements OnInit {
   visitId: number = 0;
 
   constructor(private patientRegistrationService:PatientRegistrationService,private outpatientVisitsService: OutpatientVisitsService, private toastr: ToastrService, private service: AuthService,
-    private fb: FormBuilder, private locationService: LocationsService, private mainTypeService: MainTypesService, private activatedRoute: ActivatedRoute,
+    private fb: FormBuilder, private organizationsService: OrganizationsService, private activatedRoute: ActivatedRoute,
     private accountService: AccountsService, private subTypeService: SubTypesService, private planService: PlansService,
     private salutationService: SalutationService,private departmentService: DepartmentsService,private doctorsService:DoctorsService,
     private consultationTypesService:ConsultationTypesService,
@@ -89,11 +89,9 @@ export class CreateOpVisitComponent implements OnInit {
       id: ['0', [Validators.required]],
       patient: ['0'],
       patient_code: [],
-      location: ['', [Validators.required]],
-      main_type: ['', [Validators.required]],
-      sub_type: ['', [Validators.required]],
-      account: ['', [Validators.required]],
-      plan: ['', [Validators.required]],
+      organization: [null, [Validators.required]],
+      branch: [null, [Validators.required]],
+      scheme: [null, [Validators.required]],
       department: ['', [Validators.required]],
       doctor: ['', [Validators.required]],
       consultation_type:['', [Validators.required]],
@@ -122,54 +120,54 @@ export class CreateOpVisitComponent implements OnInit {
         debounceTime(300),  // Wait for the user to stop typing for 300ms
         distinctUntilChanged(),  // Only search if the query has changed
         tap(() => this.loading = true),  // Show the loading spinner
-        switchMap(term => this.locationService.getLocations(1, term))  // Switch to a new observable for each search term
+        switchMap(term => this.organizationsService.getOrganizations(1, term))  // Switch to a new observable for each search term
       )
       .subscribe((results: any) => {
-        this.locations = results.locations.data;
+        this.selectedBranchOption = null;
+        this.organizations = results.organizations.data;
         this.loading = false;  // Hide the loading spinner when the API call finishes
       });
-    this.searchMainTypes$
+    this.searchBranches$
       .pipe(
         debounceTime(300),  // Wait for the user to stop typing for 300ms
         distinctUntilChanged(),  // Only search if the query has changed
-        tap(() => this.loadingMainType = true),  // Show the loading spinner
-        switchMap(term => this.mainTypeService.getMainTypes(1, term))  // Switch to a new observable for each search term
+        tap(() => this.loadingBranches = true),  // Show the loading spinner
+        switchMap(term => this.organizationsService.getBranches(1, term, this.selectedOption))  // Switch to a new observable for each search term
       )
       .subscribe((results: any) => {
-        this.selectedSubTypeOption = null;
-        this.main_types = results.main_types.data;
-        this.loadingMainType = false;  // Hide the loading spinner when the API call finishes
+        this.branches = results.branches.data;
+        this.loadingBranches = false;  // Hide the loading spinner when the API call finishes
       });
-    this.searchSubTypes$
+    this.searchSchemes$
       .pipe(
         debounceTime(300),  // Wait for the user to stop typing for 300ms
         distinctUntilChanged(),  // Only search if the query has changed
-        tap(() => this.loadingSubType = true),  // Show the loading spinner
-        switchMap(term => this.subTypeService.getSubTypes(1, term, this.selectedMainTypeOption))  // Switch to a new observable for each search term
+        tap(() => this.loadingBranches = true),  // Show the loading spinner
+        switchMap(term => this.subTypeService.getSubTypes(1, term, this.selectedBranchOption))  // Switch to a new observable for each search term
       )
       .subscribe((results: any) => {
         this.selectedAccountOption = null;
-        this.sub_types = results.sub_types.data;
-        this.loadingSubType = false;  // Hide the loading spinner when the API call finishes
+        this.schemes = results.schemes.data;
+        this.loadingBranches = false;  // Hide the loading spinner when the API call finishes
       });
     this.searchAccounts$
       .pipe(
         debounceTime(300),  // Wait for the user to stop typing for 300ms
         distinctUntilChanged(),  // Only search if the query has changed
-        tap(() => this.loadingAccount = true),  // Show the loading spinner
-        switchMap(term => this.accountService.getAccounts(1, term, this.selectedSubTypeOption))  // Switch to a new observable for each search term
+        tap(() => this.loadingSchemes = true),  // Show the loading spinner
+        switchMap(term => this.accountService.getAccounts(1, term, this.selectedSchemeOption))  // Switch to a new observable for each search term
       )
       .subscribe((results: any) => {
         this.selectedPlanOption = null;
         this.accounts = results.accounts.data;
-        this.loadingAccount = false;  // Hide the loading spinner when the API call finishes
+        this.loadingSchemes = false;  // Hide the loading spinner when the API call finishes
       });
     this.searchPlan$
       .pipe(
         debounceTime(300),  // Wait for the user to stop typing for 300ms
         distinctUntilChanged(),  // Only search if the query has changed
         tap(() => this.loadingPlan = true),  // Show the loading spinner
-        switchMap(term => this.planService.getPlans(1, term, this.selectedSubTypeOption, this.selectedAccountOption))  // Switch to a new observable for each search term
+        switchMap(term => this.planService.getPlans(1, term, this.selectedSchemeOption, this.selectedAccountOption))  // Switch to a new observable for each search term
       )
       .subscribe((results: any) => {
         this.plans = results.plans.data;
@@ -239,24 +237,32 @@ export class CreateOpVisitComponent implements OnInit {
     this.patients = [];
     this.visitForm.get("patient_code")?.setValue(this.patient.code);
     this.patients.push({ ...this.patient, name: `CODE: ${this.patient.code} | NAME: ${this.patient.first_name} ${this.patient.other_names} | ID: ${this.patient.id_number} | PHONE: ${this.patient.phone}` });
+    this.schemes = this.patient.patient_schemes.map(ps => {
+  return {
+    ...ps,
+    id:ps.scheme_id,
+    name: `${ps.scheme?.name} (${ps.scheme?.insurance?.name})`
+  };
+});
+    console.log("schemes:", this.schemes);
     this.selectedPatientOption = this.patient.id;
     if (this.patient.image != null) {
       this.imageUrl = this.patient.image;
     }
     if (this.patient.location) {
-      this.locations = [];
-      this.locations.push(this.patient.location);
+      this.organizations = [];
+      this.organizations.push(this.patient.location);
       this.selectedOption = this.patient.location_id;
     }
     if (this.patient.main_type) {
-      this.main_types = [];
-      this.main_types.push(this.patient.main_type);
-      this.selectedMainTypeOption = this.patient.main_type_id;
+      this.branches = [];
+      this.branches.push(this.patient.main_type);
+      this.selectedBranchOption = this.patient.main_type_id;
     }
     if (this.patient.sub_type) {
-      this.sub_types = [];
-      this.sub_types.push(this.patient.sub_type);
-      this.selectedSubTypeOption = this.patient.sub_type_id;
+      this.schemes = [];
+      this.schemes.push(this.patient.sub_type);
+      this.selectedSchemeOption = this.patient.sub_type_id;
     }
     if (this.patient.account) {
       this.accounts = [];
@@ -299,19 +305,19 @@ export class CreateOpVisitComponent implements OnInit {
       this.imageUrl = this.outpatient_visit.patient.image;
     }
     if (this.outpatient_visit.location) {
-      this.locations = [];
-      this.locations.push(this.outpatient_visit.location);
+      this.organizations = [];
+      this.organizations.push(this.outpatient_visit.location);
       this.selectedOption = this.outpatient_visit.location_id;
     }
     if (this.outpatient_visit.main_type) {
-      this.main_types = [];
-      this.main_types.push(this.outpatient_visit.main_type);
-      this.selectedMainTypeOption = this.outpatient_visit.main_type_id;
+      this.branches = [];
+      this.branches.push(this.outpatient_visit.main_type);
+      this.selectedBranchOption = this.outpatient_visit.main_type_id;
     }
     if (this.outpatient_visit.sub_type) {
-      this.sub_types = [];
-      this.sub_types.push(this.outpatient_visit.sub_type);
-      this.selectedSubTypeOption = this.outpatient_visit.sub_type_id;
+      this.schemes = [];
+      this.schemes.push(this.outpatient_visit.sub_type);
+      this.selectedSchemeOption = this.outpatient_visit.sub_type_id;
     }
     if (this.outpatient_visit.account) {
       this.accounts = [];

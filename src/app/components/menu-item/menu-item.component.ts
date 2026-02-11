@@ -48,16 +48,18 @@ export class MenuItemComponent implements OnInit {
     public toggleMenu() {
         this.isMenuExtended = !this.isMenuExtended;
     }
-
+/*
     public calculateIsActive(url: string) {
         this.isMainActive = false;
         this.isOneOfChildrenActive = false;
         if (this.isExpandable) {
             this.menuItem.children.forEach((item: any) => {
                 //if (item.path[0] === url) {
-                if (url.includes(item.path[0])) {
-                    this.isOneOfChildrenActive = true;
-                    this.isMenuExtended = true;
+                if (item.path?.length > 0) {
+                    if (url.includes(item.path[0])) {
+                        this.isOneOfChildrenActive = true;
+                        this.isMenuExtended = true;
+                    }
                 }
             });
         } else if (this.menuItem.path[0] === url) {
@@ -66,7 +68,39 @@ export class MenuItemComponent implements OnInit {
         if (!this.isMainActive && !this.isOneOfChildrenActive) {
             this.isMenuExtended = false;
         }
+    }*/public calculateIsActive(url: string) {
+        this.isMainActive = false;
+        this.isOneOfChildrenActive = false;
+
+        // Check if THIS menu item is active
+        if (!this.isExpandable && url.includes(this.menuItem.path?.[0])/*this.menuItem.path?.[0] === url*/) {
+            this.isMainActive = true;
+            return;
+        }
+
+        // If expandable, check ALL children (deep search)
+        if (this.isExpandable) {
+            this.isOneOfChildrenActive = this.hasActiveChild(this.menuItem, url);
+
+            // Open the menu automatically if any child is active
+            this.isMenuExtended = this.isOneOfChildrenActive;
+        } else {
+            this.isMenuExtended = false;
+        }
     }
+    private hasActiveChild(menu: any, url: string): boolean {
+        if (!menu?.children) return false;
+
+        return menu.children.some((child: any) => {
+            const isDirectMatch =
+                child.path?.length && url.includes(child.path[0]);
+
+            const isDeepMatch = this.hasActiveChild(child, url); // 👈 KEY PART
+
+            return isDirectMatch || isDeepMatch;
+        });
+    }
+
 
     public hasPermission(permission?: string): boolean {
         if (!permission) return true;

@@ -134,7 +134,8 @@
                 </div>
                 <div class="form-group mb-3">
                     <span class="mb-1">Email Address</span>
-                    <input formControlName="organization_email" type="email" class="form-control" placeholder="Email Address"
+                    <input formControlName="organization_email" type="email" class="form-control"
+                        placeholder="Email Address"
                         [class.is-invalid]="organizationForm.get('organization_email')?.invalid && organizationForm.get('organization_email')?.touched" />
                     <!-- Validation message -->
                     <div class="text-danger mt-1"
@@ -226,9 +227,96 @@
                 </div>
             </form>
 
-            <div *ngIf="currentStep === 3">
+            <form [formGroup]="packageForm" *ngIf="currentStep === 3">
+                <h6><i class="fas fa-box"></i> Choose your Package</h6>
+
+                <div class="form-group mb-3 mt-3" *ngFor="let package of subscription_packages">
+                    <div class="card package-card h-100"
+                        [class.border-primary]="packageForm.get('package_id')?.value === package.id"
+                        [class.border-3]="packageForm.get('package_id')?.value === package.id"
+                        [class.shadow]="packageForm.get('package_id')?.value === package.id"
+                        style="cursor: pointer; transition: all 0.3s;">
+                        <!--(click)="selectPackage(package.id)"-->
+                        <div class="card-body">
+                            <!-- Package Name -->
+                            <h5 class="card-title font-weight-bold">
+                                {{ package.name }}
+                            </h5>
+                            <br/>
+                            <hr/>
+                            <div [innerHTML]="package.description"></div>
+                            <!-- Price -->
+                            <div class="mb-3">
+                                <h2 class="mb-0">
+                                    <span class="text-muted" style="font-size: 1rem;">KES</span>
+                                    {{ package.amount | number:'1.0-0'}}
+                                </h2>
+                                <small class="text-muted">per {{ package.duration }} day(s)</small>
+                            </div>
+
+                            <!-- Select Button -->
+                            <button type="button" class="btn btn-block"
+                                [class.btn-primary]="packageForm.get('package_id')?.value === package.id"
+                                [class.btn-outline-primary]="packageForm.get('package_id')?.value !== package.id"
+                                (click)="selectPackage(package.id); $event.stopPropagation()">
+                                <i class="fas mr-2"
+                                    [class.fa-check]="packageForm.get('package_id')?.value === package.id"
+                                    [class.fa-hand-pointer]="packageForm.get('package_id')?.value !== package.id">
+                                </i>
+                                {{ packageForm.get('package_id')?.value === package.id ? 'Selected' : 'Select' }}
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Validation Error -->
+                    <div *ngIf="packageForm.get('package_id')?.invalid && packageForm.get('package_id')?.touched"
+                        class="alert alert-danger text-center">
+                        <i class="fas fa-exclamation-circle mr-2"></i>
+                        Please select a package to continue
+                    </div>
+
+                </div>
+                <div class="row">
+                    <!-- /.col -->
+                    <div class="col">
+                        <pf-button [loading]="isAuthLoading" [disabled]="isAuthLoading" (click)="goToStep(2)">
+                            <i class="fas fa-angle-left"></i> Previous
+                        </pf-button>
+                    </div>
+                    <!-- /.col -->
+                    <!-- /.col -->
+                    <div class="col">
+                        <pf-button [loading]="isAuthLoading" [disabled]="isAuthLoading||packageForm.invalid"
+                            (click)="goToStep(4)">
+                            Next <i class="fas fa-angle-right"></i>
+                        </pf-button>
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </form>
+
+            <div *ngIf="currentStep === 4">
                 <h6><i class="fas fa-check-circle"></i> Review & Confirmation</h6>
                 <div class="row">
+                    <div class="col-sm-12"><!-- Selected Package -->
+                        <h5 class="card-title1">Selected Package</h5>
+                        <div class="card border border-primary border-2" *ngIf="selectedPackage">
+                            <div class="card-body">
+                                <div class="text-center">
+                                    <i [class]="selectedPackage.icon" style="font-size: 3rem;"></i>
+                                </div>
+                                <div class="">
+                                    <h5 class="mb-1">{{ selectedPackage.name }} Package</h5>
+                                </div>
+                                <div class="text-right">
+                                    <h4 class="mb-0">KES {{ selectedPackage.amount|number:'1.0-0' }}</h4>
+                                    <small class="text-muted">{{ selectedPackage.duration_type | uppercase}}</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+                    </div>
                     <div class="col col-sm-6 form-group mb-3 mt-3">
                         <b>Name</b><br />
                         {{registerForm.get('firstname')?.value}} {{registerForm.get('lastname')?.value}}
@@ -262,7 +350,7 @@
                         {{organizationForm.get('website')?.value}}
                     </div>
                     <div class="col-12 form-group mb-3 mt-3" *ngIf="previewUrl">
-                        <b>Organization Logo</b><br/>
+                        <b>Organization Logo</b><br />
                         <img [src]="previewUrl" class="img-thumbnail" width="120" height="120" alt="Logo preview" />
                     </div>
                     <div class="col-12 form-group mb-3 mt-3">
@@ -278,7 +366,7 @@
                 <div class="row">
                     <!-- /.col -->
                     <div class="col">
-                        <pf-button [loading]="isAuthLoading" [disabled]="isAuthLoading" (click)="goToStep(2)">
+                        <pf-button [loading]="isAuthLoading" [disabled]="isAuthLoading" (click)="goToStep(3)">
                             <i class="fas fa-angle-left"></i> Previous
                         </pf-button>
                     </div>

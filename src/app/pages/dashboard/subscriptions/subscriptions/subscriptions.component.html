@@ -1,0 +1,111 @@
+<app-content-header [title]="'Subscription Packages'"></app-content-header>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col">
+                                <h6>
+                                    <i class="fas fa-box"></i>
+                                    Subscriptions
+                                </h6>
+                            </div>
+                            <!--<div class="col text-right">
+                                <a class="btn btn-primary btn-sm" routerLink="/dashboard/subscriptions/packages/add">
+                                    <i class="fas fa-plus"></i> Add Package
+                                </a>
+                            </div>-->
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Organization</th>
+                                    <th>Package</th>
+                                    <th>Duration</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                    <th class="text-right">Action</th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngIf="isLoading">
+                                        <td colspan="9" class="text-center">
+                                            <div class="alert alert-secondary">
+                                                <div class="spinner-border spinner-border-sm" role="status"
+                                                    *ngIf="isLoading">
+                                                    <span class="sr-only">Loading...</span>
+                                                </div>
+                                                Loading Subscriptions...
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="
+                                            !isLoading && subscriptions.length == 0
+                                        ">
+                                        <td colspan="9" class="text-center">
+                                            <div class="alert alert-secondary">
+                                                <i class="fas fa-ban"></i> No
+                                                <b>Subscription</b> Found!
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr *ngFor="
+                                            let subscription of subscriptions;
+                                            let i = index
+                                        ">
+                                        <td>{{ fromItems+i }}</td>
+                                        <td>{{ subscription?.user?.firstname }} {{ subscription?.user?.lastname }}</td>
+                                        <td>
+                                            {{ subscription.organization?.name}}
+                                        </td>
+                                        <td>
+                                            {{ subscription.subscription_package?.name }}
+                                        </td>
+                                        <td>{{ subscription.subscription_package.duration | number:'1.0-0' }} day(s)</td>
+                                        <td>KES {{ subscription.amount | number:'1.0-0' }}</td>
+                                        <td>
+                                            {{ formatDate(subscription.created_at) }}
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-primary btn-pill"
+                                                *ngIf="subscription.status">Active</span>
+                                            <span class="badge badge-secondary btn-pill"
+                                                *ngIf="!subscription.status">In-Active</span>
+                                        </td>
+                                        <!--
+                                        <td class="text-right">
+                    <div ngbDropdown container="body">
+                      <button type="button" class="btn btn-outline-primary btn-sm pr-3 pl-3 border-0" ngbDropdownToggle>
+                        <i class="fas fa-ellipsis-v"></i>
+                      </button>
+                      <div ngbDropdownMenu>
+                        <a ngbDropdownItem [routerLink]="
+                                                        '/dashboard/subscriptions/packages/edit/' +
+                                                        subscription.id
+                                                    "><i class="fas fa-edit"></i>
+                          Edit</a>
+                        <div class="dropdown-divider"></div>
+                        <a ngbDropdownItem [routerLink]="
+                                                        '/dashboard/subscriptions/packages/view/' +
+                                                        subscription.id
+                                                    "><i class="fas fa-long-arrow-alt-right"></i>
+                          View</a>
+                        <!--<div class="dropdown-divider"></div>-->
+                      <!--</div>
+                    </div>
+                                        </td>-->
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

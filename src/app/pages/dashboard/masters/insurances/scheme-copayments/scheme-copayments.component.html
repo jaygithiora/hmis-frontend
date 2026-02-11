@@ -1,0 +1,134 @@
+<app-content-header [title]="'Scheme Copayments'"></app-content-header>
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-header">
+            <div class="row">
+              <div class="col">
+                <h6>
+                  <i class="fas fa-user-md"></i>
+                  Scheme Copayments
+                </h6>
+              </div>
+              <div class="col text-right">
+                <button class="btn btn-primary btn-sm" (click)="openModal(content, null)">
+                  <i class="fas fa-plus"></i> Add
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <table class="table">
+              <thead>
+                <th>ID</th>
+                <th>Scheme</th>
+                <th>Department</th>
+                <th>Value</th>
+                <th>Computation</th>
+                <th>Date</th>
+                <th class="text-right">Action</th>
+              </thead>
+              <tbody>
+                <tr *ngIf="isLoading">
+                  <td colspan="7" class="text-center">
+                    <div class="alert alert-secondary">
+                      <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+                        <span class="sr-only">Loading...</span>
+                      </div>
+                      Loading Scheme Copayments...
+                    </div>
+                  </td>
+                </tr>
+                <tr *ngIf="!isLoading && scheme_copayments.length == 0">
+                  <td colspan="9" class="text-center">
+                    <div class="alert alert-secondary">
+                      <i class="fas fa-ban"></i> No
+                      <b>Scheme Copayments Found!</b>
+                    </div>
+                  </td>
+                </tr>
+                <tr *ngFor="let scheme_copayment of scheme_copayments; let i = index">
+                  <td>{{ i+1 }}</td>
+                  <td>{{scheme_copayment?.scheme_department?.scheme?.name}}</td>
+                  <td>{{ scheme_copayment?.scheme_department?.department?.name }}</td>
+                  <td>{{scheme_copayment.fee_value_type=='amount'?'KES':''}} {{ scheme_copayment.amount |number:'1.2-2'}} {{scheme_copayment.fee_value_type=='percentage'?'%':''}}</td>
+                  <td>{{ scheme_copayment.computation_on | uppercase}}</td>
+                  <td>
+                    {{ formatDate(scheme_copayment.created_at) }}
+                  </td>
+                  <td class="text-right">
+                    <button class="btn btn-primary btn-sm" (click)="
+                                                openModal(content, scheme_copayment)
+                                            ">
+                      <i class="fas fa-edit"></i> Edit
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{schemeCopaymentForm?.get("id")?.value>0?"Edit":"Add"}} Scheme Copayment</h4>
+    <button type="button" class="btn-close close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="schemeCopaymentForm" (submit)="addSchemeCopayment()">
+      <input type="hidden" formControlName="id" />
+      <div class="mb-3">
+        <label>Scheme Department</label>
+        <ng-select [items]="scheme_departments" bindLabel="name" bindValue="id" [typeahead]="searchSchemeDepartments$" [loading]="loadingSchemeDepartments"
+          [(ngModel)]="selectedSchemeDepartment" placeholder="Search for Scheme Department" (change)="onItemSelect($event)"
+          formControlName="scheme_department"></ng-select>
+          <div class="text-danger" *ngIf="schemeCopaymentForm.get('scheme_department').invalid&&schemeCopaymentForm.get('scheme_department').touched">
+          Scheme Department is required
+        </div>
+      </div>
+      <div class="mb-3">
+        <label>Fee Value Type</label>
+        <ng-select [items]="fee_value_types" bindLabel="name" bindValue="id" placeholder="Search for Fee Value Type"
+          formControlName="fee_value_type"></ng-select>
+          <div class="text-danger" *ngIf="schemeCopaymentForm.get('fee_value_type').invalid && schemeCopaymentForm.get('fee_value_type').touched">
+          Fee Value Type is required
+        </div>
+      </div>
+      <div class="mb-3">
+        <label>Computation On</label>
+        <ng-select [items]="computations_on" bindLabel="name" bindValue="id" placeholder="Computation On"
+          formControlName="computation_on"></ng-select>
+          <div class="text-danger" *ngIf="schemeCopaymentForm.get('computation_on').invalid && schemeCopaymentForm.get('computation_on').touched">
+          Computation On is required
+        </div>
+      </div>
+      <div class="mb-3">
+        <label>Amount</label>
+        <input type="text" bindLabel="name" bindValue="id" placeholder="Amount" class="form-control" [class.invalid]="schemeCopaymentForm.get('amount').invalid && schemeCopaymentForm.get('amount').touched"
+          formControlName="amount"/>
+          <div class="text-danger" *ngIf="schemeCopaymentForm.get('amount').invalid && schemeCopaymentForm.get('amount').touched">
+          Amount is required
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.close('Save click')">
+      Close
+    </button>
+    <button type="button" class="btn btn-primary" [disabled]="isLoading" (click)="addSchemeCopayment()">
+      <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+        <span class="sr-only">Loading...</span>
+      </div>
+      Save Changes
+    </button>
+  </div>
+</ng-template>

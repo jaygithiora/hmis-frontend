@@ -30,10 +30,9 @@
                                 <th>ID</th>
                                 <th>Patient Code</th>
                                 <th>Patient Name</th>
-                                <th>Main Type</th>
-                                <th>Sub Type</th>
-                                <th>Account</th>
-                                <th>Plan</th>
+                                <th>Member Type</th>
+                                <th>Gender</th>
+                                <th>IDNo.</th>
                                 <th>DOB</th>
                                 <th>Date</th>
                                 <th>Status</th>
@@ -41,7 +40,7 @@
                             </thead>
                             <tbody>
                                 <tr *ngIf="isLoading">
-                                    <td colspan="11" class="text-center">
+                                    <td colspan="10" class="text-center">
                                         <div class="alert alert-secondary">
                                             <div
                                                 class="spinner-border spinner-border-sm"
@@ -57,7 +56,7 @@
                                     </td>
                                 </tr>
                                 <tr *ngIf="!isLoading && patients.length == 0">
-                                    <td colspan="11" class="text-center">
+                                    <td colspan="10" class="text-center">
                                         <div class="alert alert-secondary">
                                             <i class="fas fa-ban"></i> No
                                             <b>Patients</b> Found!
@@ -73,13 +72,13 @@
                                     <td>{{ i + 1 }}</td>
                                     <td>{{ patient.code }}</td>
                                     <td>
+                                        {{patient?.salutation?.name}}
                                         {{ patient.first_name }}
                                         {{ patient.other_names }}
                                     </td>
-                                    <td>{{ patient.main_type?.name }}</td>
-                                    <td>{{ patient.sub_type?.name }}</td>
-                                    <td>{{ patient.account?.name }}</td>
-                                    <td>{{ patient.plan?.name }}</td>
+                                    <td>{{ patient.member_type }}</td>
+                                    <td>{{ patient.gender }}</td>
+                                    <td>{{ patient.id_number }}</td>
                                     <td>
                                         {{ patient.dob | date }}
                                     </td>

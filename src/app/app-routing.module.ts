@@ -39,13 +39,13 @@ import { ConsultationRoomsComponent } from '@pages/dashboard/masters/consultatio
 import { ServiceCategoriesComponent } from '@pages/dashboard/services/service-categories/service-categories.component';
 import { ServicesComponent } from '@pages/dashboard/services/services/services.component';
 import { StoresComponent } from '@pages/dashboard/masters/stores/stores.component';
-import { LaboratoryCategoriesComponent } from '@pages/dashboard/masters/laboratory-categories/laboratory-categories.component';
+import { LaboratoryCategoriesComponent } from '@pages/dashboard/masters/laboratory/laboratory-categories/laboratory-categories.component';
 import { RadiologyCategoriesComponent } from '@pages/dashboard/radiology/radiology-categories/radiology-categories.component';
 import { RadiologyItemsComponent } from '@pages/dashboard/radiology/radiology-items/radiology-items.component';
-import { LaboratoryTestsComponent } from '@pages/dashboard/laboratory/laboratory-tests/laboratory-tests.component';
+import { LaboratoryTestsComponent } from '@pages/dashboard/masters/laboratory/laboratory-tests/laboratory-tests.component';
 import { ProductRatesComponent } from '@pages/dashboard/inventory/product-rates/product-rates.component';
-import { LaboratoryTestRatesComponent } from '@pages/dashboard/laboratory/laboratory-test-rates/laboratory-test-rates.component';
-import { LaboratoryTestReferencesComponent } from '@pages/dashboard/laboratory/laboratory-test-references/laboratory-test-references.component';
+import { LaboratoryTestRatesComponent } from '@pages/dashboard/masters/laboratory/laboratory-test-rates/laboratory-test-rates.component';
+import { LaboratoryTestReferencesComponent } from '@pages/dashboard/masters/laboratory/laboratory-test-references/laboratory-test-references.component';
 import { RadiologyItemRatesComponent } from '@pages/dashboard/radiology/radiology-item-rates/radiology-item-rates.component';
 import { ServiceRatesComponent } from '@pages/dashboard/services/service-rates/service-rates.component';
 import { WardsComponent } from '@pages/dashboard/ip-masters/wards/wards.component';
@@ -90,10 +90,10 @@ import { LaboratorySampleCollectionsComponent } from '@pages/dashboard/laborator
 import { LaboratorySampleCollectionComponent } from '@pages/dashboard/laboratory/laboratory-sample-collection/laboratory-sample-collection.component';
 import { LaboratoryWorkListComponent } from '@pages/dashboard/laboratory/laboratory-work-list/laboratory-work-list.component';
 import { LaboratoryResultEntryComponent } from '@pages/dashboard/laboratory/laboratory-result-entry/laboratory-result-entry.component';
-import { LaboratoryEquipmentsComponent } from '@pages/dashboard/laboratory/laboratory-equipments/laboratory-equipments.component';
-import { LaboratorySampleTypesComponent } from '@pages/dashboard/laboratory/laboratory-sample-types/laboratory-sample-types.component';
-import { LaboratoryInterpretationsComponent } from '@pages/dashboard/laboratory/laboratory-interpretations/laboratory-interpretations.component';
-import { LaboratoryLinkingComponent } from '@pages/dashboard/laboratory/laboratory-linking/laboratory-linking.component';
+import { LaboratoryEquipmentsComponent } from '@pages/dashboard/masters/laboratory/laboratory-equipments/laboratory-equipments.component';
+import { LaboratorySampleTypesComponent } from '@pages/dashboard/masters/laboratory/laboratory-sample-types/laboratory-sample-types.component';
+import { LaboratoryInterpretationsComponent } from '@pages/dashboard/masters/laboratory/laboratory-interpretations/laboratory-interpretations.component';
+import { LaboratoryLinkingComponent } from '@pages/dashboard/masters/laboratory/laboratory-linking/laboratory-linking.component';
 import { LaboratoryPublishResultsComponent } from '@pages/dashboard/laboratory/laboratory-publish-results/laboratory-publish-results.component';
 import { LaboratoryResultsMasterDataComponent } from '@pages/dashboard/laboratory/laboratory-results-master-data/laboratory-results-master-data.component';
 import { ProfileComponent } from '@pages/dashboard/profile/profile.component';
@@ -107,6 +107,16 @@ import { DoctorDepartmentsComponent } from '@pages/dashboard/masters/doctors/doc
 import { FeeTypesComponent } from '@pages/dashboard/settings/fee-types/fee-types.component';
 import { DoctorFeesComponent } from '@pages/dashboard/masters/doctors/doctor-fees/doctor-fees.component';
 import { DoctorShareComponent } from '@pages/dashboard/masters/doctors/doctor-share/doctor-share.component';
+import { SchemeDepartmentsComponent } from '@pages/dashboard/masters/insurances/scheme-departments/scheme-departments.component';
+import { BillingCategoriesComponent } from '@pages/dashboard/settings/billing-categories/billing-categories.component';
+import { SchemeCopaymentsComponent } from '@pages/dashboard/masters/insurances/scheme-copayments/scheme-copayments.component';
+import { SchemeLimitsComponent } from '@pages/dashboard/masters/insurances/scheme-limits/scheme-limits.component';
+import { SchemeExclusionsComponent } from '@pages/dashboard/masters/insurances/scheme-exclusions/scheme-exclusions.component';
+import { SchemePreauthsComponent } from '@pages/dashboard/masters/insurances/scheme-preauths/scheme-preauths.component';
+import { SubscriptionsComponent } from '@pages/dashboard/subscriptions/subscriptions/subscriptions.component';
+import { PackagesComponent } from '@pages/dashboard/subscriptions/packages/packages.component';
+import { PackageComponent } from '@pages/dashboard/subscriptions/package/package.component';
+import { PackagePermissionsComponent } from '@pages/dashboard/subscriptions/package-permissions/package-permissions.component';
 
 const routes: Routes = [
   {
@@ -141,6 +151,26 @@ const routes: Routes = [
       {
         path: 'masters/insurances/schemes',
         component:SchemesComponent
+      },
+      {
+        path: 'masters/insurances/schemes/departments',
+        component:SchemeDepartmentsComponent
+      },
+      {
+        path: 'masters/insurances/schemes/copayments',
+        component:SchemeCopaymentsComponent
+      },
+      {
+        path: 'masters/insurances/schemes/limits',
+        component:SchemeLimitsComponent
+      },
+      {
+        path: 'masters/insurances/schemes/exclusions',
+        component:SchemeExclusionsComponent
+      },
+      {
+        path: 'masters/insurances/schemes/preauths',
+        component:SchemePreauthsComponent
       },
       {
         path: 'masters/payments/payment-types',
@@ -228,8 +258,36 @@ const routes: Routes = [
         component: StoresComponent
       },
       {
-        path: 'masters/lab-categories',
+        path: 'masters/laboratory/categories',
         component: LaboratoryCategoriesComponent
+      },
+      {
+        path: 'masters/laboratory/tests',
+        component: LaboratoryTestsComponent
+      },
+      {
+        path: 'masters/laboratory/test-rates',
+        component: LaboratoryTestRatesComponent
+      },
+      {
+        path: 'masters/laboratory/test-references',
+        component: LaboratoryTestReferencesComponent
+      },
+      {
+        path: 'masters/laboratory/equipment',
+        component: LaboratoryEquipmentsComponent
+      },
+      {
+        path: 'masters/laboratory/sample-types',
+        component: LaboratorySampleTypesComponent
+      },
+      {
+        path: 'masters/laboratory/interpretations',
+        component: LaboratoryInterpretationsComponent
+      },
+      {
+        path: 'masters/laboratory/linking',
+        component: LaboratoryLinkingComponent
       },
       //ip masters
       {
@@ -304,18 +362,6 @@ const routes: Routes = [
       },
       //laboratory
       {
-        path: 'laboratory/tests',
-        component: LaboratoryTestsComponent
-      },
-      {
-        path: 'laboratory/test-rates',
-        component: LaboratoryTestRatesComponent
-      },
-      {
-        path: 'laboratory/test-references',
-        component: LaboratoryTestReferencesComponent
-      },
-      {
         path: 'laboratory/sample-collections',
         component: LaboratorySampleCollectionsComponent
       },
@@ -338,22 +384,6 @@ const routes: Routes = [
       {
         path: 'laboratory/results-master-data',
         component: LaboratoryResultsMasterDataComponent
-      },
-      {
-        path: 'laboratory/equipment',
-        component: LaboratoryEquipmentsComponent
-      },
-      {
-        path: 'laboratory/sample-types',
-        component: LaboratorySampleTypesComponent
-      },
-      {
-        path: 'laboratory/interpretations',
-        component: LaboratoryInterpretationsComponent
-      },
-      {
-        path: 'laboratory/linking',
-        component: LaboratoryLinkingComponent
       },
       //services
 
@@ -513,6 +543,16 @@ const routes: Routes = [
         path: 'settings/fee-types',
         component: FeeTypesComponent
       },
+      {
+        path: 'settings/billing-categories',
+        component: BillingCategoriesComponent
+      },
+      //subscriptions
+      { path: 'subscriptions/list', component: SubscriptionsComponent },
+      { path: 'subscriptions/packages', component: PackagesComponent },
+      { path: 'subscriptions/packages/add', component: PackageComponent },
+      { path: 'subscriptions/packages/edit/:id', component: PackageComponent },
+      { path: 'subscriptions/packages/view/:id', component: PackagePermissionsComponent },
       //organizations
       { path: 'organizations/list', component: OrganizationsComponent },
       { path: 'organizations/branches', component: BranchesComponent },

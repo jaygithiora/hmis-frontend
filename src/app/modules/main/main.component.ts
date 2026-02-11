@@ -1,6 +1,6 @@
-import {AppState} from '@/store/state';
-import {ToggleSidebarMenu} from '@/store/ui/actions';
-import {UiState} from '@/store/ui/state';
+import { AppState } from '@/store/state';
+import { ToggleSidebarMenu } from '@/store/ui/actions';
+import { UiState } from '@/store/ui/state';
 import {
     AfterViewInit,
     Component,
@@ -8,8 +8,8 @@ import {
     OnInit,
     Renderer2
 } from '@angular/core';
-import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-main',
@@ -24,7 +24,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     constructor(
         private renderer: Renderer2,
         private store: Store<AppState>
-    ) {}
+    ) { }
 
     ngOnInit() {
         this.ui = this.store.select('ui');
@@ -42,7 +42,7 @@ export class MainComponent implements OnInit, AfterViewInit {
         );
 
         this.ui.subscribe(
-            ({menuSidebarCollapsed, controlSidebarCollapsed, darkMode}) => {
+            ({ menuSidebarCollapsed, controlSidebarCollapsed, darkMode }) => {
                 if (menuSidebarCollapsed) {
                     this.renderer.removeClass(
                         document.querySelector('app-root'),
@@ -95,6 +95,9 @@ export class MainComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.appLoaded = true;
+        setTimeout(() => {
+            this.appLoaded = true;   // or whatever is changing
+        });
+        //this.appLoaded = true;
     }
 }

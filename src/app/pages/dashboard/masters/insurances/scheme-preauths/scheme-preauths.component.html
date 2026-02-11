@@ -1,0 +1,196 @@
+<app-content-header [title]="'Scheme Preauths'"></app-content-header>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col">
+                                <h6>
+                                    <i class="fas fa-user-md"></i>
+                                    Scheme Preauths
+                                </h6>
+                            </div>
+                            <div class="col text-right">
+                                <button class="btn btn-primary btn-sm" (click)="openModal(content, null)">
+                                    <i class="fas fa-plus"></i> Add Preauth
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- body comes here-->
+
+                        <table class="table">
+                            <thead>
+                                <th>ID</th>
+                                <th>Scheme</th>
+                                <th>Item</th>
+                                <th>Category</th>
+                                <th>Date</th>
+                                <th class="text-right">Action</th>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="isLoading">
+                                    <td colspan="7" class="text-center">
+                                        <div class="alert alert-secondary">
+                                            <div class="spinner-border spinner-border-sm" role="status"
+                                                *ngIf="isLoading">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                            Loading Scheme Preauthorizations...
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="!isLoading && scheme_preauths.length == 0">
+                                    <td colspan="7" class="text-center">
+                                        <div class="alert alert-secondary">
+                                            <i class="fas fa-ban"></i> No
+                                            <b>Scheme Preauthorizations</b> found!
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr *ngFor="
+                                        let scheme_preauth of scheme_preauths;
+                                        let i = index
+                                    ">
+                                    <td>{{ i + 1 }}</td>
+                                    <td>{{ scheme_preauth.scheme?.name }}</td>
+                                    <td>{{ scheme_preauth.service?.name }}
+                                        {{ scheme_preauth.product?.name }}
+                                        {{ scheme_preauth.laboratory_test?.name }}
+                                        {{ scheme_preauth.radiology_item?.name }}
+                                    </td>
+                                    <td>{{ scheme_preauth.service?.service_category?.name }}
+                                        {{ scheme_preauth.product?.inventory_category?.name }}
+                                        {{ scheme_preauth.laboratory_test?.laboratory_category?.name }}
+                                        {{ scheme_preauth.radiology_item?.radiology_category?.name }}
+                                    </td>
+                                    <!--<td> <span [style.background]="scheme_preauth.color"
+                                            class="badge">{{scheme_preauth.color}}</span></td>
+                                    -->
+                                    <td>
+                                        {{ formatDate(scheme_preauth.created_at) }}
+                                    </td>
+                                    <!--<td>
+                                        <span class="badge badge-primary btn-pill"
+                                            *ngIf="scheme_preauth.status">Active</span>
+                                        <span class="badge badge-secondary btn-pill"
+                                            *ngIf="!scheme_preauth.status">In-Active</span>
+                                    </td>-->
+                                    <td class="text-right">
+                                        <button class="btn btn-primary btn-sm" (click)="
+                                                openModal(content, scheme_preauth)
+                                            "><i class="fas fa-edit"></i>
+                                            Edit</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="text-right p-2">
+                            Showing <b>{{ fromItems }}</b> to <b>{{ toItems }}</b> of <b>{{ totalItems }}</b> Entries
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <ngb-pagination [(page)]="currentPage" [pageSize]="perPage" [collectionSize]="totalItems"
+                                (pageChange)="loadPage($event)"></ngb-pagination>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{this.schemePreauthForm.get('id').value>0?"Edit":"Add"}}
+            Scheme Preauth</h4>
+        <button type="button" class="btn-close close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="modal-body">
+
+        <form [formGroup]="schemePreauthForm" (submit)="addSchemePreauth()">
+            <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs" (navChange)="onTabChange($event)">
+                <li [ngbNavItem]="1">
+                    <a ngbNavLink>Lab</a>
+                    <ng-template ngbNavContent>
+                        <div class="mb-3">
+                            <label>Laboratory Test</label>
+                            <ng-select [items]="laboratory_tests" bindLabel="name" bindValue="id"
+                                [typeahead]="searchLaboratoryTest$" [loading]="loadingLaboratoryTests"
+                                [(ngModel)]="selectedLaboratoryTest" placeholder="Search for Laboratory Test"
+                                (change)="onItemSelect($event)" formControlName="laboratory_test"></ng-select>
+                        </div>
+                    </ng-template>
+                </li>
+                <li [ngbNavItem]="2">
+                    <a ngbNavLink>Radiology</a>
+                    <ng-template ngbNavContent>
+
+                        <div class="mb-3">
+                            <label>Radiology Item</label>
+                            <ng-select [items]="radiology_items" bindLabel="name" bindValue="id"
+                                [typeahead]="searchRadiologyItem$" [loading]="loadingRadiologyItems"
+                                [(ngModel)]="selectedRadiologyItem" placeholder="Search for Radiology Item"
+                                (change)="onItemSelect($event)" formControlName="radiology_item"></ng-select>
+                        </div>
+
+                    </ng-template>
+                </li>
+                <li [ngbNavItem]="3">
+                    <a ngbNavLink>Services</a>
+                    <ng-template ngbNavContent>
+
+
+                        <div class="mb-3">
+                            <label>Services/Procedures</label>
+                            <ng-select [items]="services" bindLabel="name" bindValue="id" [typeahead]="searchService$"
+                                [loading]="loadingServices" [(ngModel)]="selectedService"
+                                placeholder="Search for Service" (change)="onItemSelect($event)"
+                                formControlName="service"></ng-select>
+                        </div>
+
+                    </ng-template>
+                <li [ngbNavItem]="4">
+                    <a ngbNavLink>Pharmacy</a>
+                    <ng-template ngbNavContent>
+
+
+                        <div class="mb-3">
+                            <label>Product/Pharmacy</label>
+                            <ng-select [items]="products" bindLabel="name" bindValue="id" [typeahead]="searchProducts$"
+                                [loading]="loadingProducts" [(ngModel)]="selectedProduct"
+                                placeholder="Search for Product" (change)="onItemSelect($event)"
+                                formControlName="product"></ng-select>
+                        </div>
+
+                    </ng-template>
+                </li>
+            </ul>
+
+            <div [ngbNavOutlet]="nav" class="mt-2"></div>
+            <input type="hidden" formControlName="id" />
+
+            <div class="mb-3">
+                <label>Scheme</label>
+                <ng-select [items]="schemes" bindLabel="name" bindValue="id" [typeahead]="searchSchemes$"
+                    [loading]="loadingSchemes" [(ngModel)]="selectedScheme" placeholder="Search for Scheme"
+                    (change)="onItemSelect($event)" formControlName="scheme"></ng-select>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.close('Save click')">
+            Close
+        </button>
+        <button type="button" class="btn btn-primary" [disabled]="isLoading" (click)="addSchemePreauth()">
+            <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+                <span class="sr-only">Loading...</span>
+            </div>
+            Save Changes
+        </button>
+    </div>
+</ng-template>

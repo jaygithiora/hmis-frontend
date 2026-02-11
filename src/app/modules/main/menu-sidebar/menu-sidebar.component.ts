@@ -36,7 +36,7 @@ export const MENU = [
   {
     name: 'Dashboard',
     iconClasses: 'fas fa-tachometer-alt',
-    path: ['/dashboard']
+    path: ['/dashboard/home']
   },
   {
     name: 'Masters',
@@ -68,6 +68,31 @@ export const MENU = [
           iconClasses: 'fas fa-minus icon-small',
           path: ['/dashboard/masters/insurances/schemes'],
           permission: 'View Schemes',
+        }, {
+          name: 'Scheme Departments',
+          iconClasses: 'fas fa-minus icon-small',
+          path: ['/dashboard/masters/insurances/schemes/departments'],
+          permission: 'View Scheme Departments',
+        }, {
+          name: 'Scheme Copayments',
+          iconClasses: 'fas fa-minus icon-small',
+          path: ['/dashboard/masters/insurances/schemes/copayments'],
+          permission: 'View Scheme Copayment',
+        }, {
+          name: 'Scheme Limits',
+          iconClasses: 'fas fa-minus icon-small',
+          path: ['/dashboard/masters/insurances/schemes/limits'],
+          permission: 'View Scheme Limits',
+        }, {
+          name: 'Scheme Exclusions',
+          iconClasses: 'fas fa-minus icon-small',
+          path: ['/dashboard/masters/insurances/schemes/exclusions'],
+          permission: 'View Scheme Exclusions',
+        }, {
+          name: 'Scheme Preauths',
+          iconClasses: 'fas fa-minus icon-small',
+          path: ['/dashboard/masters/insurances/schemes/preauths'],
+          permission: 'View Scheme Preauths',
         }]
       },
       {
@@ -175,6 +200,7 @@ export const MENU = [
         path: ['/dashboard/masters/consultation-rooms'],
         permission: 'View Consultation Rooms'
       },
+      /*
       {
         name: 'Main Accounts',
         iconClasses: 'fas fa-circle icon-small',
@@ -198,7 +224,7 @@ export const MENU = [
         iconClasses: 'fas fa-circle icon-small',
         path: ['/dashboard/masters/plans'],
         permission: 'View Plans'
-      },
+      },*/
       {
         name: 'Blood Groups',
         iconClasses: 'fas fa-circle icon-small',
@@ -224,10 +250,61 @@ export const MENU = [
         permission: 'View Stores'
       },
       {
-        name: 'Lab Categories',
+        name: 'Lab Masters',
         iconClasses: 'fas fa-circle icon-small',
-        path: ['/dashboard/masters/lab-categories'],
-        permission: 'View Laboratory Categories'
+        //path: ['/dashboard/masters/lab-categories'],
+        //permission: 'View Laboratory Categories'
+        permission: 'View Laboratory Masters',
+        children: [
+          {
+            name: 'Categories',
+            iconClasses: 'fas fa-minus icon-small',
+            path: ['/dashboard/masters/laboratory/categories'],
+            permission: "View Laboratory Categories"
+          },
+          {
+            name: 'Tests',
+            iconClasses: 'fas fa-minus icon-small',
+            path: ['/dashboard/masters/laboratory/tests'],
+            permission: "View Laboratory Tests"
+          },
+          {
+            name: 'Test Rates',
+            iconClasses: 'fas fa-minus icon-small',
+            path: ['/dashboard/masters/laboratory/test-rates'],
+            permission: 'View Laboratory Test Rates'
+          },
+          {
+            name: 'Test References',
+            iconClasses: 'fas fa-minus icon-small',
+            path: ['/dashboard/masters/laboratory/test-references'],
+            permission: 'View Laboratory Test References'
+          },
+          {
+            name: 'Lab Equipment',
+            iconClasses: 'fas fa-minus icon-small',
+            path: ['/dashboard/masters/laboratory/equipment'],
+            permission: "View Laboratory Equipment"
+          },
+          {
+            name: 'Sample Types',
+            iconClasses: 'fas fa-minus icon-small',
+            path: ['/dashboard/masters/laboratory/sample-types'],
+            permission: 'View Laboratory Sample Types'
+          },
+          {
+            name: 'Lab Interpretations',
+            iconClasses: 'fas fa-minus icon-small',
+            path: ['/dashboard/masters/laboratory/interpretations'],
+            permission: 'View Laboratory Interpretations'
+          },
+          {
+            name: 'Lab Linking',
+            iconClasses: 'fas fa-minus icon-small',
+            path: ['/dashboard/masters/laboratory/linking'],
+            permissions: 'View Laboratory Linking'
+          },
+        ]
       }
     ]
   },
@@ -360,24 +437,6 @@ export const MENU = [
     permission: "View Laboratory Menu",
     children: [
       {
-        name: 'Lab Tests',
-        iconClasses: 'fas fa-circle icon-small',
-        path: ['/dashboard/laboratory/tests'],
-        permission: "View Laboratory Tests"
-      },
-      {
-        name: 'Lab Test Rates',
-        iconClasses: 'fas fa-circle icon-small',
-        path: ['/dashboard/laboratory/test-rates'],
-        permission: 'View Laboratory Test Rates'
-      },
-      {
-        name: 'Lab Test References',
-        iconClasses: 'fas fa-circle icon-small',
-        path: ['/dashboard/laboratory/test-references'],
-        permission: 'View Laboratory Test References'
-      },
-      {
         name: 'Sample Collections',
         iconClasses: 'fas fa-circle icon-small',
         path: ['/dashboard/laboratory/sample-collections'],
@@ -393,37 +452,13 @@ export const MENU = [
         name: 'Publish Lab Results',
         iconClasses: 'fas fa-circle icon-small',
         path: ['/dashboard/laboratory/publish-results'],
-        permission: 'View Laboratory Publish Results'
+        permission: 'View Publish Laboratory Results'
       },
       {
         name: 'Results Master Data',
         iconClasses: 'fas fa-circle icon-small',
         path: ['/dashboard/laboratory/results-master-data'],
         permission: "View Laboratory Results Master Data"
-      },
-      {
-        name: 'Lab Equipment',
-        iconClasses: 'fas fa-circle icon-small',
-        path: ['/dashboard/laboratory/equipment'],
-        permission: "View Laboratory Equipment"
-      },
-      {
-        name: 'Sample Types',
-        iconClasses: 'fas fa-circle icon-small',
-        path: ['/dashboard/laboratory/sample-types'],
-        permission: 'View Laboratory Sample Types'
-      },
-      {
-        name: 'Lab Interpretations',
-        iconClasses: 'fas fa-circle icon-small',
-        path: ['/dashboard/laboratory/interpretations'],
-        permission: 'View Laboratory Interpretations'
-      },
-      {
-        name: 'Lab Linking',
-        iconClasses: 'fas fa-circle icon-small',
-        path: ['/dashboard/laboratory/linking'],
-        permissions: 'View Laboratory Linking'
       },
     ]
   },
@@ -474,7 +509,7 @@ export const MENU = [
   {
     name: 'Visit Management',
     iconClasses: 'fas fa-hospital-user',
-    permission: 'Visit Management Menu',
+    permission: 'View Visit Management Menu',
     children: [
       {
         name: 'Create OP Visit',
@@ -548,7 +583,7 @@ export const MENU = [
         name: 'Triage List',
         iconClasses: 'fas fa-circle icon-small',
         path: ['/dashboard/triage/list'],
-        permission: 'View Triage List'
+        permission: 'View Triage'
       },
     ]
   },
@@ -642,6 +677,31 @@ export const MENU = [
         iconClasses: 'fas fa-circle icon-small',
         path: ['/dashboard/settings/fee-types'],
         permission: 'View Fee Type Settings'
+      },
+      {
+        name: 'Billing Categories',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/settings/billing-categories'],
+        permission: 'View Billing Category Settings'
+      },
+    ]
+  },
+  {
+    name: 'Subscriptions',
+    iconClasses: 'fas fa-box',
+    permission: "View Subscription Menu",
+    children: [
+      {
+        name: 'Packages',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/subscriptions/packages'],
+        permission: "View Subscription Packages"
+      },
+      {
+        name: 'Subscriptions',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/subscriptions/list'],
+        permission: "View Subscriptions"
       },
     ]
   },

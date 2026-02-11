@@ -27,14 +27,15 @@
                             <thead>
                                 <th>ID</th>
                                 <th>Name</th>
-                                <th>Location</th>
+                                <th>Organization</th>
+                                <th>Branch</th>
                                 <th>Date</th>
                                 <th>Status</th>
                                 <th class="text-right">Action</th>
                             </thead>
                             <tbody>
                                 <tr *ngIf="isLoading">
-                                    <td colspan="6" class="text-center">
+                                    <td colspan="7" class="text-center">
                                         <div class="alert alert-secondary">
                                             <div
                                                 class="spinner-border spinner-border-sm"
@@ -50,7 +51,7 @@
                                     </td>
                                 </tr>
                                 <tr *ngIf="!isLoading && stores.length == 0">
-                                    <td colspan="6" class="text-center">
+                                    <td colspan="7" class="text-center">
                                         <div class="alert alert-secondary">
                                             <i class="fas fa-ban"></i> No
                                             <b>Stores</b> Found!
@@ -65,7 +66,8 @@
                                 >
                                     <td>{{ i + 1 }}</td>
                                     <td>{{ store.name }}</td>
-                                    <td>{{ store.location.name }}</td>
+                                    <td>{{ store?.organization?.name }}</td>
+                                    <td>{{ store?.branch?.name }}</td>
                                     <td>
                                         {{ formatDate(store.created_at) }}
                                     </td>
@@ -103,7 +105,7 @@
 
 <ng-template #content let-modal>
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Add/Edit Store</h4>
+        <h4 class="modal-title" id="modal-basic-title">{{this.storesForm.get('id').value>0?'Edit':'Add'}} Store</h4>
         <button
             type="button"
             class="btn-close close"
@@ -125,17 +127,30 @@
                 />
             </div>
             <div class="mb-3">
-                <label>Location</label>
+                <label>Organization</label>
                 <ng-select
-                    [items]="locations"
+                    [items]="organizations"
                     bindLabel="name"
                     bindValue="id"
                     [typeahead]="search$"
                     [loading]="loading"
                     [(ngModel)]="selectedOption"
-                    placeholder="Search for Location"
+                    placeholder="Search for Organization"
                     (change)="onItemSelect($event)"
-                    formControlName="location"
+                    formControlName="organization"
+                ></ng-select>
+            </div>
+            <div class="mb-3">
+                <label>branch</label>
+                <ng-select
+                    [items]="branches"
+                    bindLabel="name"
+                    bindValue="id"
+                    [typeahead]="searchBranch$"
+                    [loading]="loadingBranches"
+                    [(ngModel)]="selectedBranch"
+                    placeholder="Search for Branch"
+                    formControlName="branch"
                 ></ng-select>
             </div>
             <div class="mb-3">

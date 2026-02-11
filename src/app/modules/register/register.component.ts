@@ -8,8 +8,9 @@ import {
   ViewChild
 } from '@angular/core';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@services/auth/auth.service';
+import { IndexService } from '@services/frontend/index/index.service';
 import { ToastrService } from 'ngx-toastr';
 import { IntlTelI18n, CountryMap } from 'ngxsmk-tel-input';
 
@@ -19,7 +20,7 @@ import { IntlTelI18n, CountryMap } from 'ngxsmk-tel-input';
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit, OnDestroy {
-
+  public isLoading = false;
   @ViewChild('searchLocation') searchLocation!: ElementRef<HTMLInputElement>;
   autocompleteInitialized = false;
 
@@ -41,6 +42,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   public registerForm: FormGroup;
   public organizationForm: FormGroup;
+  public packageForm: FormGroup;
   public confirmationForm: FormGroup;
 
   selectedFile: File | null = null;
@@ -49,14 +51,18 @@ export class RegisterComponent implements OnInit, OnDestroy {
   public isAuthLoading = false;
 
   currentStep: number = 1;
-  totalSteps: number = 3;
+  totalSteps: number = 4;
+
+  subscription_packages = [];
 
   constructor(
     private renderer: Renderer2,
     private toastr: ToastrService,
     private authService: AuthService,
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private indexService: IndexService
   ) { }
 
   ngOnInit() {
@@ -66,8 +72,38 @@ export class RegisterComponent implements OnInit, OnDestroy {
     );*/
 
     this.initializeForms();
+    this.loadSubscriptionPackages(1);
   }
+
+  loadSubscriptionPackages(page: number) {
+    this.isLoading = true;
+    this.indexService.getSubscriptionPackages(page).subscribe((result: any) => {
+      console.log(result);
+      this.isLoading = false;
+      this.subscription_packages = result.subscription_packages.data;// Set the items
+      /*this.totalItems = result.subscription_packages.total; // Total number of items
+      this.perPage = result.subscription_packages.per_page; // Items per page
+      this.currentPage = result.subscription_packages.current_page; // Set the current page
+      this.toItems = result.subscription_packages.to; // Set to Items
+      this.fromItems = result.subscription_packages.from; // Set from Items*/
+    }, error => {
+      this.isLoading = false;
+      console.log(error);
+    });
+  }
+
+  selectPackage(packageId: number): void {
+    this.packageForm.patchValue({ package_id: packageId });
+  }
+
+  get selectedPackage(): any {
+    const packageId = this.packageForm.get('package_id')?.value;
+    return this.subscription_packages.find(p => p.id === packageId);
+  }
+
   initializeForms(): void {
+
+    const packageId = this.route.snapshot.queryParamMap.get('package');
     // Step 1: Account Information
     this.registerForm = this.fb.group({
       firstname: ['', [Validators.required, Validators.minLength(2)]],
@@ -95,12 +131,18 @@ export class RegisterComponent implements OnInit, OnDestroy {
       logo: ['', [Validators.required]],
       status: ['1', [Validators.required]]
     });
-
-    // Step 3: Confirmation
+    //Step 3
+    this.packageForm = this.fb.group({
+      package_id: [packageId, Validators.required]
+    });
+    // Step 4: Confirmation
     this.confirmationForm = this.fb.group({
       confirmed: [false]
     });
-  }// Custom validator for password matching
+    this.selectPackage(parseInt(packageId));
+  }
+
+  // Custom validator for password matching
   passwordMatchValidator(group: FormGroup): { [key: string]: boolean } | null {
     const password = group.get('password')?.value;
     const confirmPassword = group.get('password_confirmation')?.value;
@@ -141,10 +183,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
   isCurrentStepValid(): boolean {
     switch (this.currentStep) {
       case 1:
-        if(!this.organizationForm.get("organization_email")?.value){
+        if (!this.organizationForm.get("organization_email")?.value) {
           this.organizationForm.get("organization_email")?.setValue(this.registerForm.get("email")?.value);
         }
-        if(!this.organizationForm.get("organization_phone")?.value){
+        if (!this.organizationForm.get("organization_phone")?.value) {
           this.organizationForm.get("organization_phone")?.setValue(this.registerForm.get("phone")?.value);
         }
         this.markCurrentStepAsTouched();
@@ -153,6 +195,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
         this.markCurrentStepAsTouched();
         return this.organizationForm.valid;
       case 3:
+        this.markCurrentStepAsTouched();
+        return this.packageForm.valid;
+      case 4:
         return true;
       default:
         return false;
@@ -183,6 +228,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
       case 2:
         this.markFormGroupTouched(this.organizationForm);
         break;
+      case 3:
+        this.markFormGroupTouched(this.packageForm);
+        break;
     }
   }
 
@@ -196,6 +244,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     return {
       ...this.registerForm.value,
       ...this.organizationForm.value,
+      ...this.packageForm.value
     };
   }
   onFileChange(event: any) {
@@ -240,7 +289,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
         if (result.access_token && result.user) {
           localStorage.setItem("token", result.access_token);
           localStorage.setItem('user', JSON.stringify(result.user));
-          //localStorage.setItem('permissions', JSON.stringify(result.permissions));
+          localStorage.setItem('permissions', JSON.stringify(result.permissions));
         } else {
           this.toastr.error("Access token could not be found! Try again!")
         }
@@ -248,67 +297,67 @@ export class RegisterComponent implements OnInit, OnDestroy {
         this.isAuthLoading = false;
       }, (error: any) => {
         console.log("error", error)
-        if (error?.error?.errors){
-        if (error?.error?.errors?.firstname) {
-          this.toastr.error(error?.error?.errors?.firstname);
-        }
-        if (error?.error?.errors?.lastname) {
-          this.toastr.error(error?.error?.errors?.lastname);
-        }
-        if (error?.error?.errors?.email) {
-          this.toastr.error(error?.error?.errors?.email);
-        }
-        if (error?.error?.errors?.phone) {
-          this.toastr.error(error?.error?.errors?.phone);
-        }
-        if (error?.error?.errors?.password) {
-          this.toastr.error(error?.error?.errors?.password);
-        }
-        if (error?.error?.errors?.password_confirmation) {
-          this.toastr.error(error?.error?.errors?.password_confirmation);
-        }
-        if (error?.error?.errors?.terms_and_conditions) {
-          this.toastr.error(error?.error?.errors?.terms_and_conditions);
-        }
-        if (error?.error?.errors?.logo) {
-          this.toastr.error(error?.error?.errors?.logo);
-        }
-        if (error?.error?.errors?.name) {
-          this.toastr.error(error?.error?.errors?.name);
-        }
-        if (error?.error?.errors?.description) {
-          this.toastr.error(error?.error?.errors?.description);
-        }
-        if (error?.error?.errors?.address) {
-          this.toastr.error(error?.error?.errors?.address);
-        }
-        if (error?.error?.errors?.website) {
-          this.toastr.error(error?.error?.errors?.website);
-        }
-        if (error?.error?.errors?.location) {
-          this.toastr.error(error?.error?.errors?.location);
-        }
-        if (error?.error?.errors?.longitude) {
-          this.toastr.error(error?.error?.errors?.longitude);
-        }
-        if (error?.error?.errors?.latitude) {
-          this.toastr.error(error?.error?.errors?.latitude);
-        }
-        if (error?.error?.errors?.organization_email) {
-          this.toastr.error(error?.error?.errors?.organization_email);
-        }
-        if (error?.error?.errors?.organization_phone) {
-          this.toastr.error(error?.error?.errors?.organization_phone);
-        }
-      }else 
-        if (error?.error?.error) {
-          this.toastr.error(error?.error?.error);
-        } else if (error?.message) {
-          this.toastr.error(error?.message);
+        if (error?.error?.errors) {
+          if (error?.error?.errors?.firstname) {
+            this.toastr.error(error?.error?.errors?.firstname);
+          }
+          if (error?.error?.errors?.lastname) {
+            this.toastr.error(error?.error?.errors?.lastname);
+          }
+          if (error?.error?.errors?.email) {
+            this.toastr.error(error?.error?.errors?.email);
+          }
+          if (error?.error?.errors?.phone) {
+            this.toastr.error(error?.error?.errors?.phone);
+          }
+          if (error?.error?.errors?.password) {
+            this.toastr.error(error?.error?.errors?.password);
+          }
+          if (error?.error?.errors?.password_confirmation) {
+            this.toastr.error(error?.error?.errors?.password_confirmation);
+          }
+          if (error?.error?.errors?.terms_and_conditions) {
+            this.toastr.error(error?.error?.errors?.terms_and_conditions);
+          }
+          if (error?.error?.errors?.logo) {
+            this.toastr.error(error?.error?.errors?.logo);
+          }
+          if (error?.error?.errors?.name) {
+            this.toastr.error(error?.error?.errors?.name);
+          }
+          if (error?.error?.errors?.description) {
+            this.toastr.error(error?.error?.errors?.description);
+          }
+          if (error?.error?.errors?.address) {
+            this.toastr.error(error?.error?.errors?.address);
+          }
+          if (error?.error?.errors?.website) {
+            this.toastr.error(error?.error?.errors?.website);
+          }
+          if (error?.error?.errors?.location) {
+            this.toastr.error(error?.error?.errors?.location);
+          }
+          if (error?.error?.errors?.longitude) {
+            this.toastr.error(error?.error?.errors?.longitude);
+          }
+          if (error?.error?.errors?.latitude) {
+            this.toastr.error(error?.error?.errors?.latitude);
+          }
+          if (error?.error?.errors?.organization_email) {
+            this.toastr.error(error?.error?.errors?.organization_email);
+          }
+          if (error?.error?.errors?.organization_phone) {
+            this.toastr.error(error?.error?.errors?.organization_phone);
+          }
+        } else
+          if (error?.error?.error) {
+            this.toastr.error(error?.error?.error);
+          } else if (error?.message) {
+            this.toastr.error(error?.message);
 
-        } else {
-          this.toastr.error("Oops! Something went wrong with the server!!");
-        }
+          } else {
+            this.toastr.error("Oops! Something went wrong with the server!!");
+          }
         this.isAuthLoading = false;
       })
     } else {

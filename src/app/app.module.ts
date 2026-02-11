@@ -77,13 +77,13 @@ import { ProductsComponent } from './pages/dashboard/inventory/products/products
 import { ConsultationRoomsComponent } from './pages/dashboard/masters/consultation-rooms/consultation-rooms.component';
 import { ServiceCategoriesComponent } from './pages/dashboard/services/service-categories/service-categories.component';
 import { StoresComponent } from './pages/dashboard/masters/stores/stores.component';
-import { LaboratoryCategoriesComponent } from './pages/dashboard/masters/laboratory-categories/laboratory-categories.component';
+import { LaboratoryCategoriesComponent } from './pages/dashboard/masters/laboratory/laboratory-categories/laboratory-categories.component';
 import { RadiologyCategoriesComponent } from './pages/dashboard/radiology/radiology-categories/radiology-categories.component';
 import { RadiologyItemsComponent } from './pages/dashboard/radiology/radiology-items/radiology-items.component';
-import { LaboratoryTestsComponent } from './pages/dashboard/laboratory/laboratory-tests/laboratory-tests.component';
+import { LaboratoryTestsComponent } from './pages/dashboard/masters/laboratory/laboratory-tests/laboratory-tests.component';
 import { ProductRatesComponent } from './pages/dashboard/inventory/product-rates/product-rates.component';
-import { LaboratoryTestRatesComponent } from './pages/dashboard/laboratory/laboratory-test-rates/laboratory-test-rates.component';
-import { LaboratoryTestReferencesComponent } from './pages/dashboard/laboratory/laboratory-test-references/laboratory-test-references.component';
+import { LaboratoryTestRatesComponent } from './pages/dashboard/masters/laboratory/laboratory-test-rates/laboratory-test-rates.component';
+import { LaboratoryTestReferencesComponent } from './pages/dashboard/masters/laboratory/laboratory-test-references/laboratory-test-references.component';
 import { RadiologyItemRatesComponent } from './pages/dashboard/radiology/radiology-item-rates/radiology-item-rates.component';
 import { ServicesComponent } from './pages/dashboard/services/services/services.component';
 import { ServiceRatesComponent } from '@pages/dashboard/services/service-rates/service-rates.component';
@@ -147,10 +147,10 @@ import { LaboratorySampleCollectionsComponent } from './pages/dashboard/laborato
 import { LaboratorySampleCollectionComponent } from './pages/dashboard/laboratory/laboratory-sample-collection/laboratory-sample-collection.component';
 import { LaboratoryWorkListComponent } from './pages/dashboard/laboratory/laboratory-work-list/laboratory-work-list.component';
 import { LaboratoryResultEntryComponent } from './pages/dashboard/laboratory/laboratory-result-entry/laboratory-result-entry.component';
-import { LaboratoryEquipmentsComponent } from './pages/dashboard/laboratory/laboratory-equipments/laboratory-equipments.component';
-import { LaboratorySampleTypesComponent } from './pages/dashboard/laboratory/laboratory-sample-types/laboratory-sample-types.component';
-import { LaboratoryInterpretationsComponent } from './pages/dashboard/laboratory/laboratory-interpretations/laboratory-interpretations.component';
-import { LaboratoryLinkingComponent } from './pages/dashboard/laboratory/laboratory-linking/laboratory-linking.component';
+import { LaboratoryEquipmentsComponent } from './pages/dashboard/masters/laboratory/laboratory-equipments/laboratory-equipments.component';
+import { LaboratorySampleTypesComponent } from './pages/dashboard/masters/laboratory/laboratory-sample-types/laboratory-sample-types.component';
+import { LaboratoryInterpretationsComponent } from './pages/dashboard/masters/laboratory/laboratory-interpretations/laboratory-interpretations.component';
+import { LaboratoryLinkingComponent } from './pages/dashboard/masters/laboratory/laboratory-linking/laboratory-linking.component';
 import { LaboratoryPublishResultsComponent } from './pages/dashboard/laboratory/laboratory-publish-results/laboratory-publish-results.component';
 import { LaboratoryResultsMasterDataComponent } from './pages/dashboard/laboratory/laboratory-results-master-data/laboratory-results-master-data.component';
 import { ProfileComponent } from '@pages/dashboard/profile/profile.component';
@@ -165,6 +165,17 @@ import { DoctorDepartmentsComponent } from './pages/dashboard/masters/doctors/do
 import { FeeTypesComponent } from './pages/dashboard/settings/fee-types/fee-types.component';
 import { DoctorFeesComponent } from './pages/dashboard/masters/doctors/doctor-fees/doctor-fees.component';
 import { DoctorShareComponent } from './pages/dashboard/masters/doctors/doctor-share/doctor-share.component';
+import { SchemeDepartmentsComponent } from './pages/dashboard/masters/insurances/scheme-departments/scheme-departments.component';
+import { BillingCategoriesComponent } from './pages/dashboard/settings/billing-categories/billing-categories.component';
+import { SchemeCopaymentsComponent } from './pages/dashboard/masters/insurances/scheme-copayments/scheme-copayments.component';
+import { SchemeLimitsComponent } from './pages/dashboard/masters/insurances/scheme-limits/scheme-limits.component';
+import { SchemeExclusionsComponent } from './pages/dashboard/masters/insurances/scheme-exclusions/scheme-exclusions.component';
+import { SchemePreauthsComponent } from './pages/dashboard/masters/insurances/scheme-preauths/scheme-preauths.component';
+import { SubscriptionsComponent } from './pages/dashboard/subscriptions/subscriptions/subscriptions.component';
+import { PackagesComponent } from './pages/dashboard/subscriptions/packages/packages.component';
+import { PackageComponent } from './pages/dashboard/subscriptions/package/package.component';
+import { StripHtmlPipe } from './pipes/strip-html/strip-html.pipe';
+import { PackagePermissionsComponent } from './pages/dashboard/subscriptions/package-permissions/package-permissions.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -311,6 +322,17 @@ registerLocaleData(localeEn, 'en-EN');
         FeeTypesComponent,
         DoctorFeesComponent,
         DoctorShareComponent,
+        SchemeDepartmentsComponent,
+        BillingCategoriesComponent,
+        SchemeCopaymentsComponent,
+        SchemeLimitsComponent,
+        SchemeExclusionsComponent,
+        SchemePreauthsComponent,
+        SubscriptionsComponent,
+        PackagesComponent,
+        PackageComponent,
+        StripHtmlPipe,
+        PackagePermissionsComponent,
     ],
     bootstrap: [AppComponent],
     imports: [
