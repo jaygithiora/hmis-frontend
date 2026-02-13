@@ -10,8 +10,8 @@ export class DoctorFeesService {
 
   constructor(private http: HttpClient, @Inject(API_BASE_URL) private baseUrl: string) { }
 
-  getDoctorFees(page: number = 1, search: string = "", insurance: any = ""): Observable<any> {
-    return this.http.get(`${this.baseUrl}/api/dashboard/masters/doctors/fees?page=${page}&search=${search}&insurance=${insurance}`);
+  getDoctorFees(page: number = 1, search: string = "", scheme: any = "",specialization:any="", department:any="",fee_type:any=""): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/dashboard/masters/doctors/fees?page=${page}&search=${search}&scheme=${scheme}&specialization=${specialization}&department=${department}&fee_type=${fee_type}`);
   }
   updateDoctorFee(inputData: any) {
     return this.http.post(`${this.baseUrl}/api/dashboard/masters/doctors/fees/add`, inputData);

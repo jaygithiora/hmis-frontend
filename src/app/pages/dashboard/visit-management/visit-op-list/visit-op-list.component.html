@@ -31,17 +31,18 @@
                                 <th>Patient Code</th>
                                 <th>Visit Code</th>
                                 <th>Patient Name</th>
-                                <th>Main Type</th>
+                                <th>Insurance</th>
+                                <th>Scheme</th>
                                 <th>Department</th>
                                 <th>Doctor</th>
-                                <th>Consultation Type</th>
+                                <!--<th>Fee Type</th>-->
                                 <th>Date</th>
                                 <th>Status</th>
                                 <th class="text-right">Action</th>
                             </thead>
                             <tbody>
                                 <tr *ngIf="isLoading">
-                                    <td colspan="11" class="text-center">
+                                    <td colspan="12" class="text-center">
                                         <div class="alert alert-secondary">
                                             <div
                                                 class="spinner-border spinner-border-sm"
@@ -57,7 +58,7 @@
                                     </td>
                                 </tr>
                                 <tr *ngIf="!isLoading && outpatient_visits.length == 0">
-                                    <td colspan="11" class="text-center">
+                                    <td colspan="12" class="text-center">
                                         <div class="alert alert-secondary">
                                             <i class="fas fa-ban"></i> No
                                             <b>Outpatient Visits</b> Found!
@@ -74,19 +75,21 @@
                                     <td>{{ visit.patient.code }}</td>
                                     <td>{{ visit.code }}</td>
                                     <td>
+                                        {{ visit.patient.salutation?.name }}
                                         {{ visit.patient.first_name }}
                                         {{ visit.patient.other_names }}
                                     </td>
-                                    <td>{{ visit.main_type?.name }}</td>
+                                    <td>{{ visit.scheme?.insurance?.name }}</td>
+                                    <td>{{ visit.scheme?.name }}</td>
                                     <td>
                                         {{ visit.department.name}}
                                     </td>
                                     <td>
-                                        {{ visit.doctor.name}}
-                                    </td>
+                                        {{ visit.doctor?.salutation?.name}} {{ visit.doctor.firstname}} {{ visit.doctor.other_names}}
+                                    </td><!--
                                     <td>
-                                        {{ visit.consultation_type.name}}
-                                    </td>
+                                        {{ visit.fee_type?.name}}
+                                    </td>-->
                                     <td>
                                         {{ formatDate(visit.created_at) }}
                                     </td>

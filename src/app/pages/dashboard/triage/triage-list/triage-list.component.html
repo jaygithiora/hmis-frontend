@@ -28,7 +28,7 @@
                 <th>Visit Code</th>
                 <th>Patient Name</th>
                 <th>Department</th>
-                <th>Consultation Type</th>
+                <th>Fee Type</th>
                 <th>Date</th>
                 <th>Status</th>
                 <th class="text-right">Action</th>
@@ -61,7 +61,7 @@
                   <td>{{ outpatient_visit_triage.outpatient_visit.code }}</td>
                   <td>{{ outpatient_visit_triage.outpatient_visit.patient.first_name }} {{ outpatient_visit_triage.outpatient_visit.patient.other_names }}</td>
                   <td>{{ outpatient_visit_triage.outpatient_visit.department.name }}</td>
-                  <td>{{ outpatient_visit_triage.outpatient_visit.consultation_type.name }}</td>
+                  <td>{{ outpatient_visit_triage.outpatient_visit?.fee_type?.name }}</td>
                   <td>{{ formatDate(outpatient_visit_triage.created_at) }}</td>
                   <td>
                     <span class="badge badge-primary btn-pill" *ngIf="outpatient_visit_triage.status">Active</span>

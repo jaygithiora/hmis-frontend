@@ -41,6 +41,10 @@
                     <p>
                       {{
                       consultation?.outpatient_visit
+                      ?.patient?.salutation?.name
+                      }}
+                      {{
+                      consultation?.outpatient_visit
                       ?.patient?.first_name
                       }}
                       {{
@@ -59,11 +63,11 @@
                     </p>
                   </div>
                   <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
-                    <label>Consultation Type:</label>
+                    <label>Fee Type:</label>
                     <p>
                       {{
                       consultation?.outpatient_visit
-                      ?.consultation_type?.name
+                      ?.fee_type?.name
                       }}
                     </p>
                   </div>
@@ -93,29 +97,38 @@
                     </p>
                   </div>
                   <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
-                    <label>Main Type:</label>
+                    <label>Scheme:</label>
                     <p>
                       {{
-                      consultation?.outpatient_visit?.patient
-                      ?.main_type?.name
+                      consultation?.outpatient_visit?.scheme?.name
+                      }} ({{
+                      consultation?.outpatient_visit?.scheme?.insurance?.name
+                      }})
+                    </p>
+                  </div>
+                  <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
+                    <label>Speciality:</label>
+                    <p>
+                      {{
+                      consultation?.outpatient_visit
+                      ?.specialization?.name
                       }}
                     </p>
                   </div>
                   <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
-                    <label>Sub Type:</label>
+                    <label>Doctor</label>:
                     <p>
                       {{
                       consultation?.outpatient_visit
-                      ?.patient?.sub_type?.name
+                      ?.doctor?.salutation?.name
                       }}
-                    </p>
-                  </div>
-                  <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
-                    <label>Account</label>:
-                    <p>
                       {{
                       consultation?.outpatient_visit
-                      ?.patient?.account?.name
+                      ?.doctor?.firstname
+                      }}
+                      {{
+                      consultation?.outpatient_visit
+                      ?.doctor?.other_names
                       }}
                     </p>
                   </div>
@@ -166,7 +179,8 @@
 
                 <!--Patient Complaints-->
                 <div #allergySection>
-                  <app-allergies-form [formArray]="formAllergies" [patientAllergies]="patientAllergies"></app-allergies-form>
+                  <app-allergies-form [formArray]="formAllergies"
+                    [patientAllergies]="patientAllergies"></app-allergies-form>
                 </div>
 
                 <!--Consultation-->
@@ -177,28 +191,32 @@
 
                 <!--Review of Systems-->
                 <div #reviewOfSystemsSection>
-                <app-review-of-systems-form [formArray]="formSystems" [patientReviewOfSystems]="patientReviewOfSystems"></app-review-of-systems-form>
+                  <app-review-of-systems-form [formArray]="formSystems"
+                    [patientReviewOfSystems]="patientReviewOfSystems"></app-review-of-systems-form>
                 </div>
 
                 <!--Patient Medical History-->
                 <div #medicalHistorySection>
-                  <app-medical-history-form [formArray]="formMedicalHistory" [patientMedicalHistories]="patientMedicalHistories"></app-medical-history-form>
+                  <app-medical-history-form [formArray]="formMedicalHistory"
+                    [patientMedicalHistories]="patientMedicalHistories"></app-medical-history-form>
                 </div>
 
                 <!--Patient Surgical History-->
                 <div #surgicalHistorySection>
-                <app-surgery-history-form [formArray]="formSurgery" [patientSurgicalHistories]="patientSurgicalHistories"></app-surgery-history-form>
+                  <app-surgery-history-form [formArray]="formSurgery"
+                    [patientSurgicalHistories]="patientSurgicalHistories"></app-surgery-history-form>
                 </div>
 
                 <!--Social History-->
                 <div #socialHistorySection>
-                <app-social-history-form [formArray]="formSocialHistory" [patientSocialHistories]="patientSocialHistories"></app-social-history-form>
+                  <app-social-history-form [formArray]="formSocialHistory"
+                    [patientSocialHistories]="patientSocialHistories"></app-social-history-form>
                 </div>
 
                 <!--Family Medical History-->
                 <div #familyMedicalHistorySection>
-                <app-family-medical-history-form
-                  [formArray]="formFamilyMedicalHistory" [patientFamilyMedicalHistories]="patientFamilyMedicalHistories"></app-family-medical-history-form>
+                  <app-family-medical-history-form [formArray]="formFamilyMedicalHistory"
+                    [patientFamilyMedicalHistories]="patientFamilyMedicalHistories"></app-family-medical-history-form>
                 </div>
 
               </ng-template>
@@ -209,38 +227,40 @@
           <!--Diagnosis-->
           <div class="card shadow-sm border" #diagnosisSection>
             <div class="card-body">
-              <app-diagnosis-form [formArray]="formDiagnosis" [patientDiagnoses]="patientDiagnoses"></app-diagnosis-form>
+              <app-diagnosis-form [formArray]="formDiagnosis"
+                [patientDiagnoses]="patientDiagnoses"></app-diagnosis-form>
             </div>
           </div>
 
           <!--laboratory test-->
           <div #laboratoryTestSection>
-          <app-laboratory-test-form [formArray]="formLabRate" [patientLaboratoryTests]="patientLaboratoryTests"
-            (totalsChanged)="labTotals = $event"></app-laboratory-test-form>
-            </div>
+            <app-laboratory-test-form [formArray]="formLabRate" [patientLaboratoryTests]="patientLaboratoryTests"
+              (totalsChanged)="labTotals = $event"></app-laboratory-test-form>
+          </div>
 
 
           <!--Radiology Test-->
           <div #radiologyTestSection>
-          <app-radiology-test-form [formArray]="formRadRate" [patientRadiologyTests]="patientRadiologyTests"
-            (totalsChanged)="radTotals = $event"></app-radiology-test-form>
+            <app-radiology-test-form [formArray]="formRadRate" [patientRadiologyTests]="patientRadiologyTests"
+              (totalsChanged)="radTotals = $event"></app-radiology-test-form>
           </div>
 
           <!--Services/Procedures-->
           <div #servicesSection>
-          <app-services-form [formArray]="formServiceRate" [patientServices]="patientServices"
-            (totalsChanged)="serviceTotals = $event"></app-services-form>
+            <app-services-form [formArray]="formServiceRate" [patientServices]="patientServices"
+              (totalsChanged)="serviceTotals = $event"></app-services-form>
           </div>
 
           <!--Pharmacy-->
           <div #prescriptionsSection>
-          <app-prescriptions-form [formArray]="formPrescriptions" [patientPrescriptions]="patientPrescriptions"
-            (totalsChanged)="prescriptionTotals = $event"></app-prescriptions-form>
-            </div>
+            <app-prescriptions-form [formArray]="formPrescriptions" [patientPrescriptions]="patientPrescriptions"
+              (totalsChanged)="prescriptionTotals = $event"></app-prescriptions-form>
+          </div>
 
           <!--Sick Leave-->
           <div #sickLeaveSection>
-          <app-sick-leave-form [formArray]="formSickLeave" [patientSickLeaves]="patientSickLeaves"></app-sick-leave-form>
+            <app-sick-leave-form [formArray]="formSickLeave"
+              [patientSickLeaves]="patientSickLeaves"></app-sick-leave-form>
           </div>
 
           <!--Grand Totals-->
@@ -264,8 +284,21 @@
 
           <div class="card shadow-sm border">
             <div class="card-body">
+              <div class="alert alert-danger" *ngIf='user?.id != consultation?.outpatient_visit?.doctor?.user_id'>
+                This consultation is assigned to a doctor NOT ATTACHED to your account. Consultation cannot be saved
+              </div>
               <div class="mb-3 text-right">
-                <button type="button" class="btn btn-primary" [disabled]="isLoading" (click)="addConsultation()">
+                <button type="button" class="btn btn-danger mr-3"
+                  [disabled]="isLoading||(user?.id != consultation?.outpatient_visit?.doctor?.user_id)"
+                  (click)="closeEMR()">
+                  <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                  <i class="fab fa-airbnb" *ngIf="!isLoading"></i> Close EMR
+                </button>
+                <button type="button" class="btn btn-primary"
+                  [disabled]="isLoading||(user?.id != consultation?.outpatient_visit?.doctor?.user_id)"
+                  (click)="addConsultation()">
                   <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
                     <span class="sr-only">Loading...</span>
                   </div>

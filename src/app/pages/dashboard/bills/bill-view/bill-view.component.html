@@ -56,7 +56,7 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Department</th>
-                                        <th>Consultation Type</th>
+                                        <th>Fee Type</th>
                                         <th>Amount</th>
                                         <th>Discount</th>
                                         <th>Discount Value</th>
@@ -67,7 +67,7 @@
                                     <tr>
                                         <td>1.</td>
                                         <td>{{bill?.outpatient_visit?.department?.name}}</td>
-                                        <td>{{bill?.outpatient_visit?.consultation_type?.name}}</td>
+                                        <td>{{bill?.outpatient_visit?.fee_type?.name}}</td>
                                         <td><b>KES {{bill?.totals | number:'1.0-0'}}</b></td>
                                         <td>
                                             <ng-select [items]="discount_types" bindLabel="name" bindValue="id"

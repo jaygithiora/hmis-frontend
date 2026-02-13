@@ -60,6 +60,9 @@ export class ConsultationFormComponent implements OnInit {
   patientPrescriptions: any[] = [];
   patientSickLeaves: any[] = [];
 
+  user:any;
+  statuses = [{id:"review", name:"Send to Review"}, {id:"completed", name:"Close Visit"}];
+
   constructor(private consultationService: ConsultationService, private fb: FormBuilder, private toastr: ToastrService, private service: AuthService, private router: Router, private activatedRoute: ActivatedRoute) {
     this.consultationForm = this.fb.group({
       id: ['0', [Validators.required]],
@@ -78,7 +81,9 @@ export class ConsultationFormComponent implements OnInit {
       service_rates: this.fb.array([]),
       prescriptions: this.fb.array([]),
       sick_leaves: this.fb.array([]),
+      status:['active', [Validators.required]]
     });
+    this.user =service.getUser();
   }
 
   get formAllergies(): FormArray {
@@ -195,6 +200,10 @@ export class ConsultationFormComponent implements OnInit {
     const days = today.diff(birthDate, 'days');
 
     return { years, months, days };
+  }
+  closeEMR(){
+    this.consultationForm.patchValue({status:'completed'});
+    this.addConsultation();
   }
 
   addConsultation() {

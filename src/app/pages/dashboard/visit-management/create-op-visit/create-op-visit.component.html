@@ -17,139 +17,171 @@
                                             (change)="onPatientSelect($event)" formControlName="patient"></ng-select>
                                     </div>
                                 </div>
-                                <div class="col-sm-12 alert alert-primary">
-                                    PATIENT BIO DATA
-                                </div>
-                                <div class="col-sm-4 p-3">
-                                    <img [src]="imageUrl" class="img-fluid w-100 img-thumbnail"
-                                        *ngIf="patientImage == null" />
-                                    <img [src]="patientImage.imageAsDataUrl" class="img-fluid w-100 img-thumbnail"
-                                        *ngIf="patientImage != null" />
-                                    <p class="m-3">
-                                        <app-take-photo (imageCaptured)="
-                                                imageCaptured($event)
-                                            "></app-take-photo>
-                                    </p>
-                                </div>
-                                <div class="col-sm-8" *ngIf="patient">
-                                    <div class="row">
-                                        <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label>Patient Code</label><br />
-                                            {{patient?.code}}
-                                        </div>
-                                        <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label>Organization</label><br />
-                                            {{patient?.organization?.name}}
-                                        </div>
-                                        <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label>Branch</label><br />
-                                            {{patient?.branch?.name}}
-                                        </div>
-
-                                        <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label>Name</label><br />
-                                            {{patient?.salutation?.name}} {{patient?.first_name}}
-                                            {{patient?.other_names}}
-                                        </div>
-                                        <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label>Gender</label><br />
-                                            {{patient?.gender}}
-                                        </div>
-                                        <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label>Date of Birth</label><br />
-                                            {{patient?.dob|date}}
-                                        </div>
-                                        <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label>ID No.</label><br />
-                                            {{patient?.id_number}}
-                                        </div>
-                                        <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label>Member/Staff No.</label><br />
-                                            {{patient?.member_number}}
-                                        </div>
-                                        <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label>Member Type</label><br />
-                                            {{patient?.member_type}}
-                                        </div>
-
-                                    </div>
-                                </div>
-
                                 <div class="col-sm-12" *ngIf="patient">
                                     <div class="row">
 
                                         <div class="col-sm-12 alert alert-primary">
-                                            VISIT INFO
+                                            PATIENT BIO DATA
+                                        </div>
+                                        <div class="col-sm-4 p-3">
+                                            <img [src]="imageUrl" class="img-fluid w-100 img-thumbnail"
+                                                *ngIf="patientImage == null" />
+                                            <img [src]="patientImage.imageAsDataUrl"
+                                                class="img-fluid w-100 img-thumbnail" *ngIf="patientImage != null" />
+                                            
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <div class="row">
+                                                <div class="col-sm-6 col-lg-4 mb-3">
+                                                    <label>Patient Code</label><br />
+                                                    {{patient?.code}}
+                                                </div>
+                                                <div class="col-sm-6 col-lg-4 mb-3">
+                                                    <label>Organization</label><br />
+                                                    {{patient?.organization?.name}}
+                                                </div>
+                                                <div class="col-sm-6 col-lg-4 mb-3">
+                                                    <label>Branch</label><br />
+                                                    {{patient?.branch?.name}}
+                                                </div>
+
+                                                <div class="col-sm-6 col-lg-4 mb-3">
+                                                    <label>Name</label><br />
+                                                    {{patient?.salutation?.name}} {{patient?.first_name}}
+                                                    {{patient?.other_names}}
+                                                </div>
+                                                <div class="col-sm-6 col-lg-4 mb-3">
+                                                    <label>Gender</label><br />
+                                                    {{patient?.gender}}
+                                                </div>
+                                                <div class="col-sm-6 col-lg-4 mb-3">
+                                                    <label>Date of Birth</label><br />
+                                                    {{patient?.dob|date}}
+                                                </div>
+                                                <div class="col-sm-6 col-lg-4 mb-3">
+                                                    <label>ID No.</label><br />
+                                                    {{patient?.id_number}}
+                                                </div>
+                                                <div class="col-sm-6 col-lg-4 mb-3">
+                                                    <label>Member/Staff No.</label><br />
+                                                    {{patient?.member_number}}
+                                                </div>
+                                                <div class="col-sm-6 col-lg-4 mb-3">
+                                                    <label>Member Type</label><br />
+                                                    {{patient?.member_type}}
+                                                </div>
+
+                                            </div>
                                         </div>
 
-                                        <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label>Scheme</label>
-                                            <ng-select [items]="schemes" bindLabel="name" bindValue="id"
-                                                [typeahead]="searchSchemes$" [loading]="loadingSchemes" [(ngModel)]="
+                                        <div class="col-sm-12">
+                                            <div class="row">
+
+                                                <div class="col-sm-12 alert alert-primary">
+                                                    VISIT INFO
+                                                </div>
+
+                                                <div class="col-sm-6 col-lg-4 mb-3">
+                                                    <label>Scheme</label>
+                                                    <ng-select [items]="schemes" bindLabel="name" bindValue="id"
+                                                        [typeahead]="searchSchemes$" [loading]="loadingSchemes"
+                                                        [(ngModel)]="
                                                     selectedSchemeOption
                                                 " placeholder="Search for Scheme" (change)="onItemSelect($event)"
-                                                formControlName="scheme"></ng-select>
-                                        </div>
-                                        <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label>Department</label>
-                                            <ng-select [items]="departments" bindLabel="name" bindValue="id"
-                                                [typeahead]="searchDepartment$" [loading]="loadingDepartments"
-                                                [(ngModel)]="
+                                                        formControlName="scheme"></ng-select>
+                                                    <div class="text-danger" *ngIf="visitForm.get('scheme')?.errors?.['required'] && visitForm.get('scheme')?.touched">
+                                                        Scheme is required
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 col-lg-4 mb-3">
+                                                    <label>Department</label>
+                                                    <ng-select [items]="departments" bindLabel="department.name"
+                                                        bindValue="department_id" [typeahead]="searchDepartment$"
+                                                        [loading]="loadingDepartments" [(ngModel)]="
                                                     selectedDepartmentOption
                                                 " placeholder="Search for Department" (change)="onItemSelect($event)"
-                                                formControlName="department"></ng-select>
-                                        </div>
-                                        <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label>Consulting Doctor</label>
-                                            <ng-select [items]="doctors" bindLabel="name" bindValue="id"
-                                                [typeahead]="searchDoctor$" [loading]="loadingDoctors"
-                                                [(ngModel)]="selectedDoctorOption" placeholder="Search for Doctor"
-                                                (change)="onItemSelect($event)" formControlName="doctor"></ng-select>
-                                        </div>
-                                        <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label>Fee Type</label>
-                                            <ng-select [items]="consultation_types" bindLabel="name" bindValue="id"
-                                                [typeahead]="searchConsultationTypes$"
-                                                [loading]="loadingConsultationTypes"
-                                                [(ngModel)]="selectedConsultationTypeOption"
-                                                placeholder="Search for Consultation Type"
-                                                (change)="onConsultationTypeSelect($event)"
-                                                formControlName="consultation_type"></ng-select>
-                                        </div>
-                                        <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label>Consultation Fees</label>
-                                            <input type="number" class="form-control" placeholder="Consultation Fee"
-                                                formControlName="consultation_fees" />
-                                        </div>
-
-                                        <div class="col-sm-6 col-lg-4 mb-3">
-                                            <label>Status<span class="text-danger">*</span></label><select
-                                                class="form-control custom-select" formControlName="status">
-                                                <option value="active">Active</option>
-                                                <option value="pending">Pending</option>
-                                                <option value="cancelled">Cancelled</option>
-                                                <option value="review">Review</option>
-                                                <option value="completed">Completed</option>
-                                            </select>
+                                                        formControlName="department"></ng-select>
+                                                    <div class="text-danger" *ngIf="visitForm.get('department')?.errors?.['required'] && visitForm.get('department')?.touched">
+                                                        Department is required
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 col-lg-4 mb-3">
+                                                    <label>Speciality</label>
+                                                    <ng-select [items]="specialities" bindLabel="name" bindValue="id"
+                                                        [typeahead]="searchSpeciality$" [loading]="loadingSpecialities"
+                                                        [(ngModel)]="selectedSpecialityOption"
+                                                        placeholder="Search for Speciality"
+                                                        (change)="onItemSelect($event)"
+                                                        formControlName="speciality"></ng-select>
+                                                    <div class="text-danger" *ngIf="visitForm.get('speciality')?.errors?.['required'] && visitForm.get('speciality')?.touched">
+                                                        Speciality is required
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 col-lg-4 mb-3">
+                                                    <label>Fee Type</label>
+                                                    <ng-select [items]="fee_types" bindLabel="name" bindValue="id"
+                                                        [typeahead]="searchFeeType$" [loading]="loadingFeeTypes"
+                                                        [(ngModel)]="selectedFeeTypeOption"
+                                                        placeholder="Search for Fee Type"
+                                                        (change)="onItemSelect($event)"
+                                                        formControlName="fee_type"></ng-select>
+                                                    <div class="text-danger" *ngIf="visitForm.get('fee_type')?.errors?.['required'] && visitForm.get('fee_type')?.touched">
+                                                        Fee Type is required
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 col-lg-4 mb-3">
+                                                    <label>Doctor</label>
+                                                    <ng-select [disabled]="true" [items]="doctor_fees" bindLabel="name"
+                                                        bindValue="id" [typeahead]="searchDoctorFee$"
+                                                        [loading]="loadingDoctorFees"
+                                                        [(ngModel)]="selectedDoctorFeeOption"
+                                                        placeholder="Search for Doctor"
+                                                        (change)="onDoctorFeeSelect($event)"
+                                                        formControlName="doctor_fee"></ng-select>
+                                                    <div class="text-danger" *ngIf="visitForm.get('doctor_fee')?.errors?.['required'] && visitForm.get('doctor_fee')?.touched">
+                                                        Doctor is required
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 col-lg-4 mb-3">
+                                                    <label>Consultation Fees (KES)</label>
+                                                    <input type="number" class="form-control"
+                                                        placeholder="Consultation Fee"
+                                                        formControlName="consultation_fees" readonly />
+                                                </div>
+                                                <!--
+                                                <div class="col-sm-6 col-lg-4 mb-3">
+                                                    <label>Status<span class="text-danger">*</span></label><select
+                                                        class="form-control custom-select" formControlName="status">
+                                                        <option value="active">Active</option>
+                                                        <option value="pending">Pending</option>
+                                                        <option value="cancelled">Cancelled</option>
+                                                        <option value="review">Review</option>
+                                                        <option value="completed">Completed</option>
+                                                    </select>
+                                                </div>-->
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
 
-                            <div class="col-sm-12 text-right">
-                                <button class="btn btn-primary" [disabled]="isLoading" (click)="updatePatient()">
-                                    <span *ngIf="isLoading">
-                                        <div class="spinner-border spinner-border-sm" role="status">
-                                            <span class="sr-only">Loading...</span>
-                                        </div>
-                                        Saving...
-                                    </span>
-                                    <span *ngIf="!isLoading">
-                                        <i class="fas fa-paper-plane"></i>&nbsp;
-                                        <span *ngIf="visitId>0">Edit</span>
-                                        <span *ngIf="visitId==0">Create</span> Visit
-                                    </span>
-                                </button>
+                                    <div class="col-sm-12 text-right">
+                                        <button class="btn btn-primary" [disabled]="isLoading"
+                                            (click)="updatePatient()">
+                                            <span *ngIf="isLoading">
+                                                <div class="spinner-border spinner-border-sm" role="status">
+                                                    <span class="sr-only">Loading...</span>
+                                                </div>
+                                                Saving...
+                                            </span>
+                                            <span *ngIf="!isLoading">
+                                                <i class="fas fa-paper-plane"></i>&nbsp;
+                                                <span *ngIf="visitId>0">Edit</span>
+                                                <span *ngIf="visitId==0">Create</span> Visit
+                                            </span>
+                                        </button>
+                                    </div>
+
+
+                                </div>
                             </div>
                         </form>
                     </div>

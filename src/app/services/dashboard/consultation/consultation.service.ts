@@ -8,8 +8,8 @@ import { Observable } from 'rxjs';
 })
 export class ConsultationService {
 constructor(private http: HttpClient, @Inject(API_BASE_URL) private baseUrl: string) { }
-    getConsultations(page: number = 1, search: string = ""): Observable<any> {
-      return this.http.get(`${this.baseUrl}/api/dashboard/consultations/list?page=${page}&search=${search}`);
+    getConsultations(page: number = 1, search: string = "", status:string="active"): Observable<any> {
+      return this.http.get(`${this.baseUrl}/api/dashboard/consultations/list?page=${page}&search=${search}&status=${status}`);
     }
     getConsultation(id: number = 1): Observable<any> {
       return this.http.get(`${this.baseUrl}/api/dashboard/consultations/view/${id}`);

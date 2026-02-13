@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '@services/auth/auth.service';
 import { InsurancesService } from '@services/dashboard/masters/insurances/insurances/insurances.service';
@@ -17,6 +17,7 @@ export class InsurancesComponent implements OnInit {
   private modalRef: NgbModalRef;
   public isLoading: boolean = true;
   loading: boolean = false;
+  searchControl = new FormControl('');
 
   insuranceForm!: FormGroup;
 
@@ -62,6 +63,23 @@ export class InsurancesComponent implements OnInit {
   }
   ngOnInit() {
     this.loadPage(1);
+    this.searchControl.valueChanges.pipe(
+    debounceTime(400),              // wait 400ms after typing stops
+    distinctUntilChanged(),         // only if value changed
+    tap(() => this.isLoading = true), // show spinner
+    switchMap(term => 
+      this.insurancesService.getInsurances(1,term)   // call API
+    )
+  ).subscribe(result => {
+    //this.results = response;
+    this.isLoading = false;
+      this.insurances = result.insurances.data;// Set the items
+      this.totalItems = result.insurances.total; // Total number of items
+      this.perPage = result.insurances.per_page; // Items per page
+      this.currentPage = result.insurances.current_page; // Set the current page
+      this.toItems = result.insurances.to; // Set to Items
+      this.fromItems = result.insurances.from; // Set from Items
+  });
   }
 
   loadPage(page: number) {
