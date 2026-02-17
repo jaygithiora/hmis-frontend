@@ -103,6 +103,13 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <div class="text-right p-2">
+                            Showing <b>{{ fromItems }}</b> to <b>{{ toItems }}</b> of <b>{{ totalItems }}</b> Entries
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <ngb-pagination [(page)]="currentPage" [pageSize]="perPage" [collectionSize]="totalItems"
+                                (pageChange)="loadPage($event)"></ngb-pagination>
+                        </div>
                     </div>
                 </div>
             </div>

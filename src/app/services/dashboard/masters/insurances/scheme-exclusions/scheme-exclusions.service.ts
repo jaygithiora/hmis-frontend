@@ -15,4 +15,7 @@ constructor(private http: HttpClient, @Inject(API_BASE_URL) private baseUrl: str
   updateSchemeExclusion(inputData: any) {
     return this.http.post(`${this.baseUrl}/api/dashboard/masters/insurances/schemes/exclusions/add`, inputData);
   }
+  deleteSchemeExclusion(inputData: any) {
+    return this.http.post(`${this.baseUrl}/api/dashboard/masters/insurances/schemes/exclusions/delete`, inputData);
+  }
 }

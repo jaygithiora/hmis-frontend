@@ -52,6 +52,10 @@ export class DepartmentsComponent implements OnInit {
     onSearch() {
         this.loadPage(1);
     }
+    resetSearch() {
+        this.filters.search = "";
+        this.loadPage(1);
+    }
     loadPage(page: number) {
         this.isLoading = true;
         let params = this.params.set('search', this.filters.search);

@@ -15,4 +15,7 @@ export class SchemeCopaymentsService {
   updateSchemeCopayment(inputData: any) {
     return this.http.post(`${this.baseUrl}/api/dashboard/masters/insurances/schemes/copayments/add`, inputData);
   }
+  deleteSchemeCopayment(inputData: any) {
+    return this.http.post(`${this.baseUrl}/api/dashboard/masters/insurances/schemes/copayments/delete`, inputData);
+  }
 }

@@ -33,6 +33,7 @@ export class SchemeExclusionsComponent implements OnInit {
   triage_item: any;
 
   schemeExclusionForm!: FormGroup;
+  deleteSchemeExclusionForm!: FormGroup;
 
   scheme_exclusions: any[] = [];// Store fetched items
   totalItems = 0;     // Total number of items
@@ -84,6 +85,11 @@ export class SchemeExclusionsComponent implements OnInit {
       radiology_item: [null],
       scheme: [null, [Validators.required]]
     });
+    this.deleteSchemeExclusionForm = this.fb.group({
+      id:['',[Validators.required]],
+      scheme:['', [Validators.required]],
+      item:['',[Validators.required]]
+    })
     this.loadOptions();
   }
 
@@ -103,7 +109,7 @@ export class SchemeExclusionsComponent implements OnInit {
     this.searchSchemes$.pipe(
       debounceTime(300),
       tap(() => this.loadingSchemes = true),
-      switchMap(term => this.schemesService.getSchemes(1, term)),
+      switchMap(term => this.schemesService.getSchemes(1, term,"","Credit")),
       tap(() => this.loadingSchemes= false)
     ).subscribe(data => {
       this.schemes = data.schemes.data;
@@ -190,8 +196,14 @@ export class SchemeExclusionsComponent implements OnInit {
     this.modalRef = this.modalService.open(content, { centered: true });
     if (schemeExclusion != null) {
       this.schemeExclusionForm.get("id").setValue(schemeExclusion.id);
+      if (schemeExclusion.billing_category) {
+        this.schemeExclusionForm?.get("option").setValue(1);
+        this.selectedBillingCategory = schemeExclusion.billing_category_id;
+        this.billing_categories = [];
+        this.billing_categories.push(schemeExclusion.billing_category)
+      }
       if (schemeExclusion.laboratory_test) {
-        this.active = 1;
+        this.schemeExclusionForm?.get("option").setValue(2);
         this.selectedLaboratoryTest = schemeExclusion.laboratory_test_id;
         this.laboratory_tests = [];
         this.laboratory_tests.push(schemeExclusion.laboratory_test)
@@ -202,19 +214,19 @@ export class SchemeExclusionsComponent implements OnInit {
         this.schemes.push(schemeExclusion.scheme)
       }
       if (schemeExclusion.product) {
-        this.active = 4;
+        this.schemeExclusionForm?.get("option").setValue(5);
         this.selectedProduct = schemeExclusion.product_id;
         this.products = [];
         this.products.push(schemeExclusion.product)
       }
       if (schemeExclusion.service) {
-        this.active = 3;
+        this.schemeExclusionForm?.get("option").setValue(4);
         this.selectedService = schemeExclusion.service_id;
         this.services = [];
         this.services.push(schemeExclusion.service)
       }
       if (schemeExclusion.radiology_item) {
-        this.active = 2;
+        this.schemeExclusionForm?.get("option").setValue(3);
         this.selectedRadiologyItem = schemeExclusion.radiology_item_id;
         this.radiology_items = [];
         this.radiology_items.push(schemeExclusion.radiology_item)
@@ -226,11 +238,17 @@ export class SchemeExclusionsComponent implements OnInit {
       this.selectedRadiologyItem = null;
       this.selectedService = null;
       this.selectedProduct = null;
+      this.selectedBillingCategory = null;
     }
+  }
+  openModal2(content: TemplateRef<any>, schemeExclusion: any) {
+    this.modalRef = this.modalService.open(content, { centered: true });
+    this.deleteSchemeExclusionForm.get("id").setValue(schemeExclusion.id);
+    this.deleteSchemeExclusionForm.get("item").setValue(schemeExclusion?.billing_category?.name||schemeExclusion?.radiology_item?.name||schemeExclusion?.service?.name||schemeExclusion?.laboratory_test?.name||schemeExclusion?.product?.name);
+    this.deleteSchemeExclusionForm.get("scheme").setValue(schemeExclusion.scheme.name);
   }
   addSchemeExclusion() {
     if (this.schemeExclusionForm.valid) {
-      console.log(this.schemeExclusionForm.getRawValue());
       this.isLoading = true;
       this.schemeExclusionService.updateSchemeExclusion(this.schemeExclusionForm.getRawValue()).subscribe((result: any) => {
         this.isLoading = false;
@@ -259,6 +277,36 @@ export class SchemeExclusionsComponent implements OnInit {
         }
         if (error?.error?.errors?.product) {
           this.toastr.error(error?.error?.errors?.product);
+        }
+        if (error?.error?.error) {
+          this.toastr.error(error?.error?.error);
+        }
+        if (error?.error?.message) {
+          this.toastr.error(error?.error?.message);
+          this.service.logout();
+          this.modalRef?.close();
+        }
+        this.isLoading = false;
+        console.log(error);
+      });
+    } else {
+      this.toastr.error("Please fill in all the required fields before proceeding!");
+    }
+  }
+
+  deleteSchemeExclusion() {
+    if (this.deleteSchemeExclusionForm.valid) {
+      this.isLoading = true;
+      this.schemeExclusionService.deleteSchemeExclusion(this.deleteSchemeExclusionForm.getRawValue()).subscribe((result: any) => {
+        this.isLoading = false;
+        if (result.success) {
+          this.toastr.success(result.success);
+          this.modalRef?.close();
+        this.loadPage(1);
+        }
+      }, error => {
+        if (error?.error?.errors?.id) {
+          this.toastr.error(error?.error?.errors?.id);
         }
         if (error?.error?.error) {
           this.toastr.error(error?.error?.error);

@@ -15,4 +15,7 @@ export class SchemeLimitsService {
   updateSchemeLimits(inputData: any) {
     return this.http.post(`${this.baseUrl}/api/dashboard/masters/insurances/schemes/limits/add`, inputData);
   }
+  deleteSchemeLimits(inputData: any) {
+    return this.http.post(`${this.baseUrl}/api/dashboard/masters/insurances/schemes/limits/delete`, inputData);
+  }
 }
