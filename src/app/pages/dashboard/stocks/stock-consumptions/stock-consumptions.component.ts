@@ -12,11 +12,11 @@ import { ToastrService } from 'ngx-toastr';
 import { Subject, debounceTime, distinctUntilChanged, tap, switchMap } from 'rxjs';
 
 @Component({
-  selector: 'app-product-stocks',
-  templateUrl: './product-stocks.component.html',
-  styleUrl: './product-stocks.component.scss'
+  selector: 'app-stock-consumptions',
+  templateUrl: './stock-consumptions.component.html',
+  styleUrl: './stock-consumptions.component.scss'
 })
-export class ProductStocksComponent implements OnInit {
+export class StockConsumptionsComponent implements OnInit {
   private modalRef: NgbModalRef;
   public isLoading: boolean = true;
   loadingOrganizations: boolean = false;
@@ -273,5 +273,3 @@ export class ProductStocksComponent implements OnInit {
     return moment.utc(date).local().format('D MMMM, YYYY h:mma');
   }
 }
-
-

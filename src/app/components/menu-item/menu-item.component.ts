@@ -73,7 +73,7 @@ export class MenuItemComponent implements OnInit {
         this.isOneOfChildrenActive = false;
 
         // Check if THIS menu item is active
-        if (!this.isExpandable && url.includes(this.menuItem.path?.[0])/*this.menuItem.path?.[0] === url*/) {
+        if (!this.isExpandable && this.menuItem.path?.[0] === url) {
             this.isMainActive = true;
             return;
         }

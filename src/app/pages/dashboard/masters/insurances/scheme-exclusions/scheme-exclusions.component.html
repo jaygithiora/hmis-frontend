@@ -61,11 +61,13 @@
                                         {{ scheme_exclusion.product?.name }}
                                         {{ scheme_exclusion.laboratory_test?.name }}
                                         {{ scheme_exclusion.radiology_item?.name }}
+                                        {{ scheme_exclusion.billing_category?.name }}
                                     </td>
                                     <td>{{ scheme_exclusion.service?.service_category?.name }}
                                         {{ scheme_exclusion.product?.inventory_category?.name }}
                                         {{ scheme_exclusion.laboratory_test?.laboratory_category?.name }}
                                         {{ scheme_exclusion.radiology_item?.radiology_category?.name }}
+                                        <span *ngIf="scheme_exclusion.billing_category">Billing</span>
                                     </td>
                                     <!--<td> <span [style.background]="scheme_exclusion.color"
                                             class="badge">{{scheme_exclusion.color}}</span></td>
@@ -113,39 +115,35 @@
     <div class="modal-body">
 
         <form [formGroup]="schemeExclusionForm" (submit)="addSchemeExclusion()">
-            <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs" (navChange)="onTabChange($event)">
-                <li [ngbNavItem]="1">
-                    <a ngbNavLink>Lab</a>
-                    <ng-template ngbNavContent>
-                        <div class="mb-3">
+            <input type="hidden" formControlName="id" />
+            <div class="mb-3">
+                <label>Options</label>
+                <ng-select [items]="choices" bindLabel="name" bindValue="id" placeholder="Select Option"
+                    (change)="onTabChange($event)" formControlName="option" [clearable]="false"></ng-select>
+            </div>
+            <div class="mb-3" *ngIf="schemeExclusionForm.get('option').value == 1">
+                <label>Billing Category</label>
+                <ng-select [items]="billing_categories" bindLabel="name" bindValue="id"
+                    [typeahead]="searchBillingCategories$" [loading]="loadingBillingCategories"
+                    [(ngModel)]="selectedBillingCategory" placeholder="Search for Billing Category"
+                    (change)="onItemSelect($event)" formControlName="billing_category"></ng-select>
+            </div>
+                        <div class="mb-3" *ngIf="schemeExclusionForm.get('option').value == 2">
                             <label>Laboratory Test</label>
                             <ng-select [items]="laboratory_tests" bindLabel="name" bindValue="id"
                                 [typeahead]="searchLaboratoryTest$" [loading]="loadingLaboratoryTests"
                                 [(ngModel)]="selectedLaboratoryTest" placeholder="Search for Laboratory Test"
                                 (change)="onItemSelect($event)" formControlName="laboratory_test"></ng-select>
                         </div>
-                    </ng-template>
-                </li>
-                <li [ngbNavItem]="2">
-                    <a ngbNavLink>Radiology</a>
-                    <ng-template ngbNavContent>
 
-                        <div class="mb-3">
+                        <div class="mb-3" *ngIf="schemeExclusionForm.get('option').value == 3">
                             <label>Radiology Item</label>
                             <ng-select [items]="radiology_items" bindLabel="name" bindValue="id"
                                 [typeahead]="searchRadiologyItem$" [loading]="loadingRadiologyItems"
                                 [(ngModel)]="selectedRadiologyItem" placeholder="Search for Radiology Item"
                                 (change)="onItemSelect($event)" formControlName="radiology_item"></ng-select>
                         </div>
-
-                    </ng-template>
-                </li>
-                <li [ngbNavItem]="3">
-                    <a ngbNavLink>Services</a>
-                    <ng-template ngbNavContent>
-
-
-                        <div class="mb-3">
+                        <div class="mb-3" *ngIf="schemeExclusionForm.get('option').value == 4">
                             <label>Services/Procedures</label>
                             <ng-select [items]="services" bindLabel="name" bindValue="id" [typeahead]="searchService$"
                                 [loading]="loadingServices" [(ngModel)]="selectedService"
@@ -153,26 +151,13 @@
                                 formControlName="service"></ng-select>
                         </div>
 
-                    </ng-template>
-                <li [ngbNavItem]="4">
-                    <a ngbNavLink>Pharmacy</a>
-                    <ng-template ngbNavContent>
-
-
-                        <div class="mb-3">
+                        <div class="mb-3" *ngIf="schemeExclusionForm.get('option').value == 5">
                             <label>Product/Pharmacy</label>
                             <ng-select [items]="products" bindLabel="name" bindValue="id" [typeahead]="searchProducts$"
                                 [loading]="loadingProducts" [(ngModel)]="selectedProduct"
                                 placeholder="Search for Product" (change)="onItemSelect($event)"
                                 formControlName="product"></ng-select>
                         </div>
-
-                    </ng-template>
-                </li>
-            </ul>
-
-            <div [ngbNavOutlet]="nav" class="mt-2"></div>
-            <input type="hidden" formControlName="id" />
 
             <div class="mb-3">
                 <label>Scheme</label>

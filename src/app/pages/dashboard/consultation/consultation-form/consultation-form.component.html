@@ -253,7 +253,8 @@
 
           <!--Pharmacy-->
           <div #prescriptionsSection>
-            <app-prescriptions-form [formArray]="formPrescriptions" [patientPrescriptions]="patientPrescriptions"
+            <app-prescriptions-form *ngIf="consultation?.outpatient_visit" [formArray]="formPrescriptions"
+              [patientPrescriptions]="patientPrescriptions" [scheme]="consultation?.outpatient_visit?.scheme"
               (totalsChanged)="prescriptionTotals = $event"></app-prescriptions-form>
           </div>
 
@@ -287,8 +288,13 @@
               <div class="alert alert-danger" *ngIf='user?.id != consultation?.outpatient_visit?.doctor?.user_id'>
                 This consultation is assigned to a doctor NOT ATTACHED to your account. Consultation cannot be saved
               </div>
+              <div class="alert alert-danger" *ngIf='consultation?.outpatient_visit?.status != ("active"||"review")'>
+                This consultation is marked as <b>{{consultation?.outpatient_visit?.status | uppercase}}</b>. To Edit
+                Review Consultation change the visit status first
+              </div>
               <div class="mb-3 text-right">
                 <button type="button" class="btn btn-danger mr-3"
+                  *ngIf='consultation?.outpatient_visit?.status == ("active"||"review")'
                   [disabled]="isLoading||(user?.id != consultation?.outpatient_visit?.doctor?.user_id)"
                   (click)="closeEMR()">
                   <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
@@ -297,6 +303,7 @@
                   <i class="fab fa-airbnb" *ngIf="!isLoading"></i> Close EMR
                 </button>
                 <button type="button" class="btn btn-primary"
+                  *ngIf='consultation?.outpatient_visit?.status == ("active"||"review")'
                   [disabled]="isLoading||(user?.id != consultation?.outpatient_visit?.doctor?.user_id)"
                   (click)="addConsultation()">
                   <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">

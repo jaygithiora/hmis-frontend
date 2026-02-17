@@ -146,6 +146,7 @@ export class ConsultationFormComponent implements OnInit {
       this.consultationForm.get("consultation_id").setValue(id);
       this.isLoading = true;
       this.consultationService.getConsultation(parseInt(id)).subscribe((result: any) => {
+        console.log(result);
         this.consultation = result.outpatient_consultation;
         this.consultationForm.get("patient_id").setValue(this.consultation?.outpatient_visit?.patient_id);
         this.age = this.getAgeDetails(this.consultation?.outpatient_visit?.patient?.dob);

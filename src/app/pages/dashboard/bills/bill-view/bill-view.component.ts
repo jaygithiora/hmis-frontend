@@ -50,7 +50,7 @@ export class BillViewComponent implements OnInit {
           const consultationItemsGroup = this.fb.group({
             id: [cib.id || '', []],
             name: [cib?.patient_laboratory_test?.laboratory_test_rate?.laboratory_test?.name || cib?.patient_radiology_test?.radiology_item_rate?.radiology_item?.name
-              || cib?.patient_service?.service_rate?.service?.name || cib?.patient_prescription?.product_rate?.product?.name
+              || cib?.patient_service?.service_rate?.service?.name || cib?.patient_prescription?.product?.name
             ],
             quantity: [cib?.patient_prescription?.quantity || 1],
             amount: [cib.amount, Validators.required],

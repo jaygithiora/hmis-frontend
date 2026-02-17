@@ -20,6 +20,7 @@ constructor(private http: HttpClient,@Inject(API_BASE_URL) private baseUrl:strin
     return this.http.get(`${this.baseUrl}/api/dashboard/organizations/view/${id}`);
   }
   getBranches(page:number = 1, search:string="", organization_id:any=''):Observable<any>{
+    console.log("organization_id:", organization_id);
     return this.http.get(`${this.baseUrl}/api/dashboard/organizations/branches?page=${page}&search=${search}&organization=${organization_id}`);
   }
   addBranch(inputData:any){

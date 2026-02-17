@@ -36,7 +36,7 @@ export const MENU = [
   {
     name: 'Dashboard',
     iconClasses: 'fas fa-tachometer-alt',
-    path: ['/dashboard/home']
+    path: ['/dashboard']
   },
   {
     name: 'Masters',
@@ -616,6 +616,43 @@ export const MENU = [
         iconClasses: 'fas fa-circle icon-small',
         path: ['/dashboard/stocks/products'],
         permission: 'View Product Stocks'
+      },
+      {
+        name: 'Stock Consumption',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/stocks/consumptions'],
+        permission: 'View Stock Consumptions'
+      },
+    ]
+  },
+  {
+    name: 'Pharmacy',
+    iconClasses: 'fas fa-tablets',
+    permission: 'View Pharmacy Menu',
+    children: [
+      {
+        name: 'Approvals',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/pharmacy/approvals'],
+        permission: 'View Pharmacy Approvals'
+      },
+      {
+        name: 'Prescriptions',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/pharmacy/prescriptions'],
+        permission: 'View Pharmacy Prescriptions'
+      },
+      {
+        name: 'Labels',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/pharmacy/labels'],
+        permission: 'View Pharmacy Labels'
+      },
+      {
+        name: 'Ammendments',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/pharmacy/ammendments'],
+        permission: 'View Pharmacy Ammendments'
       },
     ]
   },

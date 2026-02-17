@@ -15,4 +15,8 @@ export class ProductStocksService {
   updateStock(inputData: any) {
     return this.http.post(`${this.baseUrl}/api/dashboard/stocks/add`, inputData);
   }
+
+  getPrescriptionStocks(page: number = 1, search: string = "", scheme:string="", store:string="", organization:string="", branch:string=""){
+    return this.http.get(`${this.baseUrl}/api/dashboard/stocks/prescriptions?page=${page}&search=${search}&scheme=${scheme}&store=${store}&organization=${organization}&branch=${branch}`);
+  }
 }

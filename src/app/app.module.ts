@@ -176,6 +176,10 @@ import { PackagesComponent } from './pages/dashboard/subscriptions/packages/pack
 import { PackageComponent } from './pages/dashboard/subscriptions/package/package.component';
 import { StripHtmlPipe } from './pipes/strip-html/strip-html.pipe';
 import { PackagePermissionsComponent } from './pages/dashboard/subscriptions/package-permissions/package-permissions.component';
+import { StockConsumptionsComponent } from './pages/dashboard/stocks/stock-consumptions/stock-consumptions.component';
+import { PharmacyApprovalsComponent } from './pages/dashboard/pharmacy/pharmacy-approvals/pharmacy-approvals.component';
+import { PharmacyAmmendmentsComponent } from './pages/dashboard/pharmacy/pharmacy-ammendments/pharmacy-ammendments.component';
+import { PharmacyPrescriptionsComponent } from './pages/dashboard/pharmacy/pharmacy-prescriptions/pharmacy-prescriptions.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -333,6 +337,10 @@ registerLocaleData(localeEn, 'en-EN');
         PackageComponent,
         StripHtmlPipe,
         PackagePermissionsComponent,
+        StockConsumptionsComponent,
+        PharmacyApprovalsComponent,
+        PharmacyAmmendmentsComponent,
+        PharmacyPrescriptionsComponent,
     ],
     bootstrap: [AppComponent],
     imports: [

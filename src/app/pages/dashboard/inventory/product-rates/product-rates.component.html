@@ -30,7 +30,7 @@
                                     <th>Product Code</th>
                                     <th>Product Name</th>
                                     <th>Category</th>
-                                    <th>Sub-Type</th>
+                                    <th>Scheme</th>
                                     <th>Amount</th>
                                     <th>Date</th>
                                     <th>Status</th>
@@ -78,7 +78,7 @@
                                             {{ product_rate.product.inventory_category?.name }}
                                         </td>
                                         <td>
-                                            {{ product_rate.sub_type?.name }}
+                                            {{ product_rate.scheme?.name }}
                                         </td>
                                         <td>{{ product_rate.amount }}</td>
                                         <td>
@@ -147,17 +147,17 @@
                 ></ng-select>
             </div>
             <div class="mb-3">
-                <label>Sub-Type</label>
+                <label>Scheme</label>
                 <ng-select
-                    [items]="sub_types"
+                    [items]="schemes"
                     bindLabel="name"
                     bindValue="id"
-                    [typeahead]="searchSubTypes$"
-                    [loading]="loadingSubTypes"
-                    [(ngModel)]="selectedSubTypeOption"
-                    placeholder="Search for Sub-Type"
+                    [typeahead]="searchSchemes$"
+                    [loading]="loadingSchemes"
+                    [(ngModel)]="selectedSchemeOption"
+                    placeholder="Search for Scheme"
                     (change)="onItemSelect($event)"
-                    formControlName="sub_type"
+                    formControlName="scheme"
                 ></ng-select>
             </div>
             <div class="mb-3">

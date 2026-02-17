@@ -19,17 +19,23 @@ export class PrescriptionsFormComponent implements OnInit, OnChanges {
   @Input({ required: true }) formArray!: FormArray;
   @Output() totalsChanged = new EventEmitter<number>();
   @Input() patientPrescriptions: any[] = [];
+  @Input() scheme: any;
+
+  storeOptions: { [key: number]: any[] } = {};
 
   isLoading: boolean = true;
   loading: boolean = false;
   loadingPrescriptions: boolean = false;
   loadingFrequencies: boolean = false;
+  loadingStores: boolean = false;
 
   prescriptions: any[] = [];
   frequencies: any[] = [];
+  stores: any[] = [];
 
   searchPrescriptions$ = new Subject<string>();
   searchFrequencies$ = new Subject<string>();
+  searchStores$ = new Subject<string>();
 
   selectedPrescriptionOption: any;
   selectedFrequencyOption: any;
@@ -61,7 +67,6 @@ export class PrescriptionsFormComponent implements OnInit, OnChanges {
     amount: ['', Validators.required],
   });
 */
-    this.setupSearch();
   }
 
   setupSearch() {
@@ -70,7 +75,7 @@ export class PrescriptionsFormComponent implements OnInit, OnChanges {
         debounceTime(300),  // Wait for the user to stop typing for 300ms
         distinctUntilChanged(),  // Only search if the query has changed
         tap(() => this.loadingPrescriptions = true),  // Show the loading spinner
-        switchMap(term => this.productStockService.getStocks(1, term))  // Switch to a new observable for each search term
+        switchMap(term => this.productStockService.getPrescriptionStocks(1, term, this.scheme?.id))  // Switch to a new observable for each search term
       )
       .subscribe((results: any) => {
         this.prescriptions = results.stocks.data.map(p => ({
@@ -90,24 +95,48 @@ export class PrescriptionsFormComponent implements OnInit, OnChanges {
         this.frequencies = results.drug_frequencies.data;
         this.loadingFrequencies = false;  // Hide the loading spinner when the API call finishes
       });
+    this.searchStores$
+      .pipe(
+        debounceTime(300),  // Wait for the user to stop typing for 300ms
+        distinctUntilChanged(),  // Only search if the query has changed
+        tap(() => this.loadingStores = true),  // Show the loading spinner
+        switchMap(term => this.productStockService.getPrescriptionStocks(1, term))  // Switch to a new observable for each search term
+      )
+      .subscribe((results: any) => {
+        this.stores = results.stocks.data;
+        this.loadingStores = false;  // Hide the loading spinner when the API call finishes
+      });
   }
 
-  newPrescription(): FormGroup {
+  newPrescription(prescription: any = null): FormGroup {
+    let stock = 0;
+    let selling = 0;
+    if (prescription) {
+      const matchingStock = prescription.product?.available_stocks
+        ?.find((stock: any) => stock.store_id === prescription.store_id);
+      if (matchingStock) {
+        stock = matchingStock?.available+prescription.quantity;
+        selling = matchingStock?.selling;
+      }
+      //console.log(matchingStock);
+    }
+    console.log("prescription:",prescription?.product_id);
     const group = this.fb.group({
-      id: ['', []],
-      prescription: [null, [Validators.required]],
-      frequency: [null, [Validators.required]],
-      freq: ['', []],
-      quantity: [1, [Validators.required]],
-      days: [1, [Validators.required]],
-      dose: [1, [Validators.required]],
-      stock: ['', []],
-      strength: ['', []],
-      dose_measure: ['', []],
-      route: ['', []],
-      rate: ['', []],
-      amount: ['', []],
+      id: [prescription?.id || '', []],
+      prescription: [prescription?.product_id||null, [Validators.required]],
+      store: [prescription?.store_id, [Validators.required]],
+      frequency: [prescription?.drug_frequency_id, [Validators.required]],
+      freq: [prescription?.drug_frequency?.frequency || null, []],
+      quantity: [prescription?.quantity || 1, [Validators.required,Validators.min(0)]],
+      days: [prescription?.days || 1, [Validators.required, Validators.min(0)]],
+      dose: [prescription?.dose || 1, [Validators.required,Validators.min(0)]],
+      stock: [stock||0, []],
+      balance:[stock-(prescription?.quantity || 1), [Validators.required,Validators.min(0)]],
+      dose_measure: [prescription?.dose_measure_id, []],
+      rate: [prescription?.product?.product_rates[0]?.amount||prescription?.rate, []],
+      amount: [(prescription?.product?.product_rates[0]?.amount||prescription?.rate)*(prescription?.quantity||1), []],
     });
+  
 
     group.get('dose')?.valueChanges.subscribe(() => {
       this.onDaysChange(group);
@@ -123,7 +152,6 @@ export class PrescriptionsFormComponent implements OnInit, OnChanges {
     group.get('freq')?.valueChanges.subscribe(() => {
       this.onQuantityChange(group);
     });
-
     this.formArray.markAllAsTouched();
     return group;
   }
@@ -131,6 +159,7 @@ export class PrescriptionsFormComponent implements OnInit, OnChanges {
 
   addPrescription() {
     if (this.formArray.invalid) {
+      this.formArray.markAllAsTouched();
       this.toastr.error("Please fill all prescription details before adding a new one.");
       return;
     }
@@ -139,31 +168,54 @@ export class PrescriptionsFormComponent implements OnInit, OnChanges {
 
   removePrescription(index: number) {
     this.formArray.removeAt(index);
+    delete this.storeOptions[index];
     //this.selectedPrescriptions.splice(index, 1);
     //this.serviceTotals = this.getRateTotals(this.selectedServiceRates);
   }
 
   prescriptionChange($event: any, i: number) {
-    console.log("prescription id", $event.id);
+    console.log("prescription id", $event.product_id);
+    console.log("prescription:", $event);
 
-    const exists = this.formArray.controls.some(
+    /*const exists = this.formArray.controls.some(
       (c, index) => index !== i && c.value.prescription === $event.id
     );
     if (exists) {
       this.toastr.error("Prescription already added!");
       this.formArray.at(i).reset();
       return;
-    }
+    }*/
+   const totalQuantity = this.formArray.controls
+  .filter((c, index) => index !== i && c.value.prescription === $event.id)
+  .reduce((sum, c) => sum + Number(c.value.quantity || 0), 0);
     const group = this.formArray.at(i) as FormGroup;
+    this.storeOptions[i] = $event.product?.available_stocks||[$event];
+    console.log("store options",this.storeOptions[i]);
 
+setTimeout(() => {
+  const firstStock = this.storeOptions[i]?.[0];
+  console.log("first stock:", firstStock);
+
+  group.patchValue({
+    store: firstStock?.store_id ?? null,
+    stock: firstStock
+      ? firstStock.available - totalQuantity
+      : 0,
+      balance:firstStock
+      ? firstStock.available - totalQuantity-this.formArray.at(i).get("quantity").value
+      : 0,
+      rate:$event?.product_rates?.[0]?.amount||$event?.product?.product_rates?.[0]?.amount||$event.selling
+  });
+});
+/*console.log('store:',this.storeOptions[i][0]);
     group.patchValue({
-      stock: $event.quantity,
-      strength: `${$event.strength} ${$event.inventory_strength_unit.name}`,
-      dose_measure: $event.product.dose_measure.name,
-      route: $event.product.drug_instruction.name,
-      rate: $event.selling,
-      amount: $event.selling
-    });
+      store:this.storeOptions[i].length>0?this.storeOptions[i][0].store_id:null,
+      stock: this.storeOptions[i].length>0?this.storeOptions[i][0].available-totalQuantity:0,
+      //dose_measure: $event.product.dose_measure.name,
+      //route: $event.product.drug_instruction.name,
+      //rate: $event.selling,
+      //amount: $event.selling
+    });*/
   }
   frequencyChange($event: any, i: number) {
     console.log($event);
@@ -195,7 +247,7 @@ export class PrescriptionsFormComponent implements OnInit, OnChanges {
     //const days = group.get('days')?.value || 1;
 
     const amount = quantity * /*dose * days */ (group.get('rate')?.value || 0)/*(group.get('freq')?.value || 0)*/;
-    group.patchValue({ amount: amount, days: quantity / (dose * (group.get('freq')?.value || 0)) });
+    group.patchValue({ amount: amount, days: quantity / (dose * (group.get('freq')?.value || 0)), balance:group.get('stock').value-quantity });
     this.calculatePrescriptionAmount();
     this.updating = false;
   }
@@ -217,28 +269,44 @@ export class PrescriptionsFormComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes['scheme'] && changes['scheme'].currentValue) {
+    this.setupSearch();
+    console.log("scheme bana",this.scheme);
+  }
     if (
       changes['patientPrescriptions'] &&
       this.patientPrescriptions?.length &&
       this.formArray
     ) {
+      console.log("patient pres;",this.patientPrescriptions);
+      let i = 0;
       this.patientPrescriptions.forEach(prescription => {
         this.prescriptions.push({
-          ...prescription.product_rate,
-          display: `${prescription.product_rate.product.name} - ${prescription.product_rate.product.code}`
-        }); 
-        this.frequencies.push(prescription.drug_frequency);
+          ...prescription/*.product*/,
+          display: `${prescription.product.name} - ${prescription.product.code}`
+        });
+        const matchingStock = prescription.product?.available_stocks
+          ?.find((stock: any) => stock.store_id === prescription.store_id);
+        console.log(matchingStock);
+        this.storeOptions[i] = prescription.product?.available_stocks;
+        this.formArray.push(this.newPrescription(prescription));
+        console.log(prescription?.product?.available_stocks);
+        if (!this.frequencies.some(f => f.id === prescription.drug_frequency.id)) {
+          this.frequencies.push(prescription.drug_frequency);
+        }
+        //this.frequencies.push(prescription.drug_frequency);
         // Preload existing systems into options
-        this.selectedPrescriptionOption = prescription.product_rate_id;
+        /*this.selectedPrescriptionOption = prescription.product_rate_id;
         const prescriptionGroup = this.fb.group({
           id: [prescription.id || '', []],
-          prescription: [prescription.product_rate_id || null, Validators.required],
+          prescription: [prescription.product_id || null, Validators.required],
+          store:matchingStock?.store?.id,
           dose: [prescription.dose || '', Validators.required],
           frequency:[prescription.drug_frequency_id || null, Validators.required],
           freq: [prescription.drug_frequency.frequency || '', []],
           quantity: [prescription.quantity || '', Validators.required],
           days: [prescription.days || '', Validators.required],
-          stock: [prescription.stock || '', []],
+          stock: [matchingStock.available || '', []],
           strength: [prescription.strength || '', []],
           dose_measure: [prescription.dose_measure || '', []],
           route: [prescription.route || '', []],
@@ -246,7 +314,12 @@ export class PrescriptionsFormComponent implements OnInit, OnChanges {
           amount: [prescription.amount || '', Validators.required],
         });
         this.prescriptionTotals += prescription.amount || 0;
-        this.formArray.push(prescriptionGroup);
+        this.formArray.push(prescriptionGroup);*/
+        //this.prescriptionTotals += prescription.amount || 0;
+
+  setTimeout(() => {
+        this.prescriptionTotals +=(prescription?.product?.product_rates[0]?.amount||prescription?.rate)*(prescription?.quantity||1);
+  });
         this.calculatePrescriptionAmount();
       });
     }

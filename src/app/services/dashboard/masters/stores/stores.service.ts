@@ -9,8 +9,8 @@ import { Observable } from 'rxjs';
 export class StoresService {
   constructor(private http: HttpClient, @Inject(API_BASE_URL) private baseUrl: string) { }
 
-  getStores(page: number = 1, search: string = ""): Observable<any> {
-    return this.http.get(`${this.baseUrl}/api/dashboard/masters/stores?page=${page}&search=${search}`);
+  getStores(page: number = 1, search: string = "", organization:string="", branch:string=""): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/dashboard/masters/stores?page=${page}&search=${search}&organization=${organization}&branch=${branch}`);
   }
   updateStore(inputData: any) {
     return this.http.post(`${this.baseUrl}/api/dashboard/masters/stores/add`, inputData);

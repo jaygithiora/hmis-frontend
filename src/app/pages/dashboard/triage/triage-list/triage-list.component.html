@@ -64,8 +64,7 @@
                   <td>{{ outpatient_visit_triage.outpatient_visit?.fee_type?.name }}</td>
                   <td>{{ formatDate(outpatient_visit_triage.created_at) }}</td>
                   <td>
-                    <span class="badge badge-primary btn-pill" *ngIf="outpatient_visit_triage.status">Active</span>
-                    <span class="badge badge-secondary btn-pill" *ngIf="!outpatient_visit_triage.status">In-Active</span>
+                    <span class="badge badge-primary btn-pill">{{outpatient_visit_triage?.outpatient_visit?.status | uppercase}}</span>
                   </td>
                   <td class="text-right">
                     <div ngbDropdown container="body">

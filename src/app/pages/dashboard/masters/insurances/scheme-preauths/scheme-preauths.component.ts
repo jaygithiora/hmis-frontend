@@ -9,6 +9,7 @@ import { SchemePreauthsService } from '@services/dashboard/masters/insurances/sc
 import { SchemesService } from '@services/dashboard/masters/insurances/schemes/schemes.service';
 import { RadiologyItemsService } from '@services/dashboard/radiology/radiology-items/radiology-items.service';
 import { ServicesService } from '@services/dashboard/services/services/services.service';
+import { BillingCategoriesService } from '@services/dashboard/settings/billing-categories/billing-categories.service';
 import moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, debounceTime, tap, switchMap } from 'rxjs';
@@ -27,6 +28,7 @@ export class SchemePreauthsComponent implements OnInit {
   loadingServices: boolean = false;
   loadingLaboratoryTests: boolean = false;
   loadingRadiologyItems: boolean = false;
+  loadingBillingCategories: boolean = false;
 
   triage_item: any;
 
@@ -38,6 +40,10 @@ export class SchemePreauthsComponent implements OnInit {
   fromItems = 0; //from items
   toItems = 0; //to items
   perPage = 10;       // Items per page
+
+  billing_categories: any[] = [];
+  selectedBillingCategory: any;
+  searchBillingCategories$ = new Subject<string>();
 
   schemes: any[] = [];
   selectedScheme: any;
@@ -60,18 +66,21 @@ export class SchemePreauthsComponent implements OnInit {
   searchLaboratoryTest$ = new Subject<string>();
 
   active = 1;
+  choices = [{id:1,name:"Billing Category"},{id: 2, name:"Laboratory"}, {id:3, name:"Radiology"}, {id:4,name:"Services"}, {id:5, name:"Pharmacy"}];
 
   constructor(private schemesService: SchemesService, private laboratoryTestService: LaboratoryTestsService, private radiologyItemService: RadiologyItemsService,
-    private productService: ProductsService, private servicesService: ServicesService, private schemePreauthsService: SchemePreauthsService,
-    private modalService: NgbModal, private fb: FormBuilder, private toastr: ToastrService, private service: AuthService,
+    private productService: ProductsService, private servicesService: ServicesService, private schemePreauthsService: SchemePreauthsService, private billingCategoriesService:
+    BillingCategoriesService,private modalService: NgbModal, private fb: FormBuilder, private toastr: ToastrService, private service: AuthService,
   ) {
 
     this.schemePreauthForm = this.fb.group({
       id: ['0', [Validators.required]],
+      option:[1, [Validators.required]],
       service: [null],
       product: [null],
       laboratory_test: [null],
       radiology_item: [null],
+      billing_category:[null],
       scheme: [null, [Validators.required]]
     });
     this.loadOptions();
@@ -82,6 +91,14 @@ export class SchemePreauthsComponent implements OnInit {
   }
 
   loadOptions() {
+    this.searchBillingCategories$.pipe(
+      debounceTime(300),
+      tap(() => this.loadingBillingCategories = true),
+      switchMap(term => this.billingCategoriesService.getBillingCategories(1, term)),
+      tap(() => this.loadingBillingCategories= false)
+    ).subscribe(data => {
+      this.billing_categories = data.billing_categories.data;
+    });
     this.searchSchemes$.pipe(
       debounceTime(300),
       tap(() => this.loadingSchemes = true),
@@ -143,7 +160,7 @@ export class SchemePreauthsComponent implements OnInit {
   onTabChange(event: any) {
     console.log("tab change event", event);
       this.selectedLaboratoryTest = null;
-      //this.selectedScheme = null;
+      this.selectedBillingCategory = null;
       this.selectedRadiologyItem = null;
       this.selectedService = null;
       this.selectedProduct = null;
@@ -172,8 +189,14 @@ export class SchemePreauthsComponent implements OnInit {
     this.modalRef = this.modalService.open(content, { centered: true });
     if (schemeExclusion != null) {
       this.schemePreauthForm.get("id").setValue(schemeExclusion.id);
+      if (schemeExclusion.billing_category) {
+      this.schemePreauthForm.get("option").setValue(1);
+        this.selectedBillingCategory = schemeExclusion.billing_category_id;
+        this.billing_categories = [];
+        this.billing_categories.push(schemeExclusion.billing_category)
+      }
       if (schemeExclusion.laboratory_test) {
-        this.active = 1;
+      this.schemePreauthForm.get("option").setValue(2);
         this.selectedLaboratoryTest = schemeExclusion.laboratory_test_id;
         this.laboratory_tests = [];
         this.laboratory_tests.push(schemeExclusion.laboratory_test)
@@ -184,25 +207,27 @@ export class SchemePreauthsComponent implements OnInit {
         this.schemes.push(schemeExclusion.scheme)
       }
       if (schemeExclusion.product) {
-        this.active = 4;
+      this.schemePreauthForm.get("option").setValue(5);
         this.selectedProduct = schemeExclusion.product_id;
         this.products = [];
         this.products.push(schemeExclusion.product)
       }
       if (schemeExclusion.service) {
-        this.active = 3;
+      this.schemePreauthForm.get("option").setValue(4);
         this.selectedService = schemeExclusion.service_id;
         this.services = [];
         this.services.push(schemeExclusion.service)
       }
       if (schemeExclusion.radiology_item) {
-        this.active = 2;
+      this.schemePreauthForm.get("option").setValue(3);
         this.selectedRadiologyItem = schemeExclusion.radiology_item_id;
         this.radiology_items = [];
         this.radiology_items.push(schemeExclusion.radiology_item)
       }
     } else {
       this.schemePreauthForm.get("id").setValue(0);
+      this.schemePreauthForm.get("option").setValue(1);
+      this.selectedBillingCategory = null;
       this.selectedLaboratoryTest = null;
       this.selectedScheme = null;
       this.selectedRadiologyItem = null;

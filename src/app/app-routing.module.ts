@@ -117,6 +117,7 @@ import { SubscriptionsComponent } from '@pages/dashboard/subscriptions/subscript
 import { PackagesComponent } from '@pages/dashboard/subscriptions/packages/packages.component';
 import { PackageComponent } from '@pages/dashboard/subscriptions/package/package.component';
 import { PackagePermissionsComponent } from '@pages/dashboard/subscriptions/package-permissions/package-permissions.component';
+import { StockConsumptionsComponent } from '@pages/dashboard/stocks/stock-consumptions/stock-consumptions.component';
 
 const routes: Routes = [
   {
@@ -505,6 +506,10 @@ const routes: Routes = [
       {
         path: 'stocks/products',
         component: ProductStocksComponent
+      },
+      {
+        path: 'stocks/consumptions',
+        component: StockConsumptionsComponent
       },
       //settings
       {

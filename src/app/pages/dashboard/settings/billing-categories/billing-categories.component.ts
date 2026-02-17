@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '@services/auth/auth.service';
 import { BillingCategoriesService } from '@services/dashboard/settings/billing-categories/billing-categories.service';
-import { FeeTypesService } from '@services/dashboard/settings/fee-types/fee-types.service';
 import moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 

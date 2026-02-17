@@ -4,6 +4,7 @@ import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '@services/auth/auth.service';
 import { ProductRatesService } from '@services/dashboard/inventory/product-rates/product-rates.service';
 import { ProductsService } from '@services/dashboard/inventory/products/products.service';
+import { SchemesService } from '@services/dashboard/masters/insurances/schemes/schemes.service';
 import { SubTypesService } from '@services/dashboard/masters/sub-types/sub-types.service';
 import moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
@@ -18,18 +19,18 @@ export class ProductRatesComponent implements OnInit {
   private modalRef: NgbModalRef;
   public isLoading: boolean = true;
   loadingProducts: boolean = false;
-  loadingSubTypes: boolean = false;
+  loadingSchemes: boolean = false;
 
   productRateForm!: FormGroup;
 
   products: any[] = [];
-  sub_types: any[] = [];
+  schemes: any[] = [];
 
   searchProducts$ = new Subject<string>();
-  searchSubTypes$ = new Subject<string>();
+  searchSchemes$ = new Subject<string>();
 
   selectedProductOption: any;
-  selectedSubTypeOption: any;
+  selectedSchemeOption: any;
 
   product_rates: any[] = [];// Store fetched items
   totalItems = 0;     // Total number of items
@@ -38,13 +39,13 @@ export class ProductRatesComponent implements OnInit {
   toItems = 0; //to items
   perPage = 10;       // Items per page
 
-  constructor(private productsService: ProductsService, private subTypeService: SubTypesService,
+  constructor(private productsService: ProductsService, private schemesService: SchemesService,
     private modalService: NgbModal, private fb: FormBuilder, private toastr: ToastrService,
     private service: AuthService, private productRateService: ProductRatesService) {
     this.productRateForm = this.fb.group({
       id: ['0', [Validators.required]],
-      product: ['', [Validators.required]],
-      sub_type: ['', [Validators.required]],
+      product: [null, [Validators.required]],
+      scheme: [null, [Validators.required]],
       amount: ['', [Validators.required, Validators.min(0)]],
       status: ['1', [Validators.required]]
     });
@@ -64,16 +65,16 @@ export class ProductRatesComponent implements OnInit {
         this.products = results.products.data;
         this.loadingProducts = false;  // Hide the loading spinner when the API call finishes
       });
-    this.searchSubTypes$
+    this.searchSchemes$
       .pipe(
         debounceTime(300),  // Wait for the user to stop typing for 300ms
         distinctUntilChanged(),  // Only search if the query has changed
-        tap(() => this.loadingSubTypes = true),  // Show the loading spinner
-        switchMap(term => this.subTypeService.getSubTypes(1, term))  // Switch to a new observable for each search term
+        tap(() => this.loadingSchemes = true),  // Show the loading spinner
+        switchMap(term => this.schemesService.getSchemes(1, term))  // Switch to a new observable for each search term
       )
       .subscribe((results: any) => {
-        this.sub_types = results.sub_types.data;
-        this.loadingSubTypes = false;  // Hide the loading spinner when the API call finishes
+        this.schemes = results.schemes.data;
+        this.loadingSchemes = false;  // Hide the loading spinner when the API call finishes
       });
   }
   // Handle item selection
@@ -87,7 +88,7 @@ export class ProductRatesComponent implements OnInit {
   loadPage(page: number) {
     this.isLoading = true;
     this.productRateService.getProductRates(page).subscribe((result: any) => {
-      console.log(result);
+      //console.log(result);
       this.isLoading = false;
       this.product_rates = result.product_rates.data;// Set the items
       this.totalItems = result.product_rates.total; // Total number of items
@@ -105,19 +106,23 @@ export class ProductRatesComponent implements OnInit {
     this.modalRef = this.modalService.open(content, { centered: true});
     if (product != null) {
       this.productRateForm.get("id").setValue(product.id);
-      this.productRateForm.get("name").setValue(product.name);
       this.productRateForm.get("amount").setValue(product.amount);
+      if(product?.product){
+        this.products = [];
         this.products.push(product.product);
         this.selectedProductOption = product.product_id;
-        this.sub_types.push(product.sub_type);
-        this.selectedSubTypeOption = product.sub_type_id;
+      }
+      if(product?.scheme){
+        this.schemes = [];
+        this.schemes.push(product.scheme);
+        this.selectedSchemeOption = product.scheme_id;
+      }
       this.productRateForm.get("status").setValue(product.status);
     } else {
       this.productRateForm.get("id").setValue(0);
-      this.productRateForm.get("name").setValue("");
       this.productRateForm.get("amount").setValue("");
       this.selectedProductOption = null;
-      this.selectedSubTypeOption = null;
+      this.selectedSchemeOption = null;
       this.productRateForm.get("status").setValue("1");
     }
   }
@@ -135,8 +140,8 @@ export class ProductRatesComponent implements OnInit {
         if (error?.error?.errors?.id) {
           this.toastr.error(error?.error?.errors?.id);
         }
-        if (error?.error?.errors?.sub_type) {
-          this.toastr.error(error?.error?.errors?.sub_type);
+        if (error?.error?.errors?.scheme) {
+          this.toastr.error(error?.error?.errors?.scheme);
         }
         if (error?.error?.errors?.product) {
           this.toastr.error(error?.error?.errors?.product);

@@ -6,7 +6,8 @@
                     <h6><i class='fas fa-capsules'></i> PRESCRIPTIONS</h6>
                 </div>
                 <div class="col text-right">
-                    <button type="button" class="btn btn-light btn-sm" (click)="addPrescription()"><i class="fas fa-plus"></i> Add
+                    <button type="button" class="btn btn-light btn-sm" (click)="addPrescription()"><i
+                            class="fas fa-plus"></i> Add
                         New</button>
                 </div>
             </div>
@@ -16,6 +17,8 @@
                 <thead>
                     <th>#</th>
                     <th>Medicine Name</th>
+                    <th>Store</th>
+                    <th>Stock</th>
                     <th>Dose</th>
                     <th>Frequency</th>
                     <th>Days</th>
@@ -26,7 +29,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="9" *ngIf="formArray.controls.length == 0">
+                        <td colspan="11" *ngIf="formArray.controls.length == 0">
                             <div class="alert alert-secondary text-center"><i class="fas fa-ban"></i> No
                                 <b>Prescriptions</b> yet. Click the '+ Add New' button
                                 to add here
@@ -37,18 +40,43 @@
                     <tr *ngFor="let item of formArray.controls; let i = index" [formGroup]="$any(item)">
 
                         <td>{{ i + 1 }}</td>
-                        <td><ng-select [items]="prescriptions" bindLabel="display" bindValue="id"
+                        <td><ng-select [items]="prescriptions" bindLabel="display" bindValue="product_id"
                                 formControlName="prescription" placeholder="Select prescription"
                                 [typeahead]="searchPrescriptions$" (change)="prescriptionChange($event, i)"
-                                [loading]="loadingPrescriptions" placeholder="Search Prescription" [class.is-invalid]="item.get('prescription')?.invalid &&(item.get('prescription')?.touched || item.get('prescription')?.dirty)">
+                                [loading]="loadingPrescriptions" placeholder="Search Prescription"
+                                [class.is-invalid]="item.get('prescription')?.invalid &&(item.get('prescription')?.touched || item.get('prescription')?.dirty)">
                             </ng-select>
                             <div class="invalid-feedback d-block"
-                                *ngIf="item.get('prescription')?.errors?.['required']">
+                                *ngIf="item.get('prescription')?.errors?.['required']&&item.get('prescription')?.touched">
                                 Prescription is required
                             </div>
                         </td>
+                        <td><ng-select [items]="storeOptions[i]" bindLabel="store.name" bindValue="store.id"
+                                formControlName="store" placeholder="Select Store"
+                                [class.is-invalid]="item.get('store')?.invalid &&(item.get('store')?.touched || item.get('prescription')?.dirty)">
+                            </ng-select>
+                            <div class="invalid-feedback d-block"
+                                *ngIf="item.get('store')?.errors?.['required']&&item.get('store')?.touched">
+                                Store is required
+                            </div>
+                        </td>
+                        <td><span
+                                *ngIf="item.get('balance').value >= 0 && item.get('store').value && item.get('prescription').value">{{item.get("balance").value}}</span>
+                            <span
+                                *ngIf="item.get('balance').value < 0 && item.get('store').value && item.get('prescription').value"
+                                class="text-danger">Insufficient Stock</span>
+                        </td>
                         <td><input style="min-width: 80px;" type="number" class="form-control" placeholder="Dose"
-                                formControlName="dose" />
+                                formControlName="dose"
+                                [class.is-invalid]="(item.get('dose')?.errors?.['required']||item.get('dose')?.errors?.['min'])&&item.get('dose')?.touched" />
+                            <div class="invalid-feedback d-block"
+                                *ngIf="item.get('dose')?.errors?.['required']&&item.get('dose')?.touched">
+                                Dose is required
+                            </div>
+                            <div class="invalid-feedback d-block"
+                                *ngIf="item.get('dose')?.errors?.['min']&&item.get('dose')?.touched">
+                                Dose cannot be negative
+                            </div>
                         </td>
                         <td><ng-select [items]="frequencies" bindLabel="name" bindValue="id" formControlName="frequency"
                                 placeholder="Select frequency" [typeahead]="searchFrequencies$"
@@ -57,7 +85,8 @@
     (item.get('frequency')?.touched || item.get('frequency')?.dirty)
   ">
                             </ng-select>
-                            <div class="invalid-feedback d-block" *ngIf="item.get('frequency')?.errors?.['required']">
+                            <div class="invalid-feedback d-block"
+                                *ngIf="item.get('frequency')?.errors?.['required'] && item.get('frequency')?.touched">
                                 Frequency is required
                             </div>
                         </td>
@@ -66,12 +95,26 @@
          item.get('days')?.invalid &&
          (item.get('days')?.touched || item.get('days')?.dirty)
        " />
-                            <div class="invalid-feedback d-block" *ngIf="item.get('days')?.errors?.['required']">
+                            <div class="invalid-feedback d-block"
+                                *ngIf="item.get('days')?.errors?.['required'] && item.get('days').touched">
                                 Days is required
+                            </div>
+                            <div class="invalid-feedback d-block"
+                                *ngIf="item.get('days')?.errors?.['min']&&item.get('days')?.touched">
+                                Days cannot be negative
                             </div>
                         </td>
                         <td><input style="min-width: 80px;" type="number" class="form-control" placeholder="Qty"
-                                formControlName="quantity" /></td>
+                                formControlName="quantity" />
+                            <div class="invalid-feedback d-block"
+                                *ngIf="item.get('quantity')?.errors?.['required']&&item.get('quantity')?.touched">
+                                Days is required
+                            </div>
+                            <div class="invalid-feedback d-block"
+                                *ngIf="item.get('quantity')?.errors?.['min']&&item.get('quantity')?.touched">
+                                Quantity cannot be negative
+                            </div>
+                        </td>
                         <td>{{item.value.rate | number:'1.0-0'}}</td>
                         <td>{{item.value.amount | number:'1.0-0'}}</td>
                         <td class="text-right">
@@ -130,6 +173,8 @@
                     <tr>
                         <td colspan="7">Totals:</td>
                         <td><b>KES {{ prescriptionTotals }}</b></td>
+                        <td></td>
+                        <td></td>
                         <td></td>
                     </tr>
                 </tbody>
