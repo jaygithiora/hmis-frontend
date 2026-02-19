@@ -1,143 +1,144 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { MainComponent } from '@modules/main/main.component';
-import { BlankComponent } from '@pages/blank/blank.component';
-import { LoginComponent } from '@modules/login/login.component';
-import { RegisterComponent } from '@modules/register/register.component';
-import { DashboardComponent } from '@pages/dashboard/dashboard.component';
-import { NonAuthGuard } from '@guards/non-auth.guard';
-import { ForgotPasswordComponent } from '@modules/forgot-password/forgot-password.component';
-import { RecoverPasswordComponent } from '@modules/recover-password/recover-password.component';
-import { SubMenuComponent } from '@pages/main-menu/sub-menu/sub-menu.component';
-import { FrontendComponent } from '@pages/frontend/frontend.component';
-import { IndexComponent } from '@pages/frontend/index/index.component';
-import { authGuard } from '@guards/auth.guard';
-import { HospitalDataComponent } from '@pages/dashboard/masters/hospital-data/hospital-data.component';
-import { LocationsComponent } from '@pages/dashboard/masters/locations/locations.component';
-import { MainTypesComponent } from '@pages/dashboard/masters/main-types/main-types.component';
-import { SalutationsComponent } from '@pages/dashboard/masters/salutations/salutations.component';
-import { DepartmentsComponent } from '@pages/dashboard/masters/departments/departments.component';
-import { BloodGroupsComponent } from '@pages/dashboard/masters/blood-groups/blood-groups.component';
-import { GenericNamesComponent } from '@pages/dashboard/masters/generic-names/generic-names.component';
-import { IcdsComponent } from '@pages/dashboard/masters/icds/icds.component';
-import { SubTypesComponent } from '@pages/dashboard/masters/sub-types/sub-types.component';
-import { DoctorsComponent } from '@pages/dashboard/masters/doctors/doctors/doctors.component';
-import { UsersComponent } from '@pages/dashboard/users/users/users.component';
-import { ConsultationTypesComponent } from '@pages/dashboard/masters/consultation-types/consultation-types.component';
-import { MainAccountsComponent } from '@pages/dashboard/masters/main-accounts/main-accounts.component';
-import { SubAccountsComponent } from '@pages/dashboard/masters/sub-accounts/sub-accounts.component';
-import { AccountsComponent } from '@pages/dashboard/masters/accounts/accounts.component';
-import { PlansComponent } from '@pages/dashboard/masters/plans/plans.component';
-import { InventoryCategoriesComponent } from '@pages/dashboard/inventory/inventory-categories/inventory-categories.component';
-import { PackSizesComponent } from '@pages/dashboard/inventory/pack-sizes/pack-sizes.component';
-import { PurchaseTypesComponent } from '@pages/dashboard/inventory/purchase-types/purchase-types.component';
-import { ProductTypesComponent } from '@pages/dashboard/inventory/product-types/product-types.component';
-import { DrugInstructionsComponent } from '@pages/dashboard/inventory/drug-instructions/drug-instructions.component';
-import { DoseMeasuresComponent } from '@pages/dashboard/inventory/dose-measures/dose-measures.component';
-import { ProductsComponent } from '@pages/dashboard/inventory/products/products.component';
-import { ConsultationRoomsComponent } from '@pages/dashboard/masters/consultation-rooms/consultation-rooms.component';
-import { ServiceCategoriesComponent } from '@pages/dashboard/services/service-categories/service-categories.component';
-import { ServicesComponent } from '@pages/dashboard/services/services/services.component';
-import { StoresComponent } from '@pages/dashboard/masters/stores/stores.component';
-import { LaboratoryCategoriesComponent } from '@pages/dashboard/masters/laboratory/laboratory-categories/laboratory-categories.component';
-import { RadiologyCategoriesComponent } from '@pages/dashboard/radiology/radiology-categories/radiology-categories.component';
-import { RadiologyItemsComponent } from '@pages/dashboard/radiology/radiology-items/radiology-items.component';
-import { LaboratoryTestsComponent } from '@pages/dashboard/masters/laboratory/laboratory-tests/laboratory-tests.component';
-import { ProductRatesComponent } from '@pages/dashboard/inventory/product-rates/product-rates.component';
-import { LaboratoryTestRatesComponent } from '@pages/dashboard/masters/laboratory/laboratory-test-rates/laboratory-test-rates.component';
-import { LaboratoryTestReferencesComponent } from '@pages/dashboard/masters/laboratory/laboratory-test-references/laboratory-test-references.component';
-import { RadiologyItemRatesComponent } from '@pages/dashboard/radiology/radiology-item-rates/radiology-item-rates.component';
-import { ServiceRatesComponent } from '@pages/dashboard/services/service-rates/service-rates.component';
-import { WardsComponent } from '@pages/dashboard/ip-masters/wards/wards.component';
-import { BedsComponent } from '@pages/dashboard/ip-masters/beds/beds.component';
-import { BedChargesComponent } from '@pages/dashboard/ip-masters/bed-charges/bed-charges.component';
-import { BedChargeSettingsComponent } from '@pages/dashboard/ip-masters/bed-charge-settings/bed-charge-settings.component';
-import { PatientRegistrationComponent } from '@pages/dashboard/patients/patient-registration/patient-registration.component';
-import { NextOfKinRelationsComponent } from '@pages/dashboard/settings/next-of-kin-relations/next-of-kin-relations.component';
-import { PatientsListComponent } from '@pages/dashboard/patients/patients-list/patients-list.component';
-import { CreateOpVisitComponent } from '@pages/dashboard/visit-management/create-op-visit/create-op-visit.component';
-import { CreateIpVisitComponent } from '@pages/dashboard/visit-management/create-ip-visit/create-ip-visit.component';
-import { VisitOpListComponent } from '@pages/dashboard/visit-management/visit-op-list/visit-op-list.component';
-import { VisitIpListComponent } from '@pages/dashboard/visit-management/visit-ip-list/visit-ip-list.component';
-import { PaymentModesComponent } from '@pages/dashboard/masters/payments/payment-modes/payment-modes.component';
-import { TriageCategoriesComponent } from '@pages/dashboard/triage/triage-categories/triage-categories.component';
-import { TriageItemsComponent } from '@pages/dashboard/triage/triage-items/triage-items.component';
-import { BillsComponent } from '@pages/dashboard/bills/bills/bills.component';
-import { BillViewComponent } from '@pages/dashboard/bills/bill-view/bill-view.component';
-import { TriageItemComponent } from '@pages/dashboard/triage/triage-item/triage-item.component';
-import { TriageListComponent } from '@pages/dashboard/triage/triage-list/triage-list.component';
-import { TriageComponent } from '@pages/dashboard/triage/triage/triage.component';
-import { ConsultationListComponent } from '@pages/dashboard/consultation/consultation-list/consultation-list.component';
-import { StatusesComponent } from '@pages/dashboard/settings/statuses/statuses.component';
-import { ConsultationFormComponent } from '@pages/dashboard/consultation/consultation-form/consultation-form.component';
-import { SystemsComponent } from '@pages/dashboard/settings/systems/systems.component';
-import { MedicalHistoriesComponent } from '@pages/dashboard/settings/medical-histories/medical-histories.component';
-import { SurgerySettingsComponent } from '@pages/dashboard/settings/surgery-settings/surgery-settings.component';
-import { SocialHistoriesComponent } from '@pages/dashboard/settings/social-histories/social-histories.component';
-import { SickLeaveTypesComponent } from '@pages/dashboard/settings/sick-leave-types/sick-leave-types.component';
-import { StrengthUnitsComponent } from '@pages/dashboard/inventory/strength-units/strength-units.component';
-import { ProductStocksComponent } from '@pages/dashboard/stocks/product-stocks/product-stocks.component';
-import { DrugFrequenciesComponent } from '@pages/dashboard/inventory/drug-frequencies/drug-frequencies.component';
-import { SelfRequestComponent } from '@pages/dashboard/self-requests/self-request/self-request.component';
-import { RolesComponent } from '@pages/dashboard/users/roles/roles.component';
-import { RoleComponent } from '@pages/dashboard/users/role/role.component';
-import { OrganizationsComponent } from '@pages/dashboard/organizations/organizations/organizations.component';
-import { BranchesComponent } from '@pages/dashboard/organizations/branches/branches.component';
-import { OpDiscountApprovalsComponent } from '@pages/dashboard/bills/op-discount-approvals/op-discount-approvals.component';
-import { OpDiscountApprovalComponent } from '@pages/dashboard/bills/op-discount-approval/op-discount-approval.component';
-import { BillReprintsComponent } from '@pages/dashboard/bills/bill-reprints/bill-reprints.component';
-import { LaboratorySampleCollectionsComponent } from '@pages/dashboard/laboratory/laboratory-sample-collections/laboratory-sample-collections.component';
-import { LaboratorySampleCollectionComponent } from '@pages/dashboard/laboratory/laboratory-sample-collection/laboratory-sample-collection.component';
-import { LaboratoryWorkListComponent } from '@pages/dashboard/laboratory/laboratory-work-list/laboratory-work-list.component';
-import { LaboratoryResultEntryComponent } from '@pages/dashboard/laboratory/laboratory-result-entry/laboratory-result-entry.component';
-import { LaboratoryEquipmentsComponent } from '@pages/dashboard/masters/laboratory/laboratory-equipments/laboratory-equipments.component';
-import { LaboratorySampleTypesComponent } from '@pages/dashboard/masters/laboratory/laboratory-sample-types/laboratory-sample-types.component';
-import { LaboratoryInterpretationsComponent } from '@pages/dashboard/masters/laboratory/laboratory-interpretations/laboratory-interpretations.component';
-import { LaboratoryLinkingComponent } from '@pages/dashboard/masters/laboratory/laboratory-linking/laboratory-linking.component';
-import { LaboratoryPublishResultsComponent } from '@pages/dashboard/laboratory/laboratory-publish-results/laboratory-publish-results.component';
-import { LaboratoryResultsMasterDataComponent } from '@pages/dashboard/laboratory/laboratory-results-master-data/laboratory-results-master-data.component';
-import { ProfileComponent } from '@pages/dashboard/profile/profile.component';
-import { InsurancesComponent } from '@pages/dashboard/masters/insurances/insurances/insurances.component';
-import { PaymentTypesComponent } from '@pages/dashboard/masters/payments/payment-types/payment-types.component';
-import { SchemesComponent } from '@pages/dashboard/masters/insurances/schemes/schemes.component';
-import { DoctorCategoriesComponent } from '@pages/dashboard/masters/doctors/doctor-categories/doctor-categories.component';
-import { SpecializationsComponent } from '@pages/dashboard/settings/specializations/specializations.component';
-import { DoctorSpecializationsComponent } from '@pages/dashboard/masters/doctors/doctor-specializations/doctor-specializations.component';
-import { DoctorDepartmentsComponent } from '@pages/dashboard/masters/doctors/doctor-departments/doctor-departments.component';
-import { FeeTypesComponent } from '@pages/dashboard/settings/fee-types/fee-types.component';
-import { DoctorFeesComponent } from '@pages/dashboard/masters/doctors/doctor-fees/doctor-fees.component';
-import { DoctorShareComponent } from '@pages/dashboard/masters/doctors/doctor-share/doctor-share.component';
-import { SchemeDepartmentsComponent } from '@pages/dashboard/masters/insurances/scheme-departments/scheme-departments.component';
-import { BillingCategoriesComponent } from '@pages/dashboard/settings/billing-categories/billing-categories.component';
-import { SchemeCopaymentsComponent } from '@pages/dashboard/masters/insurances/scheme-copayments/scheme-copayments.component';
-import { SchemeLimitsComponent } from '@pages/dashboard/masters/insurances/scheme-limits/scheme-limits.component';
-import { SchemeExclusionsComponent } from '@pages/dashboard/masters/insurances/scheme-exclusions/scheme-exclusions.component';
-import { SchemePreauthsComponent } from '@pages/dashboard/masters/insurances/scheme-preauths/scheme-preauths.component';
-import { SubscriptionsComponent } from '@pages/dashboard/subscriptions/subscriptions/subscriptions.component';
-import { PackagesComponent } from '@pages/dashboard/subscriptions/packages/packages.component';
-import { PackageComponent } from '@pages/dashboard/subscriptions/package/package.component';
-import { PackagePermissionsComponent } from '@pages/dashboard/subscriptions/package-permissions/package-permissions.component';
-import { StockConsumptionsComponent } from '@pages/dashboard/stocks/stock-consumptions/stock-consumptions.component';
+import {NgModule} from '@angular/core';
+import {Routes, RouterModule} from '@angular/router';
+import {MainComponent} from '@modules/main/main.component';
+import {BlankComponent} from '@pages/blank/blank.component';
+import {LoginComponent} from '@modules/login/login.component';
+import {RegisterComponent} from '@modules/register/register.component';
+import {DashboardComponent} from '@pages/dashboard/dashboard.component';
+import {NonAuthGuard} from '@guards/non-auth.guard';
+import {ForgotPasswordComponent} from '@modules/forgot-password/forgot-password.component';
+import {RecoverPasswordComponent} from '@modules/recover-password/recover-password.component';
+import {SubMenuComponent} from '@pages/main-menu/sub-menu/sub-menu.component';
+import {FrontendComponent} from '@pages/frontend/frontend.component';
+import {IndexComponent} from '@pages/frontend/index/index.component';
+import {authGuard} from '@guards/auth.guard';
+import {HospitalDataComponent} from '@pages/dashboard/masters/hospital-data/hospital-data.component';
+import {LocationsComponent} from '@pages/dashboard/masters/locations/locations.component';
+import {MainTypesComponent} from '@pages/dashboard/masters/main-types/main-types.component';
+import {SalutationsComponent} from '@pages/dashboard/masters/salutations/salutations.component';
+import {DepartmentsComponent} from '@pages/dashboard/masters/departments/departments.component';
+import {BloodGroupsComponent} from '@pages/dashboard/masters/blood-groups/blood-groups.component';
+import {GenericNamesComponent} from '@pages/dashboard/masters/generic-names/generic-names.component';
+import {IcdsComponent} from '@pages/dashboard/masters/icds/icds.component';
+import {SubTypesComponent} from '@pages/dashboard/masters/sub-types/sub-types.component';
+import {DoctorsComponent} from '@pages/dashboard/masters/doctors/doctors/doctors.component';
+import {UsersComponent} from '@pages/dashboard/users/users/users.component';
+import {ConsultationTypesComponent} from '@pages/dashboard/masters/consultation-types/consultation-types.component';
+import {MainAccountsComponent} from '@pages/dashboard/masters/main-accounts/main-accounts.component';
+import {SubAccountsComponent} from '@pages/dashboard/masters/sub-accounts/sub-accounts.component';
+import {AccountsComponent} from '@pages/dashboard/masters/accounts/accounts.component';
+import {PlansComponent} from '@pages/dashboard/masters/plans/plans.component';
+import {InventoryCategoriesComponent} from '@pages/dashboard/inventory/inventory-categories/inventory-categories.component';
+import {PackSizesComponent} from '@pages/dashboard/inventory/pack-sizes/pack-sizes.component';
+import {PurchaseTypesComponent} from '@pages/dashboard/inventory/purchase-types/purchase-types.component';
+import {ProductTypesComponent} from '@pages/dashboard/inventory/product-types/product-types.component';
+import {DrugInstructionsComponent} from '@pages/dashboard/inventory/drug-instructions/drug-instructions.component';
+import {DoseMeasuresComponent} from '@pages/dashboard/inventory/dose-measures/dose-measures.component';
+import {ProductsComponent} from '@pages/dashboard/inventory/products/products.component';
+import {ConsultationRoomsComponent} from '@pages/dashboard/masters/consultation-rooms/consultation-rooms.component';
+import {ServiceCategoriesComponent} from '@pages/dashboard/services/service-categories/service-categories.component';
+import {ServicesComponent} from '@pages/dashboard/services/services/services.component';
+import {StoresComponent} from '@pages/dashboard/masters/stores/stores.component';
+import {LaboratoryCategoriesComponent} from '@pages/dashboard/masters/laboratory/laboratory-categories/laboratory-categories.component';
+import {RadiologyCategoriesComponent} from '@pages/dashboard/radiology/radiology-categories/radiology-categories.component';
+import {RadiologyItemsComponent} from '@pages/dashboard/radiology/radiology-items/radiology-items.component';
+import {LaboratoryTestsComponent} from '@pages/dashboard/masters/laboratory/laboratory-tests/laboratory-tests.component';
+import {ProductRatesComponent} from '@pages/dashboard/inventory/product-rates/product-rates.component';
+import {LaboratoryTestRatesComponent} from '@pages/dashboard/masters/laboratory/laboratory-test-rates/laboratory-test-rates.component';
+import {LaboratoryTestReferencesComponent} from '@pages/dashboard/masters/laboratory/laboratory-test-references/laboratory-test-references.component';
+import {RadiologyItemRatesComponent} from '@pages/dashboard/radiology/radiology-item-rates/radiology-item-rates.component';
+import {ServiceRatesComponent} from '@pages/dashboard/services/service-rates/service-rates.component';
+import {WardsComponent} from '@pages/dashboard/ip-masters/wards/wards.component';
+import {BedsComponent} from '@pages/dashboard/ip-masters/beds/beds.component';
+import {BedChargesComponent} from '@pages/dashboard/ip-masters/bed-charges/bed-charges.component';
+import {BedChargeSettingsComponent} from '@pages/dashboard/ip-masters/bed-charge-settings/bed-charge-settings.component';
+import {PatientRegistrationComponent} from '@pages/dashboard/patients/patient-registration/patient-registration.component';
+import {NextOfKinRelationsComponent} from '@pages/dashboard/settings/next-of-kin-relations/next-of-kin-relations.component';
+import {PatientsListComponent} from '@pages/dashboard/patients/patients-list/patients-list.component';
+import {CreateOpVisitComponent} from '@pages/dashboard/visit-management/create-op-visit/create-op-visit.component';
+import {CreateIpVisitComponent} from '@pages/dashboard/visit-management/create-ip-visit/create-ip-visit.component';
+import {VisitOpListComponent} from '@pages/dashboard/visit-management/visit-op-list/visit-op-list.component';
+import {VisitIpListComponent} from '@pages/dashboard/visit-management/visit-ip-list/visit-ip-list.component';
+import {PaymentModesComponent} from '@pages/dashboard/masters/payments/payment-modes/payment-modes.component';
+import {TriageCategoriesComponent} from '@pages/dashboard/triage/triage-categories/triage-categories.component';
+import {TriageItemsComponent} from '@pages/dashboard/triage/triage-items/triage-items.component';
+import {BillsComponent} from '@pages/dashboard/bills/bills/bills.component';
+import {BillViewComponent} from '@pages/dashboard/bills/bill-view/bill-view.component';
+import {TriageItemComponent} from '@pages/dashboard/triage/triage-item/triage-item.component';
+import {TriageListComponent} from '@pages/dashboard/triage/triage-list/triage-list.component';
+import {TriageComponent} from '@pages/dashboard/triage/triage/triage.component';
+import {ConsultationListComponent} from '@pages/dashboard/consultation/consultation-list/consultation-list.component';
+import {StatusesComponent} from '@pages/dashboard/settings/statuses/statuses.component';
+import {ConsultationFormComponent} from '@pages/dashboard/consultation/consultation-form/consultation-form.component';
+import {SystemsComponent} from '@pages/dashboard/settings/systems/systems.component';
+import {MedicalHistoriesComponent} from '@pages/dashboard/settings/medical-histories/medical-histories.component';
+import {SurgerySettingsComponent} from '@pages/dashboard/settings/surgery-settings/surgery-settings.component';
+import {SocialHistoriesComponent} from '@pages/dashboard/settings/social-histories/social-histories.component';
+import {SickLeaveTypesComponent} from '@pages/dashboard/settings/sick-leave-types/sick-leave-types.component';
+import {StrengthUnitsComponent} from '@pages/dashboard/inventory/strength-units/strength-units.component';
+import {ProductStocksComponent} from '@pages/dashboard/stocks/product-stocks/product-stocks.component';
+import {DrugFrequenciesComponent} from '@pages/dashboard/inventory/drug-frequencies/drug-frequencies.component';
+import {SelfRequestComponent} from '@pages/dashboard/self-requests/self-request/self-request.component';
+import {RolesComponent} from '@pages/dashboard/users/roles/roles.component';
+import {RoleComponent} from '@pages/dashboard/users/role/role.component';
+import {OrganizationsComponent} from '@pages/dashboard/organizations/organizations/organizations.component';
+import {BranchesComponent} from '@pages/dashboard/organizations/branches/branches.component';
+import {OpDiscountApprovalsComponent} from '@pages/dashboard/bills/op-discount-approvals/op-discount-approvals.component';
+import {OpDiscountApprovalComponent} from '@pages/dashboard/bills/op-discount-approval/op-discount-approval.component';
+import {BillReprintsComponent} from '@pages/dashboard/bills/bill-reprints/bill-reprints.component';
+import {LaboratorySampleCollectionsComponent} from '@pages/dashboard/laboratory/laboratory-sample-collections/laboratory-sample-collections.component';
+import {LaboratorySampleCollectionComponent} from '@pages/dashboard/laboratory/laboratory-sample-collection/laboratory-sample-collection.component';
+import {LaboratoryWorkListComponent} from '@pages/dashboard/laboratory/laboratory-work-list/laboratory-work-list.component';
+import {LaboratoryResultEntryComponent} from '@pages/dashboard/laboratory/laboratory-result-entry/laboratory-result-entry.component';
+import {LaboratoryEquipmentsComponent} from '@pages/dashboard/masters/laboratory/laboratory-equipments/laboratory-equipments.component';
+import {LaboratorySampleTypesComponent} from '@pages/dashboard/masters/laboratory/laboratory-sample-types/laboratory-sample-types.component';
+import {LaboratoryInterpretationsComponent} from '@pages/dashboard/masters/laboratory/laboratory-interpretations/laboratory-interpretations.component';
+import {LaboratoryLinkingComponent} from '@pages/dashboard/masters/laboratory/laboratory-linking/laboratory-linking.component';
+import {LaboratoryPublishResultsComponent} from '@pages/dashboard/laboratory/laboratory-publish-results/laboratory-publish-results.component';
+import {LaboratoryResultsMasterDataComponent} from '@pages/dashboard/laboratory/laboratory-results-master-data/laboratory-results-master-data.component';
+import {ProfileComponent} from '@pages/dashboard/profile/profile.component';
+import {InsurancesComponent} from '@pages/dashboard/masters/insurances/insurances/insurances.component';
+import {PaymentTypesComponent} from '@pages/dashboard/masters/payments/payment-types/payment-types.component';
+import {SchemesComponent} from '@pages/dashboard/masters/insurances/schemes/schemes.component';
+import {DoctorCategoriesComponent} from '@pages/dashboard/masters/doctors/doctor-categories/doctor-categories.component';
+import {SpecializationsComponent} from '@pages/dashboard/settings/specializations/specializations.component';
+import {DoctorSpecializationsComponent} from '@pages/dashboard/masters/doctors/doctor-specializations/doctor-specializations.component';
+import {DoctorDepartmentsComponent} from '@pages/dashboard/masters/doctors/doctor-departments/doctor-departments.component';
+import {FeeTypesComponent} from '@pages/dashboard/settings/fee-types/fee-types.component';
+import {DoctorFeesComponent} from '@pages/dashboard/masters/doctors/doctor-fees/doctor-fees.component';
+import {DoctorShareComponent} from '@pages/dashboard/masters/doctors/doctor-share/doctor-share.component';
+import {SchemeDepartmentsComponent} from '@pages/dashboard/masters/insurances/scheme-departments/scheme-departments.component';
+import {BillingCategoriesComponent} from '@pages/dashboard/settings/billing-categories/billing-categories.component';
+import {SchemeCopaymentsComponent} from '@pages/dashboard/masters/insurances/scheme-copayments/scheme-copayments.component';
+import {SchemeLimitsComponent} from '@pages/dashboard/masters/insurances/scheme-limits/scheme-limits.component';
+import {SchemeExclusionsComponent} from '@pages/dashboard/masters/insurances/scheme-exclusions/scheme-exclusions.component';
+import {SchemePreauthsComponent} from '@pages/dashboard/masters/insurances/scheme-preauths/scheme-preauths.component';
+import {SubscriptionsComponent} from '@pages/dashboard/subscriptions/subscriptions/subscriptions.component';
+import {PackagesComponent} from '@pages/dashboard/subscriptions/packages/packages.component';
+import {PackageComponent} from '@pages/dashboard/subscriptions/package/package.component';
+import {PackagePermissionsComponent} from '@pages/dashboard/subscriptions/package-permissions/package-permissions.component';
+import {StockConsumptionsComponent} from '@pages/dashboard/stocks/stock-consumptions/stock-consumptions.component';
+import {IdentificationDocumentTypesComponent} from '@pages/dashboard/settings/identification-document-types/identification-document-types.component';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: FrontendComponent,
-    children: [
-      {
-        path: "",
-        component: IndexComponent
-      }
-    ]
-  },
-  {
-    path: 'dashboard',
-    component: MainComponent,
-    canActivate: [authGuard],
-    canActivateChild: [authGuard],
-    children: [
-      //masters
-      /*{
+    {
+        path: '',
+        component: FrontendComponent,
+        children: [
+            {
+                path: '',
+                component: IndexComponent
+            }
+        ]
+    },
+    {
+        path: 'dashboard',
+        component: MainComponent,
+        canActivate: [authGuard],
+        canActivateChild: [authGuard],
+        children: [
+            //masters
+            /*{
         path: 'masters/hospital-data',
         component: HospitalDataComponent
       },
@@ -145,483 +146,493 @@ const routes: Routes = [
         path: 'masters/locations',
         component: LocationsComponent
       },*/
-      {
-        path: 'masters/insurances/list',
-        component:InsurancesComponent
-      },
-      {
-        path: 'masters/insurances/schemes',
-        component:SchemesComponent
-      },
-      {
-        path: 'masters/insurances/schemes/departments',
-        component:SchemeDepartmentsComponent
-      },
-      {
-        path: 'masters/insurances/schemes/copayments',
-        component:SchemeCopaymentsComponent
-      },
-      {
-        path: 'masters/insurances/schemes/limits',
-        component:SchemeLimitsComponent
-      },
-      {
-        path: 'masters/insurances/schemes/exclusions',
-        component:SchemeExclusionsComponent
-      },
-      {
-        path: 'masters/insurances/schemes/preauths',
-        component:SchemePreauthsComponent
-      },
-      {
-        path: 'masters/payments/payment-types',
-        component: PaymentTypesComponent
-      },
-      {
-        path: 'masters/payments/payment-modes',
-        component: PaymentModesComponent
-      },
-      /*
+            {
+                path: 'masters/insurances/list',
+                component: InsurancesComponent
+            },
+            {
+                path: 'masters/insurances/schemes',
+                component: SchemesComponent
+            },
+            {
+                path: 'masters/insurances/schemes/departments',
+                component: SchemeDepartmentsComponent
+            },
+            {
+                path: 'masters/insurances/schemes/copayments',
+                component: SchemeCopaymentsComponent
+            },
+            {
+                path: 'masters/insurances/schemes/limits',
+                component: SchemeLimitsComponent
+            },
+            {
+                path: 'masters/insurances/schemes/exclusions',
+                component: SchemeExclusionsComponent
+            },
+            {
+                path: 'masters/insurances/schemes/preauths',
+                component: SchemePreauthsComponent
+            },
+            {
+                path: 'masters/payments/payment-types',
+                component: PaymentTypesComponent
+            },
+            {
+                path: 'masters/payments/payment-modes',
+                component: PaymentModesComponent
+            },
+            /*
       {
         path: 'masters/sub-types',
         component: SubTypesComponent
       },*/
-      {
-        path: 'masters/salutations',
-        component: SalutationsComponent
-      },
-      {
-        path: 'masters/departments',
-        component: DepartmentsComponent
-      },/*
+            {
+                path: 'masters/salutations',
+                component: SalutationsComponent
+            },
+            {
+                path: 'masters/departments',
+                component: DepartmentsComponent
+            } /*
       {
         path: 'masters/consultation-types',
         component: ConsultationTypesComponent
-      },*/
-      {
-        path: 'masters/doctors/categories',
-        component: DoctorCategoriesComponent
-      },
-      {
-        path: 'masters/doctors/list',
-        component: DoctorsComponent
-      },
-      {
-        path: 'masters/doctors/specializations',
-        component: DoctorSpecializationsComponent
-      },
-      {
-        path: 'masters/doctors/departments',
-        component: DoctorDepartmentsComponent
-      },
-      {
-        path: 'masters/doctors/fees',
-        component: DoctorFeesComponent
-      },
-      {
-        path: 'masters/doctors/share',
-        component: DoctorShareComponent
-      },
-      {
-        path: 'masters/consultation-rooms',
-        component: ConsultationRoomsComponent
-      },
-      {
-        path: 'masters/main-accounts',
-        component: MainAccountsComponent
-      },
-      {
-        path: 'masters/sub-accounts',
-        component: SubAccountsComponent
-      },
-      {
-        path: 'masters/accounts',
-        component: AccountsComponent
-      },
-      {
-        path: 'masters/plans',
-        component: PlansComponent
-      },
-      {
-        path: 'masters/blood-groups',
-        component: BloodGroupsComponent
-      },
-      {
-        path: 'masters/generic-names',
-        component: GenericNamesComponent
-      },
-      {
-        path: 'masters/icds',
-        component: IcdsComponent
-      },
-      {
-        path: 'masters/stores',
-        component: StoresComponent
-      },
-      {
-        path: 'masters/laboratory/categories',
-        component: LaboratoryCategoriesComponent
-      },
-      {
-        path: 'masters/laboratory/tests',
-        component: LaboratoryTestsComponent
-      },
-      {
-        path: 'masters/laboratory/test-rates',
-        component: LaboratoryTestRatesComponent
-      },
-      {
-        path: 'masters/laboratory/test-references',
-        component: LaboratoryTestReferencesComponent
-      },
-      {
-        path: 'masters/laboratory/equipment',
-        component: LaboratoryEquipmentsComponent
-      },
-      {
-        path: 'masters/laboratory/sample-types',
-        component: LaboratorySampleTypesComponent
-      },
-      {
-        path: 'masters/laboratory/interpretations',
-        component: LaboratoryInterpretationsComponent
-      },
-      {
-        path: 'masters/laboratory/linking',
-        component: LaboratoryLinkingComponent
-      },
-      //ip masters
-      {
-        path: 'ip-masters/wards',
-        component: WardsComponent
-      },
-      {
-        path: 'ip-masters/beds',
-        component: BedsComponent
-      },
-      {
-        path: 'ip-masters/bed-charges',
-        component: BedChargesComponent
-      },
-      {
-        path: 'ip-masters/bed-charge-settings',
-        component: BedChargeSettingsComponent
-      },
-      //inventory
-      {
-        path: 'inventory/categories',
-        component: InventoryCategoriesComponent
-      },
-      {
-        path: 'inventory/pack-sizes',
-        component: PackSizesComponent
-      },
-      {
-        path: 'inventory/purchase-types',
-        component: PurchaseTypesComponent
-      },
-      {
-        path: 'inventory/product-types',
-        component: ProductTypesComponent
-      },
-      {
-        path: 'inventory/drug-instructions',
-        component: DrugInstructionsComponent
-      },
-      {
-        path: 'inventory/dose-measures',
-        component: DoseMeasuresComponent
-      },
-      {
-        path: 'inventory/strength-units',
-        component: StrengthUnitsComponent
-      },
-      {
-        path: 'inventory/drug-frequencies',
-        component: DrugFrequenciesComponent
-      },
-      {
-        path: 'inventory/products',
-        component: ProductsComponent
-      },
-      {
-        path: 'inventory/product-rates',
-        component: ProductRatesComponent
-      },
-      //radiology
-      {
-        path: 'radiology/items',
-        component: RadiologyItemsComponent
-      },
-      {
-        path: 'radiology/categories',
-        component: RadiologyCategoriesComponent
-      },
-      {
-        path: 'radiology/item-rates',
-        component: RadiologyItemRatesComponent
-      },
-      //laboratory
-      {
-        path: 'laboratory/sample-collections',
-        component: LaboratorySampleCollectionsComponent
-      },
-      {
-        path: 'laboratory/sample-collections/view/:id',
-        component: LaboratorySampleCollectionComponent
-      },
-      {
-        path: 'laboratory/lab-work-list',
-        component: LaboratoryWorkListComponent
-      },
-      {
-        path: 'laboratory/lab-work-list/view/:id',
-        component: LaboratoryResultEntryComponent
-      },
-      {
-        path: 'laboratory/publish-results',
-        component: LaboratoryPublishResultsComponent
-      },
-      {
-        path: 'laboratory/results-master-data',
-        component: LaboratoryResultsMasterDataComponent
-      },
-      //services
+      },*/,
+            {
+                path: 'masters/doctors/categories',
+                component: DoctorCategoriesComponent
+            },
+            {
+                path: 'masters/doctors/list',
+                component: DoctorsComponent
+            },
+            {
+                path: 'masters/doctors/specializations',
+                component: DoctorSpecializationsComponent
+            },
+            {
+                path: 'masters/doctors/departments',
+                component: DoctorDepartmentsComponent
+            },
+            {
+                path: 'masters/doctors/fees',
+                component: DoctorFeesComponent
+            },
+            {
+                path: 'masters/doctors/share',
+                component: DoctorShareComponent
+            },
+            {
+                path: 'masters/consultation-rooms',
+                component: ConsultationRoomsComponent
+            },
+            {
+                path: 'masters/main-accounts',
+                component: MainAccountsComponent
+            },
+            {
+                path: 'masters/sub-accounts',
+                component: SubAccountsComponent
+            },
+            {
+                path: 'masters/accounts',
+                component: AccountsComponent
+            },
+            {
+                path: 'masters/plans',
+                component: PlansComponent
+            },
+            {
+                path: 'masters/blood-groups',
+                component: BloodGroupsComponent
+            },
+            {
+                path: 'masters/generic-names',
+                component: GenericNamesComponent
+            },
+            {
+                path: 'masters/icds',
+                component: IcdsComponent
+            },
+            {
+                path: 'masters/stores',
+                component: StoresComponent
+            },
+            {
+                path: 'masters/laboratory/categories',
+                component: LaboratoryCategoriesComponent
+            },
+            {
+                path: 'masters/laboratory/tests',
+                component: LaboratoryTestsComponent
+            },
+            {
+                path: 'masters/laboratory/test-rates',
+                component: LaboratoryTestRatesComponent
+            },
+            {
+                path: 'masters/laboratory/test-references',
+                component: LaboratoryTestReferencesComponent
+            },
+            {
+                path: 'masters/laboratory/equipment',
+                component: LaboratoryEquipmentsComponent
+            },
+            {
+                path: 'masters/laboratory/sample-types',
+                component: LaboratorySampleTypesComponent
+            },
+            {
+                path: 'masters/laboratory/interpretations',
+                component: LaboratoryInterpretationsComponent
+            },
+            {
+                path: 'masters/laboratory/linking',
+                component: LaboratoryLinkingComponent
+            },
+            //ip masters
+            {
+                path: 'ip-masters/wards',
+                component: WardsComponent
+            },
+            {
+                path: 'ip-masters/beds',
+                component: BedsComponent
+            },
+            {
+                path: 'ip-masters/bed-charges',
+                component: BedChargesComponent
+            },
+            {
+                path: 'ip-masters/bed-charge-settings',
+                component: BedChargeSettingsComponent
+            },
+            //inventory
+            {
+                path: 'inventory/categories',
+                component: InventoryCategoriesComponent
+            },
+            {
+                path: 'inventory/pack-sizes',
+                component: PackSizesComponent
+            },
+            {
+                path: 'inventory/purchase-types',
+                component: PurchaseTypesComponent
+            },
+            {
+                path: 'inventory/product-types',
+                component: ProductTypesComponent
+            },
+            {
+                path: 'inventory/drug-instructions',
+                component: DrugInstructionsComponent
+            },
+            {
+                path: 'inventory/dose-measures',
+                component: DoseMeasuresComponent
+            },
+            {
+                path: 'inventory/strength-units',
+                component: StrengthUnitsComponent
+            },
+            {
+                path: 'inventory/drug-frequencies',
+                component: DrugFrequenciesComponent
+            },
+            {
+                path: 'inventory/products',
+                component: ProductsComponent
+            },
+            {
+                path: 'inventory/product-rates',
+                component: ProductRatesComponent
+            },
+            //radiology
+            {
+                path: 'radiology/items',
+                component: RadiologyItemsComponent
+            },
+            {
+                path: 'radiology/categories',
+                component: RadiologyCategoriesComponent
+            },
+            {
+                path: 'radiology/item-rates',
+                component: RadiologyItemRatesComponent
+            },
+            //laboratory
+            {
+                path: 'laboratory/sample-collections',
+                component: LaboratorySampleCollectionsComponent
+            },
+            {
+                path: 'laboratory/sample-collections/view/:id',
+                component: LaboratorySampleCollectionComponent
+            },
+            {
+                path: 'laboratory/lab-work-list',
+                component: LaboratoryWorkListComponent
+            },
+            {
+                path: 'laboratory/lab-work-list/view/:id',
+                component: LaboratoryResultEntryComponent
+            },
+            {
+                path: 'laboratory/publish-results',
+                component: LaboratoryPublishResultsComponent
+            },
+            {
+                path: 'laboratory/results-master-data',
+                component: LaboratoryResultsMasterDataComponent
+            },
+            //services
 
-      {
-        path: 'services/service-categories',
-        component: ServiceCategoriesComponent
-      },
-      {
-        path: 'services/services',
-        component: ServicesComponent
-      },
-      {
-        path: 'services/service-rates',
-        component: ServiceRatesComponent
-      },
-      //patients
-      {
-        path: 'patients/registration',
-        component: PatientRegistrationComponent
-      },
-      {
-        path: 'patients/registration/edit/:id',
-        component: PatientRegistrationComponent
-      },
-      {
-        path: 'patients/list',
-        component: PatientsListComponent
-      },
-      //visits
-      {
-        path: 'visits/op/create',
-        component: CreateOpVisitComponent
-      },
-      {
-        path: 'visits/op/create/:patient_id',
-        component: CreateOpVisitComponent
-      },
-      {
-        path: 'visits/op/edit/:id',
-        component: CreateOpVisitComponent
-      },
-      {
-        path: 'visits/ip/create',
-        component: CreateIpVisitComponent
-      },
-      {
-        path: 'visits/ip/create/:patient_id',
-        component: CreateIpVisitComponent
-      },
-      {
-        path: 'visits/ip/create/edit/:id',
-        component: CreateIpVisitComponent
-      },
-      {
-        path: 'visits/op/list',
-        component: VisitOpListComponent
-      },
-      {
-        path: 'visits/ip/list',
-        component: VisitIpListComponent
-      },
-      //bills
-      {
-        path: 'bills/list',
-        component: BillsComponent
-      },
-      {
-        path: 'bills/list/view/:id',
-        component: BillViewComponent
-      },
-      {
-        path: 'bills/op-discount-approvals',
-        component: OpDiscountApprovalsComponent
-      },
-      {
-        path: 'bills/op-discount-approvals/view/:id',
-        component: OpDiscountApprovalComponent
-      },
-      {
-        path: 'bills/reprints',
-        component: BillReprintsComponent
-      },
-      //triage
-      {
-        path: 'triage/categories',
-        component: TriageCategoriesComponent
-      },
-      {
-        path: 'triage/items',
-        component: TriageItemsComponent
-      },
-      {
-        path: 'triage/items/view/:id',
-        component: TriageItemComponent
-      },
-      {
-        path: 'triage/list',
-        component: TriageListComponent
-      },
-      {
-        path: 'triage/view/:id',
-        component: TriageComponent
-      },
-      //consultation
-      {
-        path: 'consultation/list',
-        component: ConsultationListComponent
-      },
-      {
-        path: 'consultation/view/:id',
-        component: ConsultationFormComponent
-      },
-      //self-requests
-      {
-        path: 'self-request',
-        component: SelfRequestComponent
-      },
-      //stocks
-      {
-        path: 'stocks/products',
-        component: ProductStocksComponent
-      },
-      {
-        path: 'stocks/consumptions',
-        component: StockConsumptionsComponent
-      },
-      //settings
-      {
-        path: 'settings/next-of-kin-relations',
-        component: NextOfKinRelationsComponent
-      },
-      {
-        path: 'settings/statuses',
-        component: StatusesComponent
-      },
-      {
-        path: 'settings/systems',
-        component: SystemsComponent
-      },
-      {
-        path: 'settings/medical-histories',
-        component: MedicalHistoriesComponent
-      },
-      {
-        path: 'settings/surgeries',
-        component: SurgerySettingsComponent
-      },
-      {
-        path: 'settings/social-histories',
-        component: SocialHistoriesComponent
-      },
-      {
-        path: 'settings/sick-leave-types',
-        component: SickLeaveTypesComponent
-      },
-      {
-        path: 'settings/specializations',
-        component: SpecializationsComponent
-      },
-      {
-        path: 'settings/fee-types',
-        component: FeeTypesComponent
-      },
-      {
-        path: 'settings/billing-categories',
-        component: BillingCategoriesComponent
-      },
-      //subscriptions
-      { path: 'subscriptions/list', component: SubscriptionsComponent },
-      { path: 'subscriptions/packages', component: PackagesComponent },
-      { path: 'subscriptions/packages/add', component: PackageComponent },
-      { path: 'subscriptions/packages/edit/:id', component: PackageComponent },
-      { path: 'subscriptions/packages/view/:id', component: PackagePermissionsComponent },
-      //organizations
-      { path: 'organizations/list', component: OrganizationsComponent },
-      { path: 'organizations/branches', component: BranchesComponent },
-      //users
-      {
-        path: 'users/list',
-        component: UsersComponent
-      },
-      {
-        path: 'users/roles',
-        component: RolesComponent
-      },
-      {
-        path: 'users/roles/view/:id',
-        component: RoleComponent
-      },
-      //profile
-      {
-        path: 'profile',
-        component: ProfileComponent
-      },
-      {
-        path: 'blank',
-        component: BlankComponent
-      },
-      {
-        path: 'sub-menu-1',
-        component: SubMenuComponent
-      },
-      {
-        path: 'sub-menu-2',
-        component: BlankComponent
-      },
-      {
-        path: '',
-        component: DashboardComponent
-      }
-    ]
-  },
-  {
-    path: 'login',
-    component: LoginComponent,
-    //canActivate: [NonAuthGuard]
-  },
-  {
-    path: 'register',
-    component: RegisterComponent,
-    //canActivate: [NonAuthGuard]
-  },
-  {
-    path: 'forgot-password',
-    component: ForgotPasswordComponent,
-    canActivate: [NonAuthGuard]
-  },
-  {
-    path: 'recover-password',
-    component: RecoverPasswordComponent,
-    canActivate: [NonAuthGuard]
-  },
-  { path: '**', redirectTo: '' }
+            {
+                path: 'services/service-categories',
+                component: ServiceCategoriesComponent
+            },
+            {
+                path: 'services/services',
+                component: ServicesComponent
+            },
+            {
+                path: 'services/service-rates',
+                component: ServiceRatesComponent
+            },
+            //patients
+            {
+                path: 'patients/registration',
+                component: PatientRegistrationComponent
+            },
+            {
+                path: 'patients/registration/edit/:id',
+                component: PatientRegistrationComponent
+            },
+            {
+                path: 'patients/list',
+                component: PatientsListComponent
+            },
+            //visits
+            {
+                path: 'visits/op/create',
+                component: CreateOpVisitComponent
+            },
+            {
+                path: 'visits/op/create/:patient_id',
+                component: CreateOpVisitComponent
+            },
+            {
+                path: 'visits/op/edit/:id',
+                component: CreateOpVisitComponent
+            },
+            {
+                path: 'visits/ip/create',
+                component: CreateIpVisitComponent
+            },
+            {
+                path: 'visits/ip/create/:patient_id',
+                component: CreateIpVisitComponent
+            },
+            {
+                path: 'visits/ip/create/edit/:id',
+                component: CreateIpVisitComponent
+            },
+            {
+                path: 'visits/op/list',
+                component: VisitOpListComponent
+            },
+            {
+                path: 'visits/ip/list',
+                component: VisitIpListComponent
+            },
+            //bills
+            {
+                path: 'bills/list',
+                component: BillsComponent
+            },
+            {
+                path: 'bills/list/view/:id',
+                component: BillViewComponent
+            },
+            {
+                path: 'bills/op-discount-approvals',
+                component: OpDiscountApprovalsComponent
+            },
+            {
+                path: 'bills/op-discount-approvals/view/:id',
+                component: OpDiscountApprovalComponent
+            },
+            {
+                path: 'bills/reprints',
+                component: BillReprintsComponent
+            },
+            //triage
+            {
+                path: 'triage/categories',
+                component: TriageCategoriesComponent
+            },
+            {
+                path: 'triage/items',
+                component: TriageItemsComponent
+            },
+            {
+                path: 'triage/items/view/:id',
+                component: TriageItemComponent
+            },
+            {
+                path: 'triage/list',
+                component: TriageListComponent
+            },
+            {
+                path: 'triage/view/:id',
+                component: TriageComponent
+            },
+            //consultation
+            {
+                path: 'consultation/list',
+                component: ConsultationListComponent
+            },
+            {
+                path: 'consultation/view/:id',
+                component: ConsultationFormComponent
+            },
+            //self-requests
+            {
+                path: 'self-request',
+                component: SelfRequestComponent
+            },
+            //stocks
+            {
+                path: 'stocks/products',
+                component: ProductStocksComponent
+            },
+            {
+                path: 'stocks/consumptions',
+                component: StockConsumptionsComponent
+            },
+            //settings
+            {
+                path: 'settings/next-of-kin-relations',
+                component: NextOfKinRelationsComponent
+            },
+            {
+                path: 'settings/statuses',
+                component: StatusesComponent
+            },
+            {
+                path: 'settings/systems',
+                component: SystemsComponent
+            },
+            {
+                path: 'settings/medical-histories',
+                component: MedicalHistoriesComponent
+            },
+            {
+                path: 'settings/surgeries',
+                component: SurgerySettingsComponent
+            },
+            {
+                path: 'settings/social-histories',
+                component: SocialHistoriesComponent
+            },
+            {
+                path: 'settings/sick-leave-types',
+                component: SickLeaveTypesComponent
+            },
+            {
+                path: 'settings/specializations',
+                component: SpecializationsComponent
+            },
+            {
+                path: 'settings/fee-types',
+                component: FeeTypesComponent
+            },
+            {
+                path: 'settings/billing-categories',
+                component: BillingCategoriesComponent
+            },
+            {
+                path: 'settings/id-types',
+                component: IdentificationDocumentTypesComponent
+            },
+            //subscriptions
+            {path: 'subscriptions/list', component: SubscriptionsComponent},
+            {path: 'subscriptions/packages', component: PackagesComponent},
+            {path: 'subscriptions/packages/add', component: PackageComponent},
+            {
+                path: 'subscriptions/packages/edit/:id',
+                component: PackageComponent
+            },
+            {
+                path: 'subscriptions/packages/view/:id',
+                component: PackagePermissionsComponent
+            },
+            //organizations
+            {path: 'organizations/list', component: OrganizationsComponent},
+            {path: 'organizations/branches', component: BranchesComponent},
+            //users
+            {
+                path: 'users/list',
+                component: UsersComponent
+            },
+            {
+                path: 'users/roles',
+                component: RolesComponent
+            },
+            {
+                path: 'users/roles/view/:id',
+                component: RoleComponent
+            },
+            //profile
+            {
+                path: 'profile',
+                component: ProfileComponent
+            },
+            {
+                path: 'blank',
+                component: BlankComponent
+            },
+            {
+                path: 'sub-menu-1',
+                component: SubMenuComponent
+            },
+            {
+                path: 'sub-menu-2',
+                component: BlankComponent
+            },
+            {
+                path: '',
+                component: DashboardComponent
+            }
+        ]
+    },
+    {
+        path: 'login',
+        component: LoginComponent
+        //canActivate: [NonAuthGuard]
+    },
+    {
+        path: 'register',
+        component: RegisterComponent
+        //canActivate: [NonAuthGuard]
+    },
+    {
+        path: 'forgot-password',
+        component: ForgotPasswordComponent,
+        canActivate: [NonAuthGuard]
+    },
+    {
+        path: 'recover-password',
+        component: RecoverPasswordComponent,
+        canActivate: [NonAuthGuard]
+    },
+    {path: '**', redirectTo: ''}
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {})],
-  exports: [RouterModule]
+    imports: [RouterModule.forRoot(routes, {})],
+    exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

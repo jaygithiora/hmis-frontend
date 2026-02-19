@@ -6,21 +6,24 @@ import {Observable} from 'rxjs';
 @Injectable({
     providedIn: 'root'
 })
-export class FeeTypesService {
+export class IdentificationDocumentTypesService {
     constructor(
         private http: HttpClient,
         @Inject(API_BASE_URL) private baseUrl: string
     ) {}
 
-    getFeeTypes(page: number = 1, search: string = ''): Observable<any> {
+    getIdentificationDocumentTypes(
+        page: number = 1,
+        search: string = ''
+    ): Observable<any> {
         return this.http.get(
-            `${this.baseUrl}/api/dashboard/settings/fee_types?page=${page}&search=${search}`
+            `${this.baseUrl}/api/dashboard/settings/identification_document_types?page=${page}&search=${search}`
         );
     }
 
-    updateFeeType(inputData: any) {
+    updateIdentificationDocumentType(inputData: any) {
         return this.http.post(
-            `${this.baseUrl}/api/dashboard/settings/fee_types/add`,
+            `${this.baseUrl}/api/dashboard/settings/identification_document_types/add`,
             inputData
         );
     }
