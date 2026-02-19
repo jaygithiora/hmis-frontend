@@ -721,6 +721,12 @@ export const MENU = [
         path: ['/dashboard/settings/billing-categories'],
         permission: 'View Billing Category Settings'
       },
+      {
+        name: 'ID Types',
+        iconClasses: 'fas fa-circle icon-small',
+        path: ['/dashboard/settings/billing-categories'],
+        permission: 'View Identification Document Type Settings'
+      },
     ]
   },
   {

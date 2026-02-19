@@ -33,6 +33,7 @@ export class SchemePreauthsComponent implements OnInit {
   triage_item: any;
 
   schemePreauthForm!: FormGroup;
+  deleteSchemePreauthForm!: FormGroup;
 
   scheme_preauths: any[] = [];// Store fetched items
   totalItems = 0;     // Total number of items
@@ -83,6 +84,11 @@ export class SchemePreauthsComponent implements OnInit {
       billing_category:[null],
       scheme: [null, [Validators.required]]
     });
+    this.deleteSchemePreauthForm = this.fb.group({
+      id:['',[Validators.required]],
+      scheme:['', [Validators.required]],
+      item:['',[Validators.required]]
+    })
     this.loadOptions();
   }
 
@@ -102,7 +108,7 @@ export class SchemePreauthsComponent implements OnInit {
     this.searchSchemes$.pipe(
       debounceTime(300),
       tap(() => this.loadingSchemes = true),
-      switchMap(term => this.schemesService.getSchemes(1, term)),
+      switchMap(term => this.schemesService.getSchemes(1, term,'','Credit')),
       tap(() => this.loadingSchemes= false)
     ).subscribe(data => {
       this.schemes = data.schemes.data;
@@ -235,6 +241,13 @@ export class SchemePreauthsComponent implements OnInit {
       this.selectedProduct = null;
     }
   }
+  openModal2(content: TemplateRef<any>, schemeExclusion: any) {
+    this.modalRef = this.modalService.open(content, { centered: true });
+    this.deleteSchemePreauthForm.get("id").setValue(schemeExclusion.id);
+    this.deleteSchemePreauthForm.get("item").setValue(schemeExclusion?.billing_category?.name||schemeExclusion?.radiology_item?.name||schemeExclusion?.service?.name||schemeExclusion?.laboratory_test?.name||schemeExclusion?.product?.name);
+    this.deleteSchemePreauthForm.get("scheme").setValue(schemeExclusion.scheme.name);
+  }
+
   addSchemePreauth() {
     if (this.schemePreauthForm.valid) {
       console.log(this.schemePreauthForm.getRawValue());
@@ -266,6 +279,36 @@ export class SchemePreauthsComponent implements OnInit {
         }
         if (error?.error?.errors?.product) {
           this.toastr.error(error?.error?.errors?.product);
+        }
+        if (error?.error?.error) {
+          this.toastr.error(error?.error?.error);
+        }
+        if (error?.error?.message) {
+          this.toastr.error(error?.error?.message);
+          this.service.logout();
+          this.modalRef?.close();
+        }
+        this.isLoading = false;
+        console.log(error);
+      });
+    } else {
+      this.toastr.error("Please fill in all the required fields before proceeding!");
+    }
+  }
+
+  deleteSchemeExclusion() {
+    if (this.deleteSchemePreauthForm.valid) {
+      this.isLoading = true;
+      this.schemePreauthsService.deleteSchemePreauth(this.deleteSchemePreauthForm.getRawValue()).subscribe((result: any) => {
+        this.isLoading = false;
+        if (result.success) {
+          this.toastr.success(result.success);
+          this.modalRef?.close();
+        this.loadPage(1);
+        }
+      }, error => {
+        if (error?.error?.errors?.id) {
+          this.toastr.error(error?.error?.errors?.id);
         }
         if (error?.error?.error) {
           this.toastr.error(error?.error?.error);

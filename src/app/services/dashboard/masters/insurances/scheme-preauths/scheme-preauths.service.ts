@@ -8,11 +8,14 @@ import { Observable } from 'rxjs';
 })
 export class SchemePreauthsService {
   constructor(private http: HttpClient, @Inject(API_BASE_URL) private baseUrl: string) { }
-  
-    getSchemePreauths(page: number = 1, search: string = "", payment_type: any = ""): Observable<any> {
-      return this.http.get(`${this.baseUrl}/api/dashboard/masters/insurances/schemes/preauths?page=${page}&search=${search}&payment_type=${payment_type}`);
-    }
-    updateSchemePreauth(inputData: any) {
-      return this.http.post(`${this.baseUrl}/api/dashboard/masters/insurances/schemes/preauths/add`, inputData);
-    }
+
+  getSchemePreauths(page: number = 1, search: string = "", payment_type: any = ""): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/dashboard/masters/insurances/schemes/preauths?page=${page}&search=${search}&payment_type=${payment_type}`);
+  }
+  updateSchemePreauth(inputData: any) {
+    return this.http.post(`${this.baseUrl}/api/dashboard/masters/insurances/schemes/preauths/add`, inputData);
+  }
+  deleteSchemePreauth(inputData: any) {
+    return this.http.post(`${this.baseUrl}/api/dashboard/masters/insurances/schemes/preauths/delete`, inputData);
+  }
 }

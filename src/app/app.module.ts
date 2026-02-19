@@ -184,6 +184,7 @@ import {StockConsumptionsComponent} from './pages/dashboard/stocks/stock-consump
 import {PharmacyApprovalsComponent} from './pages/dashboard/pharmacy/pharmacy-approvals/pharmacy-approvals.component';
 import {PharmacyAmmendmentsComponent} from './pages/dashboard/pharmacy/pharmacy-ammendments/pharmacy-ammendments.component';
 import {PharmacyPrescriptionsComponent} from './pages/dashboard/pharmacy/pharmacy-prescriptions/pharmacy-prescriptions.component';
+import { IdentificationDocumentTypesComponent } from './pages/dashboard/settings/identification-document-types/identification-document-types.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -344,7 +345,8 @@ registerLocaleData(localeEn, 'en-EN');
         StockConsumptionsComponent,
         PharmacyApprovalsComponent,
         PharmacyAmmendmentsComponent,
-        PharmacyPrescriptionsComponent
+        PharmacyPrescriptionsComponent,
+        IdentificationDocumentTypesComponent
     ],
     bootstrap: [AppComponent],
     imports: [

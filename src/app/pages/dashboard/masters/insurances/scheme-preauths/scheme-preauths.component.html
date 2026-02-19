@@ -82,10 +82,13 @@
                                             *ngIf="!scheme_preauth.status">In-Active</span>
                                     </td>-->
                                     <td class="text-right">
-                                        <button class="btn btn-primary btn-sm" (click)="
+                                        <button class="btn btn-secondary btn-sm" (click)="
                                                 openModal(content, scheme_preauth)
-                                            "><i class="fas fa-edit"></i>
-                                            Edit</button>
+                                            "><i class="fas fa-pencil-alt"></i></button>
+                                            &nbsp;
+                                        <button class="btn btn-danger btn-sm" (click)="
+                                                openModal2(content2, scheme_preauth)
+                                            "><i class="fas fa-trash"></i></button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -175,4 +178,34 @@
             Save Changes
         </button>
     </div>
+</ng-template>
+
+
+<ng-template #content2 let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title"><i class="fas fa-trash"></i> Confirm Deletion</h4>
+    <button type="button" class="btn-close close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="deleteSchemePreauthForm" (submit)="deleteSchemeExclusion()">
+      <input type="hidden" formControlName="id" />
+      <div class="alert alert-danger mb-3">
+        Are you sure you want to delete<b> {{deleteSchemePreauthForm.get("item").value}}
+          ({{deleteSchemePreauthForm.get("scheme").value}})</b> permanently? This action cannot be reversed.
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('Save click')">
+      <i class="fas fa-times"></i> Close
+    </button>
+    <button type="button" class="btn btn-danger" [disabled]="isLoading" (click)="deleteSchemeExclusion()">
+      <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <i class="fas fa-trash" *ngIf="!isLoading"></i> Delete
+    </button>
+  </div>
 </ng-template>
