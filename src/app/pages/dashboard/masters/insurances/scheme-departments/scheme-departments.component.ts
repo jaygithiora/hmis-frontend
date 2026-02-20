@@ -122,18 +122,19 @@ export class SchemeDepartmentsComponent implements OnInit {
 
     openModal(content: TemplateRef<any>, scheme_department: any) {
         this.modalRef = this.modalService.open(content, {centered: true});
+        console.log("scheme department:",scheme_department);
         if (scheme_department != null) {
             this.schemes = [];
             this.departments = [];
             this.schemeDepartmentForm.get('id').setValue(scheme_department.id);
             if (scheme_department.scheme) {
                 this.schemes.push(scheme_department.scheme);
-            }
             this.selectedOption = scheme_department.scheme_id;
-            if (scheme_department.department) {
-                this.schemes.push(scheme_department.department);
             }
-            this.selectedDepartment = scheme_department.department_id;
+            if (scheme_department.department) {
+                this.departments.push(scheme_department.department);
+                this.selectedDepartment = scheme_department.department_id;
+            }
         } else {
             this.schemeDepartmentForm.get('id').setValue(0);
             this.selectedOption = null;

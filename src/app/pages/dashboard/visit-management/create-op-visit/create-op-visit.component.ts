@@ -99,7 +99,7 @@ export class CreateOpVisitComponent implements OnInit {
         debounceTime(300),  // Wait for the user to stop typing for 300ms
         distinctUntilChanged(),  // Only search if the query has changed
         tap(() => this.loadingDepartments = true),  // Show the loading spinner
-        switchMap(term => this.schemeDepartmentsService.getSchemeDepartments(1, this.selectedSchemeOption, term))  // Switch to a new observable for each search term
+        switchMap(term => this.schemeDepartmentsService.getSchemeDepartments(1, term,this.selectedSchemeOption))  // Switch to a new observable for each search term
       )
       .subscribe((results: any) => {
         this.selectedSpecialityOption = null;

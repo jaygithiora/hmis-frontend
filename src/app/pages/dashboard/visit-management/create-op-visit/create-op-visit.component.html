@@ -85,9 +85,7 @@
                                                     <label>Scheme</label>
                                                     <ng-select [items]="schemes" bindLabel="name" bindValue="id"
                                                         [typeahead]="searchSchemes$" [loading]="loadingSchemes"
-                                                        [(ngModel)]="
-                                                    selectedSchemeOption
-                                                " placeholder="Search for Scheme" (change)="onItemSelect($event)"
+                                                        [(ngModel)]="selectedSchemeOption" placeholder="Search for Scheme" (change)="onItemSelect($event)"
                                                         formControlName="scheme"></ng-select>
                                                     <div class="text-danger" *ngIf="visitForm.get('scheme')?.errors?.['required'] && visitForm.get('scheme')?.touched">
                                                         Scheme is required
